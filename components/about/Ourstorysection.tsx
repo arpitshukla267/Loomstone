@@ -1,14 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Manrope } from "next/font/google";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
 
 const COMPANY = "Loomstone";
 const carpetImage = "/carpet.jpeg";
@@ -34,7 +28,7 @@ export default function OurStorySection() {
             {/* white outline layer (behind) */}
             <span
               aria-hidden
-              className={`${manrope.className} absolute left-0 top-0 select-none font-extrabold`}
+              className="font-manrope absolute left-0 top-0 select-none font-extrabold"
               style={{
                 ...digitBase,
                 color: "#ffffff",
@@ -47,7 +41,7 @@ export default function OurStorySection() {
 
             {/* carpet image visible only through the digits */}
             <span
-              className={`${manrope.className} relative block select-none font-extrabold`}
+              className="font-manrope relative block select-none font-extrabold"
               style={{
                 ...digitBase,
                 color: "transparent",
@@ -78,7 +72,7 @@ export default function OurStorySection() {
             <i className="h-px w-14 shrink-0 bg-[#e8a21c]/50" />
           </span>
           <h2
-            className={`${manrope.className} mb-5 mt-4 text-[32px] font-semibold leading-[1.15] text-[#2a2a6b] md:text-[44px]`}
+            className="font-manrope mb-5 mt-4 text-[32px] font-semibold leading-[1.15] text-[#2a2a6b] md:text-[44px]"
           >
             Carpets Designed as the{" "}
             <span className="text-[#e8a21c]">Foundation of Every Room</span>

@@ -37,7 +37,11 @@ function XIcon() {
   );
 }
 
-export function FooterSection() {
+interface FooterSectionProps {
+  onShowToast?: (message: string) => void;
+}
+
+export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
   return (
     <footer className="pt-[55px] md:pt-[70px] pb-6 px-6 md:px-[5%] text-line bg-[#22215c]">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px] md:gap-[45px] max-w-[1310px] mx-auto">

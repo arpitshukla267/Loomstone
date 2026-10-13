@@ -2,22 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Poppins, Manrope } from "next/font/google";
 import { ArrowUpRight, Check, Eye, Hammer } from "lucide-react";
 import { PageFrame } from "@/components/site/site-chrome";
 import { Reveal, FadeImage } from "@/components/ui/reveal";
 import FounderSection from "@/components/about/FounderSection";
 import VisionMissionSection from "@/components/about/Visionmissionsection";
 import OurStorySection from "@/components/about/Ourstorysection";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 const COMPANY = "Loomstone";
 const OWNER = "Pawan Yadav";
@@ -89,7 +79,7 @@ export default function AboutPage() {
   return (
     <PageFrame active="About">
       <div
-        className={`${poppins.className} min-h-screen overflow-x-hidden bg-[#f4f9fc] text-[15px] leading-relaxed text-slate-600 pt-20`}
+        className="font-poppins min-h-screen overflow-x-hidden bg-[#f4f9fc] text-[15px] leading-relaxed text-slate-600 pt-20"
       >
         <main>
           {/* Hero */}
@@ -103,7 +93,7 @@ export default function AboutPage() {
               </Reveal>
               <Reveal delay={100}>
                 <h1
-                  className={`${manrope.className} font-manrope font-semibold mb-6 mt-5 text-[40px] leading-[1.1] text-[#2a2a6b] md:text-6xl`}
+                  className="font-manrope font-semibold mb-6 mt-5 text-[40px] leading-[1.1] text-[#2a2a6b] md:text-6xl"
                 >
                   The Art of{" "}
                   <em className="block font-semibold text-[#e8a21c]">
@@ -157,7 +147,7 @@ export default function AboutPage() {
               <div className="rounded-xl border-t-[3px] border-[#e8a21c] bg-white p-8 shadow-[0_12px_32px_rgba(42,42,107,0.08)]">
                 <Eyebrow>EVERY SPACE, ELEVATED</Eyebrow>
                 <h2
-                  className={`${manrope.className} mb-3.5 mt-3.5 text-[26px] font-medium leading-tight text-[#2a2a6b]`}
+                  className="font-manrope mb-3.5 mt-3.5 text-[26px] font-medium leading-tight text-[#2a2a6b]"
                 >
                   Carpets Designed as the Foundation of Every Room
                 </h2>
@@ -234,7 +224,7 @@ export default function AboutPage() {
                         </span>
                         <Eyebrow>{tag}</Eyebrow>
                         <h3
-                          className={`${manrope.className} mb-4 mt-3 text-[28px] font-medium leading-tight text-[#2a2a6b]`}
+                          className="font-manrope mb-4 mt-3 text-[28px] font-medium leading-tight text-[#2a2a6b]"
                         >
                           {title}
                         </h3>
@@ -270,7 +260,7 @@ export default function AboutPage() {
             <Reveal>
               <Eyebrow center>WHAT SETS US APART</Eyebrow>
               <h2
-                className={`${manrope.className} mb-2.5 mt-3.5 text-center text-3xl font-medium text-[#2a2a6b] md:text-4xl`}
+                className="font-manrope mb-2.5 mt-3.5 text-center text-3xl font-medium text-[#2a2a6b] md:text-4xl"
               >
                 The Four Pillars of Craftsmanship
               </h2>
@@ -284,12 +274,12 @@ export default function AboutPage() {
                 <Reveal key={p.n} delay={i * 100} className="h-full">
                   <article className="flex h-full flex-col rounded-xl border border-[#dfe6ea] bg-[#e8eef1] px-5 py-6">
                     <span
-                      className={`${manrope.className} mb-2.5 text-[#e8a21c]`}
+                      className="font-manrope mb-2.5 text-[#e8a21c]"
                     >
                       {p.n}
                     </span>
                     <h3
-                      className={`${manrope.className} mb-3 text-xl font-medium leading-tight text-[#2a2a6b]`}
+                      className="font-manrope mb-3 text-xl font-medium leading-tight text-[#2a2a6b]"
                     >
                       {p.title}
                     </h3>

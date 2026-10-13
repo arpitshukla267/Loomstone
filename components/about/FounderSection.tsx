@@ -1,12 +1,6 @@
 "use client";
 
-import { Manrope } from "next/font/google";
 import { Reveal, FadeImage } from "@/components/ui/reveal";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 const COMPANY = "Loomstone";
 const OWNER = "Pawan Yadav";
@@ -71,13 +65,13 @@ export default function FounderSection() {
         >
           <span
             aria-hidden
-            className={`${manrope.className} block h-14 -ml-2 text-[120px] font-bold leading-[0.9] text-[#e8a21c]`}
+            className="font-manrope block h-14 -ml-2 text-[120px] font-bold leading-[0.9] text-[#e8a21c]"
           >
             &ldquo;
           </span>
 
           <p
-            className={`${manrope.className} mt-6 max-w-[780px] text-[15px] font-medium leading-[1.6] md:text-[19px]`}
+            className="font-manrope mt-6 max-w-[780px] text-[15px] font-medium leading-[1.6] md:text-[19px]"
           >
             {QUOTE}
           </p>
@@ -85,7 +79,7 @@ export default function FounderSection() {
           <div className="my-8 h-[2px] w-24 bg-[#e8a21c]" />
 
           <h3
-            className={`${manrope.className} text-[22px] font-bold leading-tight`}
+            className="font-manrope text-[22px] font-bold leading-tight"
           >
             Mr. {OWNER}
           </h3>

@@ -31,7 +31,7 @@ export function SectionHeading({
   title,
   text,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   text: string;
 }) {

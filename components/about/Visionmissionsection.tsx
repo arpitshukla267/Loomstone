@@ -1,14 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Manrope } from "next/font/google";
 import { Check, Eye, Flag } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 const carpetImage = "/carpet.jpeg";
 
@@ -83,7 +77,7 @@ export default function VisionMissionSection() {
             {/* Title */}
             <div className="absolute left-[7%] top-[5%] z-10">
               <h2
-                className={`${manrope.className} text-[52px] font-bold leading-[1.1] text-[#2a2a6b]`}
+                className="font-manrope text-[52px] font-bold leading-[1.1] text-[#2a2a6b]"
               >
                 Our Vision And Mission
               </h2>
@@ -109,7 +103,7 @@ export default function VisionMissionSection() {
             <div className="absolute inset-x-0 top-[22%] h-[34%] bg-[#2a2a6b] text-white [clip-path:polygon(0_0,71.7%_0,61.1%_100%,0_100%)]">
               <div className="flex h-full max-w-[46%] flex-col justify-center pl-[7%]">
                 <h3
-                  className={`${manrope.className} text-[38px] font-bold leading-tight`}
+                  className="font-manrope text-[38px] font-bold leading-tight"
                 >
                   {vision.title}
                 </h3>
@@ -124,7 +118,7 @@ export default function VisionMissionSection() {
             <div className="absolute inset-x-0 bottom-0 top-[64%] bg-[#e8a21c] text-[#2a2a6b] [clip-path:polygon(0_0,58.7%_0,47.5%_100%,0_100%)]">
               <div className="flex h-full max-w-[40%] flex-col justify-center pl-[4%]">
                 <h3
-                  className={`${manrope.className} text-[34px] font-bold leading-tight`}
+                  className="font-manrope text-[34px] font-bold leading-tight"
                 >
                   {mission.title}
                 </h3>
@@ -155,7 +149,7 @@ export default function VisionMissionSection() {
         <div className="lg:hidden">
           <Reveal>
             <h2
-              className={`${manrope.className} text-[34px] font-bold leading-tight text-[#2a2a6b] md:text-5xl`}
+              className="font-manrope text-[34px] font-bold leading-tight text-[#2a2a6b] md:text-5xl"
             >
               Our Vision And Mission
             </h2>
@@ -182,7 +176,7 @@ export default function VisionMissionSection() {
                 <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border-4 border-white bg-[#2a2a6b]">
                   <Eye size={26} strokeWidth={1.6} />
                 </span>
-                <h3 className={`${manrope.className} text-[28px] font-bold`}>
+                <h3 className="font-manrope text-[28px] font-bold">
                   {vision.title}
                 </h3>
                 <p className="mt-2 text-[15px] leading-relaxed text-white/90">
@@ -196,7 +190,7 @@ export default function VisionMissionSection() {
                 <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border-4 border-white bg-[#e8a21c]">
                   <Flag size={26} strokeWidth={1.6} />
                 </span>
-                <h3 className={`${manrope.className} text-[28px] font-bold`}>
+                <h3 className="font-manrope text-[28px] font-bold">
                   {mission.title}
                 </h3>
                 <p className="mt-2 text-[15px] leading-relaxed">
