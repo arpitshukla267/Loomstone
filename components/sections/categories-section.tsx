@@ -1,39 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { siteImages } from "@/components/site/site-images";
+import Link from "next/link";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { defaultCategories } from "../../data/defaultCategories";
+import type { CategoryItem } from "@/data/defaultCategories";
 import { SectionIntro } from "./section-intro";
 import { Reveal, FadeImage } from "../ui/reveal";
-
-export interface CategoryItem {
-  title: string;
-  text: string;
-  image: string;
-}
-
-export const defaultCategories: CategoryItem[] = [
-  {
-    title: "Hand-Knotted Haute Couture",
-    text: "High-density botanical dye silk and highland fleece. Up to 300 KPSI with heirloom resilience.",
-    image: siteImages.wool,
-  },
-  {
-    title: "Textured Hand-Tufted & Relief",
-    text: "Sculptural cut and loop pile crafted for luxury penthouses, suites, and high-traffic salons.",
-    image: siteImages.relief,
-  },
-  {
-    title: "Raw Jute & Flatweave Dhurries",
-    text: "Artisanal heritage grounding pieces woven from unbleached jute, nettle, and hand-spun flax.",
-    image: siteImages.flat,
-  },
-  {
-    title: "Architectural Monochromes",
-    text: "Understated tonalities, organic abrash variations, and micro-ribbed structures for calm expanses.",
-    image: siteImages.mono,
-  },
-];
 
 export interface CategoriesSectionProps {
   categories?: CategoryItem[];
@@ -43,8 +16,6 @@ export interface CategoriesSectionProps {
 
 export function CategoriesSection({
   categories = defaultCategories,
-  onOpenInquiry,
-  onShowToast,
 }: CategoriesSectionProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
@@ -53,69 +24,85 @@ export function CategoriesSection({
   const updateArrows = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
+
     setCanPrev(el.scrollLeft > 4);
     setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
   }, []);
 
   useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+
     updateArrows();
+    el.addEventListener("scroll", updateArrows, { passive: true });
     window.addEventListener("resize", updateArrows);
-    return () => window.removeEventListener("resize", updateArrows);
+
+    return () => {
+      el.removeEventListener("scroll", updateArrows);
+      window.removeEventListener("resize", updateArrows);
+    };
   }, [updateArrows]);
 
-  // Moves to the previous/next card and brings it to the horizontal center.
   const scrollByCard = (direction: 1 | -1) => {
     const el = trackRef.current;
     if (!el) return;
+
     const cards = Array.from(el.children) as HTMLElement[];
     if (!cards.length) return;
 
-    const trackRect = el.getBoundingClientRect();
-    const trackCenter = trackRect.left + trackRect.width / 2;
-    const centerOf = (c: HTMLElement) => {
-      const r = c.getBoundingClientRect();
-      return r.left + r.width / 2;
+    const trackCenter = el.getBoundingClientRect().left + el.clientWidth / 2;
+
+    const centerOf = (card: HTMLElement) => {
+      const rect = card.getBoundingClientRect();
+      return rect.left + rect.width / 2;
     };
 
-    // Card currently closest to the center
     let current = 0;
     let best = Infinity;
-    cards.forEach((c, i) => {
-      const d = Math.abs(centerOf(c) - trackCenter);
-      if (d < best) {
-        best = d;
-        current = i;
+
+    cards.forEach((card, index) => {
+      const distance = Math.abs(centerOf(card) - trackCenter);
+
+      if (distance < best) {
+        best = distance;
+        current = index;
       }
     });
 
-    const target =
-      cards[Math.min(Math.max(current + direction, 0), cards.length - 1)];
-    el.scrollBy({ left: centerOf(target) - trackCenter, behavior: "smooth" });
+    const targetIndex = Math.min(
+      Math.max(current + direction, 0),
+      cards.length - 1,
+    );
+
+    el.scrollBy({
+      left: centerOf(cards[targetIndex]) - trackCenter,
+      behavior: "smooth",
+    });
   };
 
   const arrowClass =
-    "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-[0_6px_18px_rgba(42,41,103,0.2)] transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold md:hidden";
+    "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-md transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold md:hidden";
 
   return (
     <section
-      className="bg-white py-[70px] md:py-[100px] px-6 md:px-[5%]"
-      id="about"
+      id="categories"
+      className="bg-white px-6 py-[70px] md:px-[5%] md:py-[60px]"
     >
-      <div className="max-w-[1310px] mx-auto">
+      <div className="mx-auto max-w-[1310px]">
         <Reveal>
           <SectionIntro
-            eyebrow="Textile Typologies"
-            title="Our Rug Styles"
-            text="Four distinct weaving styles made for living rooms, bedrooms, and commercial spaces."
+            eyebrow="Artisanal Categories"
+            title="Find by Category"
+            text="Explore distinctive rug-making techniques from our master ateliers, each designed to suit different spaces, styles, and needs."
           />
         </Reveal>
 
-        {/* Wrapper holds the arrows (mobile only) */}
         <div className="relative">
           <button
             type="button"
-            aria-label="Previous style"
+            aria-label="Previous category"
             onClick={() => scrollByCard(-1)}
+            disabled={!canPrev}
             className={`${arrowClass} left-2 ${
               canPrev ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
@@ -125,8 +112,9 @@ export function CategoriesSection({
 
           <button
             type="button"
-            aria-label="Next style"
+            aria-label="Next category"
             onClick={() => scrollByCard(1)}
+            disabled={!canNext}
             className={`${arrowClass} right-2 ${
               canNext ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
@@ -134,66 +122,50 @@ export function CategoriesSection({
             <ChevronRight size={20} />
           </button>
 
-          {/*
-            Mobile: horizontal swipe carousel, ~1.25 cards visible at a time.
-            Card width = 80vw - 32px, so card + gap + 25% of the next card
-            exactly fills the space to the right of the 24px page padding.
-            Desktop (md+): original grid, unchanged.
-          */}
           <div
             ref={trackRef}
-            onScroll={updateArrows}
-            className="-mx-6 flex snap-x snap-mandatory scroll-px-6 gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4"
+            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4"
           >
             {categories.map((category, index) => {
-              // Cards stagger by column; inner pieces follow the card in order.
-              const base = (index % 4) * 160;
+              const targetUrl = `/products?category=${encodeURIComponent(category.title)}`;
 
               return (
                 <Reveal
                   key={category.title}
-                  delay={base}
+                  delay={(index % 4) * 120}
                   className="h-full w-[calc(80vw-32px)] shrink-0 snap-center md:w-auto md:shrink"
                 >
-                  <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-gold hover:shadow-[0_16px_30px_rgba(42,41,103,0.07)]">
-                    <Reveal delay={base + 150} y={14}>
-                      <div className="relative h-[190px] overflow-hidden md:h-[270px] bg-[#dbe1e5]">
-                        <FadeImage
-                          src={category.image}
-                          alt={category.title}
-                          fill
-                          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 80vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-                        />
-                      </div>
-                    </Reveal>
+                  <Link
+                    href={targetUrl}
+                    className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_16px_32px_rgba(42,41,103,0.09)]"
+                  >
+                    <div className="relative h-[190px] overflow-hidden bg-[#f1f2f3] md:h-[260px]">
+                      <FadeImage
+                        src={category.image}
+                        alt={category.title}
+                        fill
+                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 80vw"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                      />
+                    </div>
 
                     <div className="flex flex-1 flex-col p-4 md:p-6">
-                      <Reveal delay={base + 250} y={14}>
-                        <h3 className="m-0 line-clamp-2 min-h-[2.6em] text-navy font-manrope font-normal text-[18px] leading-[1.3] md:text-[21px]">
-                          {category.title}
-                        </h3>
-                      </Reveal>
+                      <h3 className="m-0 min-h-[2.6em] text-[18px] font-normal leading-[1.3] text-navy transition-colors group-hover:text-gold md:text-[21px]">
+                        {category.title}
+                      </h3>
 
-                      <Reveal
-                        delay={base + 350}
-                        y={14}
-                        className="flex flex-1 flex-col"
-                      >
-                        <p className="text-cool text-[12px] leading-[1.6] mt-1.5 mb-4 md:mb-[25px] line-clamp-3 min-h-[4.8em] md:text-[13px] md:leading-[1.7] md:mt-2 md:min-h-[5.1em]">
-                          {category.text}
-                        </p>
+                      <p className="mb-5 mt-2 line-clamp-4 text-[12px] leading-[1.7] text-cool md:text-[13px]">
+                        {category.text}
+                      </p>
 
-                        <button
-                          type="button"
-                          className="w-full cursor-pointer mt-auto pt-2 md:mt-auto rounded-[8px] border-0 bg-navy py-2.5 md:py-3 text-[10px] font-bold uppercase tracking-[.12em] text-white transition-colors hover:bg-navy/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-                          onClick={onOpenInquiry}
-                        >
-                          Enquire Now
-                        </button>
-                      </Reveal>
+                      <div className="mt-auto">
+                        <span className="inline-flex w-full items-center justify-center gap-2 rounded-[8px] border border-navy bg-navy py-3 text-xs font-medium title tracking-[.1em] text-white transition-all duration-200 group-hover:border-gold group-hover:bg-gold group-hover:text-navy">
+                          View Products
+                          <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                        </span>
+                      </div>
                     </div>
-                  </article>
+                  </Link>
                 </Reveal>
               );
             })}

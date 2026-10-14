@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-import { siteImages } from '@/components/site/site-images';
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { siteImages } from "@/components/site/site-images";
 
 interface MetricProps {
   number: string;
@@ -43,51 +43,51 @@ export interface HeroSectionProps {
   slides?: HeroSlide[];
 }
 
-const SLIDE_DURATION = 3000;
+const SLIDE_DURATION = 5000;
 
 const defaultSlides = (heroImage: string): HeroSlide[] => [
   {
-    image: heroImage,
+    image: "hero/hero-1.png",
     heading: (
       <>
-        Handmade rugs for{' '}
-        <em className="text-gold not-italic">beautiful</em> spaces.
+        Handmade rugs for <em className="text-gold not-italic">beautiful</em>{" "}
+        spaces.
       </>
     ),
     description:
-      'Carefully woven by hand using natural wool and silk. Designed to fit your home, hotel, or office perfectly.',
-    primaryText: 'Explore Collections',
-    secondaryText: 'Inquire About a Custom Rug',
+      "Carefully woven by hand using natural wool and silk. Designed to fit your home, hotel, or office perfectly.",
+    primaryText: "Explore Collections",
+    secondaryText: "Inquire About a Custom Rug",
   },
   {
-    image:
-      'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=2000&q=85',
+    image: "hero/hero-4.png",
     heading: (
       <>
-        Thoughtful design.{' '}
-        <em className="text-gold not-italic">Timeless</em> interiors.
+        Thoughtful design. <em className="text-gold not-italic">Timeless</em>{" "}
+        interiors.
       </>
     ),
     description:
-      'Discover handcrafted rugs that bring warmth, texture, and understated elegance to every room.',
-    primaryText: 'Discover Our Rugs',
-    secondaryText: 'Create Your Custom Rug',
+      "Discover handcrafted rugs that bring warmth, texture, and understated elegance to every room.",
+    primaryText: "Discover Our Rugs",
+    secondaryText: "Create Your Custom Rug",
   },
   {
-    image:
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2000&q=85',
+    image: "hero/hero-2.png",
     heading: (
       <>
-        Made by hand.{' '}
-        <em className="text-gold not-italic">Made for you.</em>
+        Made by hand. <em className="text-gold not-italic">Made for you.</em>
       </>
     ),
     description:
-      'From carefully chosen materials to refined finishes, find a rug that feels uniquely yours.',
-    primaryText: 'View Collections',
-    secondaryText: 'Design Your Own Rug',
+      "From carefully chosen materials to refined finishes, find a rug that feels uniquely yours.",
+    primaryText: "View Collections",
+    secondaryText: "Design Your Own Rug",
   },
 ];
+
+const arrowClassName =
+  "absolute z-20 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-0 bg-white/25 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-white/45 cursor-pointer bottom-3 md:bottom-auto md:top-1/2 md:-translate-y-1/2";
 
 export function HeroSection({
   onOpenInquiry,
@@ -119,6 +119,10 @@ export function HeroSection({
     setProgressKey((current) => current + 1);
   };
 
+  const goPrev = () =>
+    goToSlide((activeSlide - 1 + heroSlides.length) % heroSlides.length);
+  const goNext = () => goToSlide((activeSlide + 1) % heroSlides.length);
+
   const currentSlide = heroSlides[activeSlide];
 
   return (
@@ -128,7 +132,7 @@ export function HeroSection({
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-[5%] py-24 md:py-28"
+      className="relative min-h-screen flex items-center justify-start overflow-hidden pl-0 pr-6 md:pl-[max(5%,72px)] md:pr-[5%] pt-24 pb-28 md:pt-36 md:pb-28"
     >
       {/* Smooth Background Image Slider */}
       <AnimatePresence initial={false}>
@@ -147,14 +151,14 @@ export function HeroSection({
         />
       </AnimatePresence>
 
-      {/* Dark Black Gradient Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.48)_48%,rgba(0,0,0,0.22)_100%)]" />
+      {/* Left Side Overlay: text ke peeche dark, right ki taraf fade */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.42)_45%,rgba(0,0,0,0)_80%)]" />
 
-      {/* Centered Animated Content */}
+      {/* Left-aligned Animated Content */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={activeSlide}
-          className="relative z-10 w-full max-w-[1000px] mx-auto flex flex-col items-center text-center"
+          className="relative z-10 w-full max-w-[1400px] mx-auto pl-6 flex flex-col items-start text-left [text-shadow:0_2px_18px_rgba(0,0,0,0.4)]"
           initial="hidden"
           animate="visible"
           exit="exit"
@@ -182,7 +186,7 @@ export function HeroSection({
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[850px] my-4 md:my-6 text-white font-manrope font-semibold text-[48px] md:text-[clamp(47px,7vw,84px)] leading-[1.05] tracking-[-0.04em]"
+            className="max-w-[700px] my-4 md:my-5 text-white font-manrope font-light text-4xl leading-[1.2] tracking-[-0.02em]"
           >
             {currentSlide.heading}
           </motion.h1>
@@ -198,7 +202,7 @@ export function HeroSection({
               duration: 0.65,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[570px] m-0 text-white/80 text-[15px] md:text-[17px] leading-[1.7]"
+            className="max-w-[480px] m-0 text-white/70 font-light text-sm leading-[1.7]"
           >
             {currentSlide.description}
           </motion.p>
@@ -214,11 +218,11 @@ export function HeroSection({
               duration: 0.6,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="flex flex-wrap justify-center items-center gap-3 mt-[30px]"
+            className="flex flex-wrap justify-start items-center gap-3 mt-6 md:mt-[26px]"
           >
             <a
               href="#products"
-              className="inline-flex items-center justify-center min-h-[50px] px-6 text-white bg-navy text-[10px] font-bold tracking-[.13em] uppercase no-underline transition-all duration-200 hover:-translate-y-0.5 cursor-pointer rounded-[8px]"
+              className="inline-flex items-center justify-center min-h-[44px] px-5 text-white bg-navy text-[10px] font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:-translate-y-0.5 cursor-pointer rounded-[8px] [text-shadow:none]"
             >
               {currentSlide.primaryText}
             </a>
@@ -226,14 +230,36 @@ export function HeroSection({
             <button
               type="button"
               onClick={onOpenInquiry}
-              className="inline-flex items-center justify-center gap-2 min-h-[50px] px-6 text-white bg-white/10 backdrop-blur-sm border border-white/40 text-[10px] font-bold tracking-[.13em] uppercase no-underline transition-all duration-200 hover:border-gold hover:text-gold cursor-pointer rounded-[8px]"
+              className="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 text-white bg-white/10 backdrop-blur-sm border border-white/40 text-[10px] font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:border-gold hover:text-gold cursor-pointer rounded-[8px] [text-shadow:none]"
             >
               {currentSlide.secondaryText}
-              <ArrowUpRight size={16} />
+              <ArrowUpRight size={15} />
             </button>
           </motion.div>
         </motion.div>
       </AnimatePresence>
+
+      {/* Side Arrows (mobile par neeche, dots ke dono taraf) */}
+      {heroSlides.length > 1 && (
+        <>
+          <button
+            type="button"
+            aria-label="Previous slide"
+            onClick={goPrev}
+            className={`${arrowClassName} left-3 md:left-6`}
+          >
+            <ChevronLeft size={22} strokeWidth={1.5} />
+          </button>
+          <button
+            type="button"
+            aria-label="Next slide"
+            onClick={goNext}
+            className={`${arrowClassName} right-3 md:right-6`}
+          >
+            <ChevronRight size={22} strokeWidth={1.5} />
+          </button>
+        </>
+      )}
 
       {/* Progressive Slide Indicators */}
       {heroSlides.length > 1 && (
@@ -245,7 +271,7 @@ export function HeroSection({
               aria-label={`Go to slide ${index + 1}`}
               aria-current={activeSlide === index ? "true" : undefined}
               onClick={() => goToSlide(index)}
-              className={`relative overflow-hidden cursor-pointer transition-all duration-300 rounded-full ${
+              className={`relative overflow-hidden cursor-pointer transition-all duration-500 rounded-full ${
                 activeSlide === index
                   ? "h-[4px] w-12 md:w-16 bg-white/30"
                   : "h-2 w-2 bg-white/60 hover:bg-white"

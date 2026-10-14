@@ -1,6 +1,8 @@
 export * from './section-intro';
 export * from './hero-section';
 export * from './categories-section';
+export * from './find-your-rug-section';
+export * from './find-by-room-section';
 export * from './featured-designs-section';
 export * from './process-section';
 export * from './projects-section';
@@ -9,3 +11,4 @@ export * from './header-section';
 export * from './footer-section';
 export * from './quick-actions';
 export * from './inquiry-modal';
+export * from './recent-blogs-section';

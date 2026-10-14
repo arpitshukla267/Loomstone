@@ -1,6 +1,8 @@
 import './globals.css';
 import './pages.css';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { PageProgress } from '@/components/ui/page-progress';
 
 export const metadata: Metadata = {
   title: 'Loomstone | Handcrafted & Bespoke Luxury Carpets',
@@ -10,7 +12,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-ash text-ink font-sans antialiased">{children}</body>
+      <body className="bg-ash text-ink font-sans antialiased">
+        <Suspense fallback={null}>
+          <PageProgress />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }

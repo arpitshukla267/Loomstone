@@ -10,7 +10,7 @@ const YEARS = "03";
 
 /* shared look of the big number */
 const digitBase: React.CSSProperties = {
-  fontSize: "clamp(130px, 17vw, 250px)",
+  fontSize: "clamp(150px, 18vw, 450px)",
   lineHeight: 1,
   letterSpacing: "-0.04em",
 };
@@ -67,10 +67,6 @@ export default function OurStorySection() {
       {/* ================= Story ================= */}
       <div>
         <Reveal>
-          <span className="flex items-center gap-3.5 text-[10px] font-semibold tracking-[0.18em] text-[#e8a21c]">
-            OUR STORY
-            <i className="h-px w-14 shrink-0 bg-[#e8a21c]/50" />
-          </span>
           <h2
             className="font-manrope mb-5 mt-4 text-[32px] font-semibold leading-[1.15] text-[#2a2a6b] md:text-[44px]"
           >

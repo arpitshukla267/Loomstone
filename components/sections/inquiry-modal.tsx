@@ -6,10 +6,15 @@ import { ArrowRight, Check, X } from 'lucide-react';
 export interface InquiryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  productName?: string;
+  productDetails?: string;
 }
 
-export function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
+export function InquiryModal({ isOpen, onClose, productName, productDetails }: InquiryModalProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [notes, setNotes] = useState(
+    productName ? `Inquiring about ${productName}. Please share lead times, custom sizes, and swatches.` : ""
+  );
 
   if (!isOpen) return null;
 
@@ -73,8 +78,14 @@ export function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
               DIRECT ARCHITECTURAL COMMISSION
             </span>
             <h2 className="mt-3 mb-2.5 text-navy font-manrope font-normal text-[26px] md:text-[32px] capitalize">
-              Initiate project consultation
+              {productName ? `Inquire: ${productName}` : "Initiate project consultation"}
             </h2>
+            {productName && (
+              <div className="mb-3 inline-flex items-center gap-2 rounded-md bg-gold/15 px-3 py-1.5 text-xs font-semibold text-navy">
+                Selected Piece: <span className="font-bold text-navy">{productName}</span>
+                {productDetails && <span className="text-cool/80">({productDetails})</span>}
+              </div>
+            )}
             <p className="m-0 text-cool text-[13px] leading-[1.7]">
               Complete the spatial brief below. Our design directors will
               respond with yarn recommendations, custom scale renderings, and an
@@ -83,7 +94,7 @@ export function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
             <form onSubmit={handleSubmit} className="flex flex-col gap-[17px] mt-[26px]">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <label className="flex flex-col gap-[7px] text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                  Architect / Specifier Name
+                  Architect / Client Name
                   <input
                     required
                     placeholder="e.g. Elena Rostova"
@@ -91,7 +102,7 @@ export function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                   />
                 </label>
                 <label className="flex flex-col gap-[7px] text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                  Design Practice / Studio
+                  Design Practice / Private Client
                   <input
                     required
                     placeholder="e.g. Studio Rostova Architecture"
@@ -108,17 +119,19 @@ export function InquiryModal({ isOpen, onClose }: InquiryModalProps) {
                   />
                 </label>
                 <label className="flex flex-col gap-[7px] text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                  Approximate Dimensions
+                  Approximate Dimensions / Size
                   <input
-                    placeholder="e.g. 5.5m × 4.0m"
+                    placeholder="e.g. 8x10 ft or 5.5m × 4.0m"
                     className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
                   />
                 </label>
               </div>
               <label className="flex flex-col gap-[7px] text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                Project Notes / Architectural Context
+                Project Notes / Custom Requirements
                 <textarea
                   rows={4}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
                   placeholder="Share room dimensions, lighting conditions, and chromatic constraints..."
                   className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
                 />

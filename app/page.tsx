@@ -5,11 +5,14 @@ import { Check } from 'lucide-react';
 import {
   HeaderSection,
   HeroSection,
+  FindYourRugSection,
+  FindByRoomSection,
   CategoriesSection,
   FeaturedDesignsSection,
   ProcessSection,
   ProjectsSection,
   FaqSection,
+  RecentBlogsSection,
   FooterSection,
   QuickActions,
   InquiryModal,
@@ -32,11 +35,15 @@ export default function Home() {
     <main className="overflow-hidden bg-ash text-ink font-sans">
       <HeaderSection onShowToast={showToast} activePage="Home" />
       <HeroSection onOpenInquiry={openInquiry} />
+      {/* <FindYourRugSection /> */}
+      <FindByRoomSection />
+      <div className='text-4xl text-center'>banner</div>
       <CategoriesSection onOpenInquiry={openInquiry} onShowToast={showToast} />
       <FeaturedDesignsSection onOpenInquiry={openInquiry} />
-      <ProcessSection onOpenInquiry={openInquiry} />
-      <ProjectsSection onOpenInquiry={openInquiry} />
+      {/* <ProcessSection onOpenInquiry={openInquiry} /> */}
+      {/* <ProjectsSection onOpenInquiry={openInquiry} /> */}
       <FaqSection />
+      <RecentBlogsSection />
       <FooterSection onShowToast={showToast} />
 
       <QuickActions />

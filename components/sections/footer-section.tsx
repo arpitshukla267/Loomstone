@@ -6,6 +6,13 @@ import Link from 'next/link';
 
 const quickLinks = [
   { label: 'Home', href: '/' },
+  { label: 'Products Archive', href: '/products' },
+  { label: 'About Atelier', href: '/about' },
+  { label: 'Projects & Contracts', href: '/projects' },
+  { label: 'Inspiration Gallery', href: '/inspiration' },
+  { label: 'Blogs & Stories', href: '/blogs' },
+  { label: 'Direct Consultation', href: '/contact' },
+  { label: 'Atelier CMS Portal', href: '/admin' },
 ];
 
 const iconClass =
@@ -49,11 +56,11 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
         <div>
           <Link className="inline-flex items-center mb-[18px]" href="/">
             <Image
-              src="/logo.jpeg"
+              src="/logo-horizontal.png"
               alt="Loomstone"
               width={140}
               height={45}
-              className="h-16 w-auto object-contain rounded bg-white/10 p-1"
+              className="h-16 w-auto object-contain rounded bg-white"
             />
           </Link>
           <p className="text-[12px] leading-[1.8] text-line max-w-[360px]">

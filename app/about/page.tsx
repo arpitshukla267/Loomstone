@@ -15,6 +15,7 @@ const SINCE = "";
 
 const carpetImage = "/carpet.jpeg";
 const founderImage = "/founder.jpeg";
+const heroImage = "/about.png";
 
 const visionPoints = [
   "Pairing the richness of wool with the resilience of modern fibers",
@@ -78,190 +79,44 @@ function Eyebrow({
 export default function AboutPage() {
   return (
     <PageFrame active="About">
-      <div
-        className="font-poppins min-h-screen overflow-x-hidden bg-[#f4f9fc] text-[15px] leading-relaxed text-slate-600 pt-20"
-      >
+      <div className="font-poppins min-h-screen overflow-x-hidden bg-[#f4f9fc] text-[15px] leading-relaxed text-slate-600 pt-20">
         <main>
-          {/* Hero */}
-          <section className="mx-auto grid max-w-[85vw] items-start gap-12 pb-12 pt-12 lg:grid-cols-[1fr_300px] lg:pt-[72px]">
-            <div>
-              <Reveal>
-                <Eyebrow line>
-                  ABOUT {COMPANY.toUpperCase()}{" "}
-                  {SINCE ? `• FOUNDED IN ${SINCE}` : ""}
-                </Eyebrow>
-              </Reveal>
+          {/* Hero: centered title on background image */}
+          <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px]">
+            <Image
+              src={heroImage}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+            {/* Overlay for text readability */}
+            <div className="absolute inset-0 bg-[#000000]/50" />
+
+            <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 text-center">
               <Reveal delay={100}>
-                <h1
-                  className="font-manrope font-semibold mb-6 mt-5 text-[40px] leading-[1.1] text-[#2a2a6b] md:text-6xl"
-                >
+                <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl">
                   The Art of{" "}
-                  <em className="block font-semibold text-[#e8a21c]">
+                  <em className="block font-semibold not-italic text-[#e8a21c]">
                     Woven Carpets
                   </em>
                 </h1>
               </Reveal>
-              <Reveal delay={200}>
-                <p className="max-w-lg">
-                  {COMPANY} brings together timeless carpet-weaving tradition
-                  and modern innovation. We create luxurious, durable and fully
-                  customizable carpets for homes, hotels and commercial spaces.
-                </p>
-              </Reveal>
             </div>
-            {/* <Reveal delay={150}>
-              <aside className="rounded-r-xl border-l-[3px] border-[#e8a21c] bg-[#e8eef1] px-5 py-[18px]">
-                <Eyebrow>WHAT WE DO</Eyebrow>
-                <p className="mb-[18px] mt-2.5 text-xs text-[#2a2a6b]">
-                  Axminster Carpets • Bespoke Designs • Hospitality &amp;
-                  Residential Interiors
-                </p>
-                <div className="flex justify-between border-t border-[#dfe6ea] pt-3 text-[11px]">
-                  <strong className="text-[10px] tracking-widest text-[#2a2a6b]">
-                    EST. 1984
-                  </strong>
-                  <span>{COMPANY}</span>
-                </div>
-              </aside>
-            </Reveal> */}
           </section>
 
-          {/* Feature */}
-          {/* <section className="mx-auto grid max-w-[85vw] items-center pb-16 lg:grid-cols-[1.35fr_1fr]">
-            <Reveal>
-              <div className="relative h-full min-h-[580px] w-full overflow-hidden rounded-xl">
-                <Image
-                  src={carpetImage}
-                  alt={`${COMPANY} carpet in an elegant interior`}
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 52vw, 90vw"
-                  className="object-cover"
-                />
-              </div>
-            </Reveal>
-            <Reveal
-              delay={150}
-              className="relative z-10 mx-3 -mt-6 lg:-ml-6 lg:mr-0 lg:mt-0"
-            >
-              <div className="rounded-xl border-t-[3px] border-[#e8a21c] bg-white p-8 shadow-[0_12px_32px_rgba(42,42,107,0.08)]">
-                <Eyebrow>EVERY SPACE, ELEVATED</Eyebrow>
-                <h2
-                  className="font-manrope mb-3.5 mt-3.5 text-[26px] font-medium leading-tight text-[#2a2a6b]"
-                >
-                  Carpets Designed as the Foundation of Every Room
-                </h2>
-                <p className="text-sm">
-                  Axminster carpets are woven with rich textures and intricate
-                  designs. Each one is crafted by weaving individual tufts of a
-                  wool and nylon blend through a backing, giving you patterns
-                  that stay beautiful and a finish that lasts for decades.
-                </p>
-                <div className="mt-5 flex items-center gap-2 text-[10px] font-semibold tracking-widest text-[#2a2a6b]">
-                  <Check size={15} className="text-[#e8a21c]" /> WOOL / NYLON
-                  BLEND CONSTRUCTION
-                </div>
-              </div>
-            </Reveal>
-          </section> */}
           <OurStorySection />
 
           {/* ================= Founder ================= */}
           <FounderSection />
 
-          {/* Vision & Mission */}
-          {/* <section className="bg-[#e8eef1]">
-            <div className="mx-auto max-w-[90vw] py-16">
-              <Reveal>
-                <div className="mb-7">
-                  <Eyebrow line>PURPOSE &amp; DIRECTION</Eyebrow>
-                </div>
-              </Reveal>
-              <div className="grid items-stretch gap-7 md:grid-cols-2">
-                {[
-                  {
-                    icon: Eye,
-                    tag: "OUR OUTLOOK",
-                    title: "Our Vision",
-                    text: "To be the most trusted name in custom carpets, bringing luxury, comfort and lasting design to every space.",
-                    points: visionPoints,
-                    foot: "PILLAR I • LONGEVITY",
-                    border: "border-[#2a2a6b]",
-                    iconColor: "text-[#2a2a6b]",
-                  },
-                  {
-                    icon: Hammer,
-                    tag: "OUR PROMISE",
-                    title: "Our Mission",
-                    text: "To create durable, beautiful and sustainable carpets tailored to every client’s interiors.",
-                    points: missionPoints,
-                    foot: "PILLAR II • DESIGN & RESPONSIBILITY",
-                    border: "border-[#e8a21c]",
-                    iconColor: "text-[#e8a21c]",
-                  },
-                ].map(
-                  (
-                    {
-                      icon: Icon,
-                      tag,
-                      title,
-                      text,
-                      points,
-                      foot,
-                      border,
-                      iconColor,
-                    },
-                    i,
-                  ) => (
-                    <Reveal key={title} delay={i * 120} className="h-full">
-                      <article
-                        className={`flex h-full flex-col rounded-xl border border-t-[3px] bg-white p-8 md:p-10 ${border}`}
-                      >
-                        <span
-                          className={`mb-6 flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#e8eef1] ${iconColor}`}
-                        >
-                          <Icon size={18} />
-                        </span>
-                        <Eyebrow>{tag}</Eyebrow>
-                        <h3
-                          className="font-manrope mb-4 mt-3 text-[28px] font-medium leading-tight text-[#2a2a6b]"
-                        >
-                          {title}
-                        </h3>
-                        <p className="text-base leading-relaxed">{text}</p>
-                        <ul className="mb-8 mt-6 flex-1 space-y-3">
-                          {points.map((t) => (
-                            <li
-                              key={t}
-                              className="flex items-start gap-2.5 text-[13px]"
-                            >
-                              <Check
-                                size={14}
-                                className="mt-[3px] shrink-0 text-[#e8a21c]"
-                              />
-                              <span>{t}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        <footer className="border-t border-[#dfe6ea] pt-4 text-[10px] font-semibold tracking-[0.14em] text-[#e8a21c]">
-                          {foot}
-                        </footer>
-                      </article>
-                    </Reveal>
-                  ),
-                )}
-              </div>
-            </div>
-          </section> */}
           <VisionMissionSection />
 
           {/* Pillars */}
           <section className="mx-auto max-w-[90vw] py-16">
             <Reveal>
-              <Eyebrow center>WHAT SETS US APART</Eyebrow>
-              <h2
-                className="font-manrope mb-2.5 mt-3.5 text-center text-3xl font-medium text-[#2a2a6b] md:text-4xl"
-              >
+              <h2 className="font-manrope mb-2.5 mt-3.5 text-center text-3xl font-medium text-[#2a2a6b] md:text-4xl">
                 The Four Pillars of Craftsmanship
               </h2>
               <p className="mx-auto mb-10 max-w-md text-center text-[13px]">
@@ -273,14 +128,10 @@ export default function AboutPage() {
               {pillars.map((p, i) => (
                 <Reveal key={p.n} delay={i * 100} className="h-full">
                   <article className="flex h-full flex-col rounded-xl border border-[#dfe6ea] bg-[#e8eef1] px-5 py-6">
-                    <span
-                      className="font-manrope mb-2.5 text-[#e8a21c]"
-                    >
+                    <span className="font-manrope mb-2.5 text-[#e8a21c]">
                       {p.n}
                     </span>
-                    <h3
-                      className="font-manrope mb-3 text-xl font-medium leading-tight text-[#2a2a6b]"
-                    >
+                    <h3 className="font-manrope mb-3 text-xl font-medium leading-tight text-[#2a2a6b]">
                       {p.title}
                     </h3>
                     <p className="flex-1 text-xs">{p.text}</p>

@@ -94,10 +94,6 @@ export default function ProjectsPage() {
       {/* Inner Hero */}
       <section className="bg-white flex flex-col lg:flex-row lg:items-end justify-between gap-10 lg:gap-[60px] min-h-auto md:min-h-[420px] pt-[130px] md:pt-[170px] pb-[55px] md:pb-[70px] px-6 md:px-[5%]">
         <div className="max-w-[800px]">
-          <span className="inline-flex items-center gap-2 text-gold text-[10px] font-bold tracking-[.14em] uppercase">
-            <i className="h-px w-8 bg-gold" />
-            Selected work
-          </span>
           <h1 className="my-4 md:my-5 text-navy font-manrope font-semibold text-[45px] md:text-[clamp(42px,6vw,72px)] leading-[1.08] tracking-[-0.03em]">
             Rugs made for{" "}
             <em className="text-gold not-italic">the life of a room.</em>

@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  Suspense,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -8,6 +10,9 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import {
   AnimatePresence,
   MotionConfig,
@@ -25,56 +30,57 @@ import {
   Tag,
   X,
   ArrowUpDown,
+  Search,
+  MessageSquare,
+  Sparkles,
+  Maximize2,
+  RotateCcw,
   type LucideIcon,
 } from "lucide-react";
-import { PageFrame, siteImages } from "@/components/site/site-chrome";
+import { PageFrame } from "@/components/site/site-chrome";
 import { Reveal } from "@/components/ui/reveal";
+import { InquiryModal } from "@/components/sections/inquiry-modal";
+import { defaultCategories } from "@/data/defaultCategories";
+import { getAllProducts, type Product } from "@/data/products";
 
-const products = [
-  {
-    name: "Kashmiri Botanical Medallion",
-    category: "Hand-knotted",
-    image: siteImages.wool,
-  },
-  {
-    name: "Ziegler Ivory Serapi",
-    category: "Hand-knotted",
-    image: siteImages.relief,
-  },
-  {
-    name: "Highland Mohair Rib",
-    category: "Relief",
-    image: siteImages.mono,
-  },
-  {
-    name: "Lapis Lazuli Raw Silk",
-    category: "Botanical dye",
-    image: siteImages.flat,
-  },
-  {
-    name: "Ochre Horizon",
-    category: "Botanical dye",
-    image: siteImages.wool,
-  },
-  {
-    name: "Travertine Strata",
-    category: "Relief",
-    image: siteImages.relief,
-  },
+const heroImage = "/inventory.png";
+
+const ROOM_OPTIONS = [
+  "All",
+  "Living Room",
+  "Bedroom",
+  "Dining Room",
+  "Hallway & Entryway",
+  "Office & Study",
 ];
 
-const categories = ["All", "Hand-knotted", "Relief", "Botanical dye"];
+const STYLE_OPTIONS = [
+  "All",
+  "Modern Minimalist",
+  "Heritage & Vintage",
+  "Geometric & Linear",
+  "Organic & Abstract",
+];
+
+const SIZE_OPTIONS = [
+  "All",
+  "5 x 8 ft",
+  "6 x 9 ft",
+  "8 x 10 ft",
+  "9 x 12 ft",
+  "Custom Size",
+];
 
 type SortOption = "featured" | "name-asc" | "name-desc" | "category";
 
 const sortOptions: { value: SortOption; label: string; icon: LucideIcon }[] = [
-  { value: "featured", label: "Featured", icon: TrendingUp },
+  { value: "featured", label: "Featured & Curated", icon: TrendingUp },
   { value: "name-asc", label: "Name: A to Z", icon: ArrowDownAZ },
   { value: "name-desc", label: "Name: Z to A", icon: ArrowUpZA },
-  { value: "category", label: "Category", icon: Tag },
+  { value: "category", label: "Technique / Category", icon: Tag },
 ];
 
-/* ---------- Custom sort dropdown with enter / exit animation (desktop) ---------- */
+/* ---------- Sort dropdown ---------- */
 const menuVariants = {
   hidden: { opacity: 0, y: -8, scale: 0.97 },
   show: {
@@ -113,10 +119,9 @@ function SortSelect({
   const rootRef = useRef<HTMLDivElement>(null);
 
   const selectedIndex = sortOptions.findIndex((o) => o.value === value);
-  const selected = sortOptions[selectedIndex];
+  const selected = sortOptions[selectedIndex] || sortOptions[0];
   const SelectedIcon = selected.icon;
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const onDown = (e: MouseEvent) => {
@@ -157,7 +162,6 @@ function SortSelect({
           type="button"
           aria-haspopup="listbox"
           aria-expanded={open}
-          aria-labelledby="product-sort-label"
           onClick={() => {
             setActive(selectedIndex);
             setOpen((o) => !o);
@@ -181,7 +185,6 @@ function SortSelect({
           {open && (
             <motion.ul
               role="listbox"
-              aria-labelledby="product-sort-label"
               variants={menuVariants}
               initial="hidden"
               animate="show"
@@ -223,11 +226,7 @@ function SortSelect({
   );
 }
 
-/* ---------- Sticky column that doesn't depend on ancestor overflow ----------
-   CSS `position: sticky` silently fails when any parent has overflow
-   hidden/auto (common in page wrappers). This version uses fixed positioning
-   driven by scroll, so it works regardless. It sticks below the header, then
-   rests at the bottom of its column when the products end. */
+/* ---------- Sticky column ---------- */
 function useStickyColumn(topOffset = 96) {
   const columnRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -260,21 +259,18 @@ function useStickyColumn(topOffset = 96) {
       col.style.minHeight = `${height}px`;
 
       if (rect.top >= topOffset) {
-        // Not reached yet: normal flow
         inner.style.position = "";
         inner.style.top = "";
         inner.style.bottom = "";
         inner.style.left = "";
         inner.style.width = "";
       } else if (rect.bottom - height <= topOffset) {
-        // Products ended: rest at the bottom of the column
         inner.style.position = "absolute";
         inner.style.top = "";
         inner.style.bottom = "0px";
         inner.style.left = "0px";
         inner.style.width = `${rect.width}px`;
       } else {
-        // Stuck while scrolling
         inner.style.position = "fixed";
         inner.style.top = `${topOffset}px`;
         inner.style.bottom = "";
@@ -305,55 +301,17 @@ function useStickyColumn(topOffset = 96) {
   return { columnRef, innerRef };
 }
 
-/* ---------- Page scroll lock (works on iOS Safari too) ----------
-   Pins the body in place and restores the exact scroll position on unlock. */
-function useBodyScrollLock(locked: boolean) {
-  useEffect(() => {
-    if (!locked) return;
-
-    const body = document.body;
-    const scrollY = window.scrollY;
-    const prev = {
-      position: body.style.position,
-      top: body.style.top,
-      left: body.style.left,
-      right: body.style.right,
-      width: body.style.width,
-      overflow: body.style.overflow,
-    };
-
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
-    body.style.overflow = "hidden";
-
-    return () => {
-      body.style.position = prev.position;
-      body.style.top = prev.top;
-      body.style.left = prev.left;
-      body.style.right = prev.right;
-      body.style.width = prev.width;
-      body.style.overflow = prev.overflow;
-      window.scrollTo({ top: scrollY, behavior: "instant" as ScrollBehavior });
-    };
-  }, [locked]);
-}
-
-/* ---------- Mobile bottom sheet ---------- */
+/* ---------- Mobile Sheet ---------- */
 function BottomSheet({
   open,
   title,
   onClose,
   children,
-  footer,
 }: {
   open: boolean;
   title: string;
   onClose: () => void;
   children: ReactNode;
-  footer?: ReactNode;
 }) {
   const dragControls = useDragControls();
 
@@ -370,7 +328,6 @@ function BottomSheet({
     <AnimatePresence>
       {open && (
         <>
-          {/* Overlay */}
           <motion.div
             key="sheet-overlay"
             aria-hidden="true"
@@ -382,7 +339,6 @@ function BottomSheet({
             className="fixed inset-0 z-50 bg-black/40 md:hidden"
           />
 
-          {/* Sheet */}
           <motion.div
             key="sheet-panel"
             role="dialog"
@@ -404,9 +360,8 @@ function BottomSheet({
             onDragEnd={(_, info) => {
               if (info.offset.y > 100 || info.velocity.y > 500) onClose();
             }}
-            className="fixed inset-x-0 bottom-0 z-50 flex max-h-[85vh] flex-col rounded-t-2xl bg-white shadow-[0_-12px_40px_rgba(42,41,103,0.18)] md:hidden"
+            className="fixed inset-x-0 bottom-0 z-50 flex max-h-[88vh] flex-col rounded-t-2xl bg-white shadow-[0_-12px_40px_rgba(42,41,103,0.18)] md:hidden"
           >
-            {/* Drag handle */}
             <div
               onPointerDown={(e) => dragControls.start(e)}
               className="flex shrink-0 cursor-grab touch-none justify-center pb-1 pt-3"
@@ -414,7 +369,6 @@ function BottomSheet({
               <span className="h-1 w-10 rounded-full bg-[#dbe1e5]" />
             </div>
 
-            {/* Header */}
             <div
               onPointerDown={(e) => dragControls.start(e)}
               className="flex shrink-0 touch-none items-center justify-between border-b border-line px-5 pb-3 pt-2"
@@ -425,7 +379,6 @@ function BottomSheet({
               <button
                 type="button"
                 aria-label="Close"
-                onPointerDown={(e) => e.stopPropagation()}
                 onClick={onClose}
                 className="flex h-9 w-9 items-center justify-center rounded-full text-navy transition-colors hover:bg-ash"
               >
@@ -433,19 +386,9 @@ function BottomSheet({
               </button>
             </div>
 
-            {/* Content */}
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
               {children}
             </div>
-
-            {/* Footer (optional) */}
-            {footer ? (
-              <div className="shrink-0 border-t border-line px-5 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4">
-                {footer}
-              </div>
-            ) : (
-              <div className="shrink-0 pb-[env(safe-area-inset-bottom)]" />
-            )}
           </motion.div>
         </>
       )}
@@ -453,165 +396,108 @@ function BottomSheet({
   );
 }
 
-/* ---------- Mobile bottom bar (Filter + Sort) and its sheets ---------- */
-function MobileFilterBar({
-  visible,
-  filter,
-  setFilter,
-  sort,
-  setSort,
-}: {
-  visible: boolean;
-  filter: string;
-  setFilter: (value: string) => void;
-  sort: SortOption;
-  setSort: (value: SortOption) => void;
-}) {
-  const [sheet, setSheet] = useState<"filter" | "sort" | null>(null);
+/* ---------- Products Content Component ---------- */
+function ProductsContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  useBodyScrollLock(sheet !== null);
+  // Load products & handle updates from CMS
+  const [productsList, setProductsList] = useState<Product[]>([]);
 
-  // Close the sheet if the viewport grows to desktop
   useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth >= 768) setSheet(null);
+    setProductsList(getAllProducts());
+
+    const handleUpdate = () => {
+      setProductsList(getAllProducts());
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    window.addEventListener("loomstone_products_updated", handleUpdate);
+    return () => {
+      window.removeEventListener("loomstone_products_updated", handleUpdate);
+    };
   }, []);
 
-  const close = () => setSheet(null);
-
-  const barButton =
-    "flex min-h-[48px] flex-1 items-center justify-center gap-2 bg-white px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-navy transition-colors active:bg-ash";
-
-  return (
-    <MotionConfig reducedMotion="user">
-      {/* Bottom bar */}
-      <AnimatePresence>
-        {(visible || sheet !== null) && (
-          <motion.div
-            key="mobile-bar"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-x-0 bottom-0 z-40 flex items-stretch bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(42,41,103,0.08)] md:hidden"
-          >
-            <button
-              type="button"
-              onClick={() => setSheet("filter")}
-              aria-haspopup="dialog"
-              className={barButton}
-            >
-              <SlidersHorizontal size={15} className="text-gold" />
-              Filter
-            </button>
-
-            {/* Divider between the two buttons */}
-            <span aria-hidden="true" className="my-3 w-px shrink-0 bg-line" />
-
-            <button
-              type="button"
-              onClick={() => setSheet("sort")}
-              aria-haspopup="dialog"
-              className={barButton}
-            >
-              <ArrowUpDown size={15} className="text-gold" />
-              Sort
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Filter sheet */}
-      <BottomSheet open={sheet === "filter"} title="Filters" onClose={close}>
-        <h4 className="mb-2 text-[11px] font-semibold text-navy">Category</h4>
-        <div role="radiogroup" aria-label="Category">
-          {categories.map((category) => {
-            const count =
-              category === "All"
-                ? products.length
-                : products.filter((p) => p.category === category).length;
-            const selected = filter === category;
-
-            return (
-              <label
-                key={category}
-                className="flex min-h-[48px] cursor-pointer items-center gap-3 border-b border-line last:border-b-0"
-              >
-                <input
-                  type="radio"
-                  name="product-category-mobile"
-                  value={category}
-                  checked={selected}
-                  onChange={() => {
-                    setFilter(category);
-                    close();
-                  }}
-                  className="h-4 w-4 shrink-0 accent-[#2a2967]"
-                />
-                <span
-                  className={`flex-1 text-[13px] ${
-                    selected ? "font-medium text-navy" : "text-cool"
-                  }`}
-                >
-                  {category}
-                </span>
-                <span className="text-[11px] tabular-nums text-[#9299a0]">
-                  {count}
-                </span>
-              </label>
-            );
-          })}
-        </div>
-      </BottomSheet>
-
-      {/* Sort sheet */}
-      <BottomSheet open={sheet === "sort"} title="Sort by" onClose={close}>
-        <div role="radiogroup" aria-label="Sort by">
-          {sortOptions.map((option) => {
-            const Icon = option.icon;
-            const selected = option.value === sort;
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                onClick={() => {
-                  setSort(option.value);
-                  close();
-                }}
-                className={`flex min-h-[48px] w-full items-center gap-3 border-b border-line text-left text-[13px] last:border-b-0 ${
-                  selected ? "font-medium text-navy" : "text-cool"
-                }`}
-              >
-                <Icon
-                  size={16}
-                  className={selected ? "text-gold" : "text-[#9299a0]"}
-                />
-                <span className="flex-1">{option.label}</span>
-                {selected && <Check size={16} className="text-gold" />}
-              </button>
-            );
-          })}
-        </div>
-      </BottomSheet>
-    </MotionConfig>
-  );
-}
-
-export default function ProductsPage() {
-  const [filter, setFilter] = useState("All");
+  // Filter states
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedRoom, setSelectedRoom] = useState<string>("All");
+  const [selectedStyle, setSelectedStyle] = useState<string>("All");
+  const [selectedSize, setSelectedSize] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [sort, setSort] = useState<SortOption>("featured");
+
+  // Sync initial query params on mount or when URL changes
+  useEffect(() => {
+    const catParam = searchParams.get("category");
+    const weaveParam = searchParams.get("weave");
+    const roomParam = searchParams.get("room");
+    const styleParam = searchParams.get("style");
+    const sizeParam = searchParams.get("size");
+
+    if (catParam) {
+      // Find matching default category or exact string
+      const matched = defaultCategories.find(
+        (c) => c.title.toLowerCase() === catParam.toLowerCase(),
+      );
+      setSelectedCategory(matched ? matched.title : catParam);
+    } else if (weaveParam) {
+      // Map weave to category if applicable
+      const matchedCat = defaultCategories.find((c) =>
+        c.title.toLowerCase().includes(weaveParam.toLowerCase()),
+      );
+      if (matchedCat) {
+        setSelectedCategory(matchedCat.title);
+      } else {
+        setSelectedCategory(weaveParam);
+      }
+    }
+
+    if (roomParam) {
+      const matchedRoom = ROOM_OPTIONS.find(
+        (r) => r.toLowerCase() === roomParam.toLowerCase(),
+      );
+      if (matchedRoom) setSelectedRoom(matchedRoom);
+    }
+
+    if (styleParam) {
+      const matchedStyle = STYLE_OPTIONS.find(
+        (s) => s.toLowerCase() === styleParam.toLowerCase(),
+      );
+      if (matchedStyle) setSelectedStyle(matchedStyle);
+    }
+
+    if (sizeParam) {
+      setSelectedSize(sizeParam);
+    }
+  }, [searchParams]);
+
+  // Filter collapsible state (all closed initially)
+  const [openFilters, setOpenFilters] = useState<{
+    category: boolean;
+    room: boolean;
+    style: boolean;
+    size: boolean;
+  }>({
+    category: false,
+    room: false,
+    style: false,
+    size: false,
+  });
+
+  const toggleFilter = (key: "category" | "room" | "style" | "size") => {
+    setOpenFilters((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // Mobile Bottom Bar state
   const [barVisible, setBarVisible] = useState(false);
-  const { columnRef, innerRef } = useStickyColumn(96);
+  const [mobileSheet, setMobileSheet] = useState<"filter" | "sort" | null>(
+    null,
+  );
+  const { columnRef, innerRef } = useStickyColumn(120);
   const catalogRef = useRef<HTMLElement>(null);
 
-  // Show the mobile bar only while the catalog section is on screen,
-  // so it never covers the hero or the footer.
+  // Inquiry Modal state for quick product enquiries
+  const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
+  const [enquiryProduct, setEnquiryProduct] = useState<Product | null>(null);
+
   useEffect(() => {
     const el = catalogRef.current;
     if (!el) return;
@@ -623,221 +509,627 @@ export default function ProductsPage() {
     return () => observer.disconnect();
   }, []);
 
-  const visibleProducts = useMemo(() => {
-    const filtered = products.filter(
-      (product) => filter === "All" || product.category === filter,
-    );
+  const categoryOptions = useMemo(() => {
+    return ["All", ...defaultCategories.map((c) => c.title)];
+  }, []);
 
+  // Filter logic
+  const filteredProducts = useMemo(() => {
+    let result = productsList;
+
+    // Search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.materials.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.colorPalette.toLowerCase().includes(q) ||
+          p.craftDetails.toLowerCase().includes(q),
+      );
+    }
+
+    // Category filter
+    if (selectedCategory !== "All") {
+      result = result.filter(
+        (p) =>
+          p.category.toLowerCase() === selectedCategory.toLowerCase() ||
+          p.weave.toLowerCase() === selectedCategory.toLowerCase(),
+      );
+    }
+
+    // Room filter
+    if (selectedRoom !== "All") {
+      result = result.filter((p) =>
+        p.rooms.some((r) => r.toLowerCase() === selectedRoom.toLowerCase()),
+      );
+    }
+
+    // Style filter
+    if (selectedStyle !== "All") {
+      result = result.filter(
+        (p) => p.style.toLowerCase() === selectedStyle.toLowerCase(),
+      );
+    }
+
+    // Size filter
+    if (selectedSize !== "All") {
+      result = result.filter((p) =>
+        p.sizes.some((s) =>
+          s.toLowerCase().includes(selectedSize.toLowerCase()),
+        ),
+      );
+    }
+
+    // Sorting
     switch (sort) {
       case "name-asc":
-        return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
-
+        return [...result].sort((a, b) => a.name.localeCompare(b.name));
       case "name-desc":
-        return [...filtered].sort((a, b) => b.name.localeCompare(a.name));
-
+        return [...result].sort((a, b) => b.name.localeCompare(a.name));
       case "category":
-        return [...filtered].sort((a, b) =>
-          a.category.localeCompare(b.category),
-        );
-
+        return [...result].sort((a, b) => a.category.localeCompare(b.category));
+      case "featured":
       default:
-        return filtered;
+        return [...result].sort(
+          (a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0),
+        );
     }
-  }, [filter, sort]);
+  }, [
+    productsList,
+    searchQuery,
+    selectedCategory,
+    selectedRoom,
+    selectedStyle,
+    selectedSize,
+    sort,
+  ]);
+
+  const hasActiveFilters =
+    selectedCategory !== "All" ||
+    selectedRoom !== "All" ||
+    selectedStyle !== "All" ||
+    selectedSize !== "All" ||
+    searchQuery.trim().length > 0;
+
+  const handleResetFilters = () => {
+    setSelectedCategory("All");
+    setSelectedRoom("All");
+    setSelectedStyle("All");
+    setSelectedSize("All");
+    setSearchQuery("");
+  };
+
+  const openInquiryForProduct = (product: Product) => {
+    setEnquiryProduct(product);
+    setInquiryModalOpen(true);
+  };
 
   return (
     <PageFrame active="Products">
       {/* ================= HERO ================= */}
-      <section className="bg-white px-6 pb-12 pt-[125px] md:px-[5%] md:pb-[55px] md:pt-[150px]">
-        <Reveal>
-          <div className="mx-auto flex max-w-[1310px] flex-col justify-between gap-8 md:flex-row md:items-end">
-            <div className="max-w-[850px]">
-              <h1 className="font-manrope text-[42px] font-semibold leading-[1.08] tracking-[-0.035em] text-navy md:text-[clamp(45px,5.5vw,72px)]">
-                Objects for{" "}
-                <em className="text-gold not-italic">considered rooms.</em>
-              </h1>
+      <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px]">
+        <Image
+          src={heroImage}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-right-top"
+        />
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-[#000000]/50" />
 
-              <p className="mt-5 max-w-[650px] text-[14px] leading-[1.8] text-cool md:text-[16px]">
-                Explore a considered library of fibers, textures, and natural
-                color stories. Every design is a starting point for a piece made
-                specifically for your space.
-              </p>
-            </div>
-          </div>
-        </Reveal>
+        <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 translate-y-1/4 text-center">
+          <Reveal delay={100}>
+            <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl">
+              Our{" "}
+              <em className="block font-semibold not-italic text-[#e8a21c]">
+                Collection
+              </em>
+            </h1>
+          </Reveal>
+        </div>
       </section>
 
       {/* ================= PRODUCT CATALOG ================= */}
-      {/* Extra bottom padding on mobile leaves room for the fixed bottom bar */}
       <section
         ref={catalogRef}
-        className="bg-ash px-2 pb-28 pt-12 sm:px-5 md:px-[5%] md:py-[55px]"
+        className="bg-ash px-4 pb-28 pt-8 sm:px-6 md:px-[5%] md:py-12"
       >
         <div className="mx-auto max-w-[1310px]">
-          {/* Catalog Heading */}
-          <Reveal className="px-2">
-            <div className="mb-7 flex flex-col justify-between gap-4 border-b border-line pb-5 sm:flex-row sm:items-end">
-              <div>
-                <h2 className="font-manrope text-[30px] font-normal text-navy md:text-[36px]">
-                  Popular products
-                </h2>
-
-                <p className="mt-2 text-[13px] text-cool">
-                  Ready for custom sizing, colors, and direct inquiry.
-                </p>
+          {/* Top Bar: Search + Results Count + Sorting (desktop) */}
+          <div className="mb-8 rounded-xl border border-[#dbe1e5] bg-white p-4 shadow-sm md:p-5">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              {/* Search Bar */}
+              <div className="relative flex-1 md:max-w-md">
+                <Search
+                  size={16}
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cool/60"
+                />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by rug name, fiber, or color..."
+                  className="w-full rounded-lg border border-line bg-ash/50 py-2.5 pl-10 pr-9 text-[13px] text-ink outline-none transition-colors placeholder:text-cool/50 focus:border-navy focus:bg-white"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-cool/60 hover:text-navy"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
               </div>
 
-              <span className="text-[12px] text-cool">
-                {visibleProducts.length}{" "}
-                {visibleProducts.length === 1 ? "design" : "designs"}
-              </span>
-            </div>
-          </Reveal>
+              {/* Status & Sort */}
+              <div className="flex items-center justify-between gap-4 md:justify-end">
+                <span className="text-[12px] font-medium text-cool">
+                  Showing{" "}
+                  <strong className="text-navy">
+                    {filteredProducts.length}
+                  </strong>{" "}
+                  of {productsList.length} designs
+                </span>
 
-          {/*
-            Central wrapper (2 columns on desktop):
-            - Left: filter sidebar (desktop only), sticky while this wrapper is on screen.
-            - Right: products, scroll with the normal page.
-            On mobile the sidebar is removed; filters and sorting live in the
-            bottom bar + bottom sheets instead.
-          */}
-          <div className="grid grid-cols-1 items-start gap-7 md:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] md:gap-7 lg:gap-10">
-            {/* ================= FILTER SIDEBAR (desktop only) ================= */}
+                <div className="hidden w-[200px] md:block">
+                  <SortSelect value={sort} onChange={setSort} />
+                </div>
+              </div>
+            </div>
+
+            {/* Active Filter Tags */}
+            {hasActiveFilters && (
+              <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-line/60 pt-3">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-cool/70">
+                  Active Filters:
+                </span>
+
+                {selectedCategory !== "All" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
+                    Category: {selectedCategory}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory("All")}
+                      className="hover:text-gold"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                )}
+
+                {selectedRoom !== "All" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
+                    Room: {selectedRoom}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedRoom("All")}
+                      className="hover:text-gold"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                )}
+
+                {selectedStyle !== "All" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
+                    Style: {selectedStyle}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedStyle("All")}
+                      className="hover:text-gold"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                )}
+
+                {selectedSize !== "All" && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
+                    Size: {selectedSize}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedSize("All")}
+                      className="hover:text-gold"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                )}
+
+                {searchQuery.trim() && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
+                    Keyword: &quot;{searchQuery}&quot;
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className="hover:text-gold"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleResetFilters}
+                  className="text-[11px] font-semibold text-gold underline underline-offset-2 hover:text-navy"
+                >
+                  Reset all
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Grid Layout: Desktop Sidebar Filters + Products Grid */}
+          <div className="grid grid-cols-1 items-start gap-7 md:grid-cols-[280px_minmax(0,1fr)] lg:gap-8">
+            {/* ================= DESKTOP FILTER SIDEBAR ================= */}
             <div
               ref={columnRef}
               className="relative hidden min-w-0 self-stretch md:block"
             >
-              <div ref={innerRef} className="z-20 w-full">
-                <aside className="rounded-xl border border-[#dbe1e5] bg-white p-5 md:p-6">
-                  <div className="flex items-center gap-2 border-b border-line pb-4">
-                    <SlidersHorizontal size={17} className="text-navy" />
-
-                    <h3 className="text-[12px] font-semibold uppercase tracking-[0.1em] text-navy">
-                      Filters
-                    </h3>
-                  </div>
-
-                  {/* Category Filters */}
-                  <div className="border-b border-line py-5">
-                    <h4 className="mb-4 text-[11px] font-semibold text-navy">
-                      Category
-                    </h4>
-
-                    <div className="space-y-3.5">
-                      {categories.map((category) => {
-                        const count =
-                          category === "All"
-                            ? products.length
-                            : products.filter(
-                                (product) => product.category === category,
-                              ).length;
-
-                        return (
-                          <label
-                            key={category}
-                            className="flex cursor-pointer items-center gap-3"
-                          >
-                            <input
-                              type="radio"
-                              name="product-category"
-                              value={category}
-                              checked={filter === category}
-                              onChange={() => setFilter(category)}
-                              className="h-4 w-4 shrink-0 accent-[#2a2967]"
-                            />
-
-                            <span
-                              className={`flex-1 text-[12px] ${
-                                filter === category
-                                  ? "font-medium text-navy"
-                                  : "text-cool"
-                              }`}
-                            >
-                              {category}
-                            </span>
-
-                            <span className="text-[11px] tabular-nums text-[#9299a0]">
-                              {count}
-                            </span>
-                          </label>
-                        );
-                      })}
+              <div ref={innerRef} className="z-20 w-full space-y-4">
+                <aside className="rounded-xl border border-[#dbe1e5] bg-white p-5 shadow-sm">
+                  <div className="flex items-center justify-between border-b border-line pb-3.5">
+                    <div className="flex items-center gap-2">
+                      <SlidersHorizontal size={16} className="text-navy" />
+                      <h3 className="text-sm font-semibold tracking-[0.1em] text-navy">
+                        Filters
+                      </h3>
                     </div>
-                  </div>
 
-                  {/* Sorting Options */}
-                  <div className="pt-5">
-                    <span
-                      id="product-sort-label"
-                      className="mb-3 block text-[11px] font-semibold text-navy"
-                    >
-                      Sort by
-                    </span>
-
-                    <SortSelect value={sort} onChange={setSort} />
-                  </div>
-
-                  {/* Clear Filter */}
-                  {filter !== "All" && (
+                    {/* Clear All button in front of Filter Archive */}
                     <button
                       type="button"
-                      onClick={() => setFilter("All")}
-                      className="mt-5 w-full rounded-lg border border-line px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-navy transition-colors hover:border-navy"
+                      onClick={handleResetFilters}
+                      className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium tracking-wider text-gold hover:bg-gold/10 hover:text-navy transition-colors"
+                      title="Clear all filters"
                     >
-                      Clear filters
+                      <RotateCcw size={12} />
+                      Clear All
                     </button>
-                  )}
+                  </div>
+
+                  {/* 1. Category / Technique (From defaultCategories) */}
+                  <div className="border-b border-line py-3.5">
+                    <button
+                      type="button"
+                      onClick={() => toggleFilter("category")}
+                      className="flex w-full items-center justify-between text-left transition-colors hover:text-navy"
+                    >
+                      <h4 className="text-xs font-semibold tracking-wider text-navy">
+                        Technique / Category
+                      </h4>
+                      <ChevronDown
+                        size={16}
+                        className={`text-cool transition-transform duration-200 ${
+                          openFilters.category ? "rotate-180 text-navy" : ""
+                        }`}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {openFilters.category && (
+                        <motion.div
+                          key="cat-anim"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{
+                            duration: 0.28,
+                            ease: [0.04, 0.62, 0.23, 0.98],
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-3 space-y-2">
+                            {categoryOptions.map((cat) => {
+                              const count =
+                                cat === "All"
+                                  ? productsList.length
+                                  : productsList.filter(
+                                      (p) =>
+                                        p.category.toLowerCase() ===
+                                          cat.toLowerCase() ||
+                                        p.weave.toLowerCase() ===
+                                          cat.toLowerCase(),
+                                    ).length;
+
+                              return (
+                                <label
+                                  key={cat}
+                                  className="flex cursor-pointer items-center justify-between text-[12px] text-cool hover:text-navy"
+                                >
+                                  <span className="flex items-center gap-2.5">
+                                    <input
+                                      type="radio"
+                                      name="desktop-category"
+                                      value={cat}
+                                      checked={selectedCategory === cat}
+                                      onChange={() => setSelectedCategory(cat)}
+                                      className="h-3.5 w-3.5 accent-[#2a2967]"
+                                    />
+                                    <span
+                                      className={
+                                        selectedCategory === cat
+                                          ? "font-semibold text-navy"
+                                          : ""
+                                      }
+                                    >
+                                      {cat}
+                                    </span>
+                                  </span>
+                                  <span className="text-[10px] tabular-nums text-cool/50">
+                                    {count}
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* 2. Room / Space */}
+                  <div className="border-b border-line py-3.5">
+                    <button
+                      type="button"
+                      onClick={() => toggleFilter("room")}
+                      className="flex w-full items-center justify-between text-left transition-colors hover:text-navy"
+                    >
+                      <h4 className="text-xs font-semibold tracking-wider text-navy">
+                        Room / Placement
+                      </h4>
+                      <ChevronDown
+                        size={16}
+                        className={`text-cool transition-transform duration-200 ${
+                          openFilters.room ? "rotate-180 text-navy" : ""
+                        }`}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {openFilters.room && (
+                        <motion.div
+                          key="room-anim"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{
+                            duration: 0.28,
+                            ease: [0.04, 0.62, 0.23, 0.98],
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-3 space-y-2">
+                            {ROOM_OPTIONS.map((room) => {
+                              const count =
+                                room === "All"
+                                  ? productsList.length
+                                  : productsList.filter((p) =>
+                                      p.rooms.some(
+                                        (r) =>
+                                          r.toLowerCase() ===
+                                          room.toLowerCase(),
+                                      ),
+                                    ).length;
+
+                              return (
+                                <label
+                                  key={room}
+                                  className="flex cursor-pointer items-center justify-between text-[12px] text-cool hover:text-navy"
+                                >
+                                  <span className="flex items-center gap-2.5">
+                                    <input
+                                      type="radio"
+                                      name="desktop-room"
+                                      value={room}
+                                      checked={selectedRoom === room}
+                                      onChange={() => setSelectedRoom(room)}
+                                      className="h-3.5 w-3.5 accent-[#2a2967]"
+                                    />
+                                    <span
+                                      className={
+                                        selectedRoom === room
+                                          ? "font-semibold text-navy"
+                                          : ""
+                                      }
+                                    >
+                                      {room}
+                                    </span>
+                                  </span>
+                                  <span className="text-[10px] tabular-nums text-cool/50">
+                                    {count}
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* 3. Style */}
+                  <div className="border-b border-line py-3.5">
+                    <button
+                      type="button"
+                      onClick={() => toggleFilter("style")}
+                      className="flex w-full items-center justify-between text-left transition-colors hover:text-navy"
+                    >
+                      <h4 className="text-xs font-semibold tracking-wider text-navy">
+                        Design Style
+                      </h4>
+                      <ChevronDown
+                        size={16}
+                        className={`text-cool transition-transform duration-200 ${
+                          openFilters.style ? "rotate-180 text-navy" : ""
+                        }`}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {openFilters.style && (
+                        <motion.div
+                          key="style-anim"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{
+                            duration: 0.28,
+                            ease: [0.04, 0.62, 0.23, 0.98],
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-3 space-y-2">
+                            {STYLE_OPTIONS.map((style) => (
+                              <label
+                                key={style}
+                                className="flex cursor-pointer items-center gap-2.5 text-[12px] text-cool hover:text-navy"
+                              >
+                                <input
+                                  type="radio"
+                                  name="desktop-style"
+                                  value={style}
+                                  checked={selectedStyle === style}
+                                  onChange={() => setSelectedStyle(style)}
+                                  className="h-3.5 w-3.5 accent-[#2a2967]"
+                                />
+                                <span
+                                  className={
+                                    selectedStyle === style
+                                      ? "font-semibold text-navy"
+                                      : ""
+                                  }
+                                >
+                                  {style}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* 4. Sizes */}
+                  <div className="pt-3.5">
+                    <button
+                      type="button"
+                      onClick={() => toggleFilter("size")}
+                      className="flex w-full items-center justify-between text-left transition-colors hover:text-navy"
+                    >
+                      <h4 className="text-xs font-semibold tracking-wider text-navy">
+                        Standard Size
+                      </h4>
+                      <ChevronDown
+                        size={16}
+                        className={`text-cool transition-transform duration-200 ${
+                          openFilters.size ? "rotate-180 text-navy" : ""
+                        }`}
+                      />
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {openFilters.size && (
+                        <motion.div
+                          key="size-anim"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{
+                            duration: 0.28,
+                            ease: [0.04, 0.62, 0.23, 0.98],
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {SIZE_OPTIONS.map((size) => (
+                              <button
+                                key={size}
+                                type="button"
+                                onClick={() => setSelectedSize(size)}
+                                className={`rounded border px-2.5 py-1 text-[11px] transition-colors ${
+                                  selectedSize === size
+                                    ? "border-navy bg-navy font-medium text-white"
+                                    : "border-line bg-ash/40 text-cool hover:border-navy"
+                                }`}
+                              >
+                                {size}
+                              </button>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </aside>
               </div>
             </div>
 
-            {/* ================= PRODUCTS (scroll with page) ================= */}
+            {/* ================= PRODUCTS GRID ================= */}
             <div className="min-w-0">
-              {visibleProducts.length > 0 ? (
-                <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
-                  {visibleProducts.map((product, index) => (
+              {filteredProducts.length > 0 ? (
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
+                  {filteredProducts.map((product, index) => (
                     <Reveal
-                      key={product.name}
-                      delay={(index % 3) * 100}
-                      y={24}
-                      duration={850}
+                      key={product.id}
+                      delay={(index % 3) * 80}
+                      y={20}
                       className="h-full"
                     >
-                      <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_12px_28px_rgba(42,41,103,0.08)]">
-                        {/* Product Image */}
-                        <div className="aspect-[4/3] overflow-hidden bg-[#e8e9e8]">
+                      <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_16px_36px_rgba(42,41,103,0.09)]">
+                        {/* Image Showcase */}
+                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e9e8]">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={product.image}
                             alt={product.name}
                             loading="lazy"
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                          />
+
+                          {/* Quick details link on image hover */}
+                          <Link
+                            href={`/products/${product.slug}`}
+                            aria-label={`View ${product.name}`}
+                            className="absolute inset-0"
                           />
                         </div>
 
-                        {/* Product Information */}
-                        <div className="flex flex-1 flex-col p-3 sm:p-4 md:p-[18px]">
-                          <h3 className="font-manrope text-[15px] font-normal leading-[1.3] text-navy sm:text-[19px] md:text-[21px]">
-                            {product.name}
-                          </h3>
+                        {/* Card Info */}
+                        <div className="flex flex-1 flex-col p-4 sm:p-5">
+                          {/* Title */}
+                          <Link href={`/products/${product.slug}`}>
+                            <h3 className="font-manrope text-[18px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[20px]">
+                              {product.name}
+                            </h3>
+                          </Link>
 
-                          <p className="mt-2 line-clamp-3 flex-1 text-[11px] leading-[1.6] text-cool sm:line-clamp-none sm:text-[12px] sm:leading-[1.7]">
-                            Natural fibers, thoughtful textures, and a
-                            considered palette for architectural interiors.
+                          {/* Description */}
+                          <p className="mt-2 line-clamp-2 text-[12px] leading-relaxed text-cool">
+                            {product.description}
                           </p>
 
-                          {/* Enquire Button */}
-                          <button
-                            type="button"
-                            onClick={() =>
-                              window.alert(
-                                `A consultation request for ${product.name} has been prepared.`,
-                              )
-                            }
-                            className="mt-4 inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-[8px] border border-navy bg-navy px-2 py-2.5 text-[9px] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-200 hover:bg-white hover:text-navy sm:mt-5 sm:min-h-[42px] sm:gap-2 sm:px-3 sm:text-[10px] sm:tracking-[0.08em]"
-                          >
-                            Enquire Now
-                            <ArrowRight size={14} className="shrink-0" />
-                          </button>
+                          {/* Action Buttons */}
+                          <div className="mt-auto grid grid-cols-2 gap-2 pt-4">
+                            <Link
+                              href={`/products/${product.slug}`}
+                              className="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-[8px] border border-navy bg-white px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-navy transition-colors hover:bg-ash"
+                            >
+                              Details
+                              <ArrowRight size={13} />
+                            </Link>
+
+                            <button
+                              type="button"
+                              onClick={() => openInquiryForProduct(product)}
+                              className="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-[8px] border border-navy bg-navy px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-gold hover:border-gold hover:text-navy"
+                            >
+                              <MessageSquare size={13} />
+                              Enquire
+                            </button>
+                          </div>
                         </div>
                       </article>
                     </Reveal>
@@ -846,19 +1138,18 @@ export default function ProductsPage() {
               ) : (
                 <div className="rounded-xl border border-line bg-white px-6 py-16 text-center">
                   <h3 className="font-manrope text-[24px] text-navy">
-                    No designs found
+                    No matching rug designs found
                   </h3>
-
-                  <p className="mt-2 text-[13px] text-cool">
-                    Try selecting another category.
+                  <p className="mx-auto mt-2 max-w-md text-[13px] text-cool">
+                    No items match your active filters. Try loosening your
+                    criteria or resetting the filters.
                   </p>
-
                   <button
                     type="button"
-                    onClick={() => setFilter("All")}
-                    className="mt-5 rounded-lg bg-navy px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.08em] text-white"
+                    onClick={handleResetFilters}
+                    className="mt-6 rounded-lg bg-navy px-6 py-3 text-[11px] font-bold uppercase tracking-wider text-white transition-colors hover:bg-navy/90"
                   >
-                    View all designs
+                    View All Designs
                   </button>
                 </div>
               )}
@@ -867,56 +1158,368 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* ================= MOBILE FILTER / SORT BAR + SHEETS ================= */}
-      <MobileFilterBar
-        visible={barVisible}
-        filter={filter}
-        setFilter={setFilter}
-        sort={sort}
-        setSort={setSort}
-      />
+      {/* ================= MOBILE BOTTOM BAR ================= */}
+      <AnimatePresence>
+        {barVisible && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed inset-x-0 bottom-0 z-40 flex items-stretch border-t border-line bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(42,41,103,0.12)] md:hidden"
+          >
+            <button
+              type="button"
+              onClick={() => setMobileSheet("filter")}
+              className="flex min-h-[48px] flex-1 items-center justify-center gap-2 bg-white px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-navy active:bg-ash"
+            >
+              <SlidersHorizontal size={15} className="text-gold" />
+              Filters {hasActiveFilters && "•"}
+            </button>
 
-      {/* ================= PRODUCT VALUES ================= */}
-      <section className="bg-white px-6 py-[65px] md:px-[5%] md:py-[85px]">
-        <div className="mx-auto max-w-[1310px]">
-          <Reveal>
-            <div className="mb-8 max-w-[750px]">
-              <h2 className="font-manrope text-[30px] font-normal leading-[1.2] text-navy md:text-[40px]">
-                Made slowly. Specified precisely.
-              </h2>
+            <span aria-hidden="true" className="my-3 w-px shrink-0 bg-line" />
 
-              <p className="mt-3 text-[13px] leading-[1.8] text-cool md:text-[15px]">
-                From raw fiber to final placement, every stage is considered as
-                part of the architecture.
-              </p>
-            </div>
-          </Reveal>
+            <button
+              type="button"
+              onClick={() => setMobileSheet("sort")}
+              className="flex min-h-[48px] flex-1 items-center justify-center gap-2 bg-white px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-navy active:bg-ash"
+            >
+              <ArrowUpDown size={15} className="text-gold" />
+              Sort
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              "Natural fibers only",
-              "Small-batch botanical dyes",
-              "Dense hand-knotting",
-              "White-glove delivery",
-            ].map((value, index) => (
-              <Reveal key={value} delay={index * 100} duration={850}>
-                <div className="h-full rounded-xl border border-[#dbe1e5] p-5 transition-colors duration-300 hover:border-gold md:p-6">
-                  <Check size={17} className="text-gold" />
+      {/* Mobile Filter Sheet */}
+      <BottomSheet
+        open={mobileSheet === "filter"}
+        title="Filter Designs"
+        onClose={() => setMobileSheet(null)}
+      >
+        <div className="space-y-6 pb-6">
+          {/* Category */}
+          <div className="border-b border-line/50 pb-3">
+            <button
+              type="button"
+              onClick={() => toggleFilter("category")}
+              className="flex w-full items-center justify-between text-left"
+            >
+              <h4 className="text-[12px] font-bold uppercase tracking-wider text-navy">
+                Technique / Category
+              </h4>
+              <ChevronDown
+                size={16}
+                className={`text-cool transition-transform duration-200 ${
+                  openFilters.category ? "rotate-180 text-navy" : ""
+                }`}
+              />
+            </button>
+            <AnimatePresence initial={false}>
+              {openFilters.category && (
+                <motion.div
+                  key="m-cat"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{
+                    duration: 0.28,
+                    ease: [0.04, 0.62, 0.23, 0.98],
+                  }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-2 space-y-2">
+                    {categoryOptions.map((cat) => (
+                      <label
+                        key={cat}
+                        className="flex min-h-[38px] cursor-pointer items-center gap-3 border-b border-line/30 last:border-b-0"
+                      >
+                        <input
+                          type="radio"
+                          name="mobile-category"
+                          value={cat}
+                          checked={selectedCategory === cat}
+                          onChange={() => setSelectedCategory(cat)}
+                          className="h-4 w-4 accent-[#2a2967]"
+                        />
+                        <span
+                          className={`text-[13px] ${
+                            selectedCategory === cat
+                              ? "font-semibold text-navy"
+                              : "text-cool"
+                          }`}
+                        >
+                          {cat}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-                  <h3 className="my-3 font-manrope text-[20px] font-normal leading-[1.3] text-navy">
-                    {value}
-                  </h3>
+          {/* Room */}
+          <div className="border-b border-line/50 pb-3">
+            <button
+              type="button"
+              onClick={() => toggleFilter("room")}
+              className="flex w-full items-center justify-between text-left"
+            >
+              <h4 className="text-[12px] font-bold uppercase tracking-wider text-navy">
+                Room / Placement
+              </h4>
+              <ChevronDown
+                size={16}
+                className={`text-cool transition-transform duration-200 ${
+                  openFilters.room ? "rotate-180 text-navy" : ""
+                }`}
+              />
+            </button>
+            <AnimatePresence initial={false}>
+              {openFilters.room && (
+                <motion.div
+                  key="m-room"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{
+                    duration: 0.28,
+                    ease: [0.04, 0.62, 0.23, 0.98],
+                  }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-2 space-y-2">
+                    {ROOM_OPTIONS.map((room) => (
+                      <label
+                        key={room}
+                        className="flex min-h-[38px] cursor-pointer items-center gap-3 border-b border-line/30 last:border-b-0"
+                      >
+                        <input
+                          type="radio"
+                          name="mobile-room"
+                          value={room}
+                          checked={selectedRoom === room}
+                          onChange={() => setSelectedRoom(room)}
+                          className="h-4 w-4 accent-[#2a2967]"
+                        />
+                        <span
+                          className={`text-[13px] ${
+                            selectedRoom === room
+                              ? "font-semibold text-navy"
+                              : "text-cool"
+                          }`}
+                        >
+                          {room}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-                  <p className="m-0 text-[12px] leading-[1.8] text-cool">
-                    Honest materials and careful craft, documented for your
-                    project file.
-                  </p>
-                </div>
-              </Reveal>
-            ))}
+          {/* Style */}
+          <div className="border-b border-line/50 pb-3">
+            <button
+              type="button"
+              onClick={() => toggleFilter("style")}
+              className="flex w-full items-center justify-between text-left"
+            >
+              <h4 className="text-[12px] font-bold uppercase tracking-wider text-navy">
+                Design Style
+              </h4>
+              <ChevronDown
+                size={16}
+                className={`text-cool transition-transform duration-200 ${
+                  openFilters.style ? "rotate-180 text-navy" : ""
+                }`}
+              />
+            </button>
+            <AnimatePresence initial={false}>
+              {openFilters.style && (
+                <motion.div
+                  key="m-style"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{
+                    duration: 0.28,
+                    ease: [0.04, 0.62, 0.23, 0.98],
+                  }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-2 space-y-2">
+                    {STYLE_OPTIONS.map((style) => (
+                      <label
+                        key={style}
+                        className="flex min-h-[38px] cursor-pointer items-center gap-3 border-b border-line/30 last:border-b-0"
+                      >
+                        <input
+                          type="radio"
+                          name="mobile-style"
+                          value={style}
+                          checked={selectedStyle === style}
+                          onChange={() => setSelectedStyle(style)}
+                          className="h-4 w-4 accent-[#2a2967]"
+                        />
+                        <span
+                          className={`text-[13px] ${
+                            selectedStyle === style
+                              ? "font-semibold text-navy"
+                              : "text-cool"
+                          }`}
+                        >
+                          {style}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Standard Size */}
+          <div className="pb-3">
+            <button
+              type="button"
+              onClick={() => toggleFilter("size")}
+              className="flex w-full items-center justify-between text-left"
+            >
+              <h4 className="text-[12px] font-bold uppercase tracking-wider text-navy">
+                Standard Size
+              </h4>
+              <ChevronDown
+                size={16}
+                className={`text-cool transition-transform duration-200 ${
+                  openFilters.size ? "rotate-180 text-navy" : ""
+                }`}
+              />
+            </button>
+            <AnimatePresence initial={false}>
+              {openFilters.size && (
+                <motion.div
+                  key="m-size"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{
+                    duration: 0.28,
+                    ease: [0.04, 0.62, 0.23, 0.98],
+                  }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {SIZE_OPTIONS.map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => setSelectedSize(size)}
+                        className={`rounded border px-3 py-1.5 text-xs transition-colors ${
+                          selectedSize === size
+                            ? "border-navy bg-navy font-medium text-white"
+                            : "border-line bg-ash/40 text-cool hover:border-navy"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="flex-1 rounded-lg border border-line py-3 text-[11px] font-bold uppercase tracking-wider text-navy"
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileSheet(null)}
+              className="flex-1 rounded-lg bg-navy py-3 text-[11px] font-bold uppercase tracking-wider text-white"
+            >
+              View Results ({filteredProducts.length})
+            </button>
           </div>
         </div>
-      </section>
+      </BottomSheet>
+
+      {/* Mobile Sort Sheet */}
+      <BottomSheet
+        open={mobileSheet === "sort"}
+        title="Sort By"
+        onClose={() => setMobileSheet(null)}
+      >
+        <div className="space-y-2 pb-6">
+          {sortOptions.map((option) => {
+            const Icon = option.icon;
+            const isSelected = option.value === sort;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  setSort(option.value);
+                  setMobileSheet(null);
+                }}
+                className={`flex min-h-[48px] w-full items-center gap-3 border-b border-line/50 px-2 text-left text-[13px] ${
+                  isSelected ? "font-semibold text-navy" : "text-cool"
+                }`}
+              >
+                <Icon
+                  size={16}
+                  className={isSelected ? "text-gold" : "text-cool/50"}
+                />
+                <span className="flex-1">{option.label}</span>
+                {isSelected && <Check size={16} className="text-gold" />}
+              </button>
+            );
+          })}
+        </div>
+      </BottomSheet>
+
+      {/* Inquiry Modal */}
+      <InquiryModal
+        isOpen={inquiryModalOpen}
+        onClose={() => {
+          setInquiryModalOpen(false);
+          setEnquiryProduct(null);
+        }}
+        productName={enquiryProduct?.name}
+        productDetails={
+          enquiryProduct
+            ? `${enquiryProduct.category} • ${enquiryProduct.priceDisplay}`
+            : undefined
+        }
+      />
     </PageFrame>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense
+      fallback={
+        <PageFrame active="Products">
+          <div className="flex min-h-[60vh] items-center justify-center">
+            <div className="text-center font-manrope text-navy">
+              <span className="text-sm font-semibold tracking-widest uppercase text-gold">
+                Loading Loomstone Archive...
+              </span>
+            </div>
+          </div>
+        </PageFrame>
+      }
+    >
+      <ProductsContent />
+    </Suspense>
   );
 }

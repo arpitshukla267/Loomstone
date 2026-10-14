@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Check, Eye, Flag } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
-const carpetImage = "/carpet.jpeg";
+const carpetImage = "/inventory.png";
 
 const visionPoints = [
   "Pairing the richness of wool with the resilience of modern fibers",
@@ -96,7 +96,6 @@ export default function VisionMissionSection() {
                 sizes="(min-width: 1024px) 55vw, 90vw"
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-[#2a2a6b]/25" />
             </div>
 
             {/* Vision band */}

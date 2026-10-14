@@ -1,316 +1,294 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { ArrowRight, Check, Clock3, Factory, Headphones, Mail, MapPin, Phone, Send, ShieldCheck } from 'lucide-react';
-import { PageFrame, SectionHeading, siteImages } from '@/components/site/site-chrome';
+import { useState } from "react";
+import { ArrowRight, Check, ChevronDown } from "lucide-react";
+import { PageFrame } from "@/components/site/site-chrome";
 
-const salons = [
-  { country: 'France', name: 'Paris Showroom', address: "14 Rue de l'Université, 75007 Paris, France", phone: '+33 1 42 68 00 20', note: 'Rive Gauche', icon: MapPin },
-  { country: 'Italia', name: 'Milan Studio', address: 'Via Solferino 21, Brera, 20121 Milan, Italy', phone: '+39 02 87 39 40 10', note: 'Brera Design District', icon: MapPin },
-  { country: 'United States', name: 'New York Showroom', address: '54 Greene Street, SoHo, New York, NY 10013', phone: '+1 212 941 7800', note: 'Cast Iron District', icon: MapPin },
-  { country: 'India', name: 'Jaipur Workshops', address: 'Amber Road Craft Enclave, Jaipur, India', phone: 'Visits welcome', note: 'By appointment', icon: Factory },
-];
+/* ---------- shared styles (our theme: navy / gold / ash / cool / ink / line) ---------- */
+const labelCls =
+  "flex flex-col text-[13px] font-medium tracking-[.06em] text-navy";
+const lineCls =
+  "w-full bg-transparent border-0 border-b border-line pt-3 pb-3.5 text-[15px] text-ink outline-none placeholder:text-[#8a9298] focus:border-gold transition-colors";
+
+function Label({ text, required }: { text: string; required?: boolean }) {
+  return (
+    <span className="mb-2.5">
+      {text}
+      {required && <span className="ml-1">*</span>}
+    </span>
+  );
+}
+
+function Input({
+  label,
+  placeholder,
+  required,
+  type = "text",
+}: {
+  label: string;
+  placeholder: string;
+  required?: boolean;
+  type?: string;
+}) {
+  return (
+    <label className={labelCls}>
+      <Label text={label} required={required} />
+      <input
+        required={required}
+        type={type}
+        placeholder={placeholder}
+        className={lineCls}
+      />
+    </label>
+  );
+}
+
+function Select({
+  label,
+  placeholder,
+  options,
+  required,
+}: {
+  label: string;
+  placeholder: string;
+  options: string[];
+  required?: boolean;
+}) {
+  const [value, setValue] = useState("");
+  return (
+    <label className={labelCls}>
+      <Label text={label} required={required} />
+      <div className="relative">
+        <select
+          required={required}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className={`${lineCls} appearance-none cursor-pointer pr-8 pt-5 ${value ? "" : "text-[#8a9298]"}`}
+        >
+          <option value="" disabled>
+            {placeholder}
+          </option>
+          {options.map((o) => (
+            <option key={o} value={o} className="text-ink">
+              {o}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          size={16}
+          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-navy"
+        />
+      </div>
+    </label>
+  );
+}
+
+function Detail({
+  label,
+  value,
+  sub,
+  href,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  href?: string;
+}) {
+  return (
+    <div>
+      <div className="text-[14px] text-cool">{label}</div>
+      {href ? (
+        <a
+          href={href}
+          className="mt-1 block text-[17px] text-navy no-underline hover:text-gold transition-colors"
+        >
+          {value}
+        </a>
+      ) : (
+        <div className="mt-1 text-[17px] text-navy">{value}</div>
+      )}
+      {sub && <div className="mt-1 text-[14px] text-[#8a9298]">{sub}</div>}
+    </div>
+  );
+}
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
 
   return (
     <PageFrame active="Contact">
-      {/* Inner Hero */}
-      <section className="bg-white flex flex-col md:flex-row md:items-end justify-between gap-10 md:gap-[60px] min-h-auto md:min-h-[420px] pt-[130px] md:pt-[170px] pb-[55px] md:pb-[70px] px-6 md:px-[5%]">
-        <div className="max-w-[800px]">
-          <span className="inline-flex items-center gap-2 text-gold text-[10px] font-bold tracking-[.13em] uppercase">
-            <i className="w-2 h-2 inline-block bg-gold not-italic" />
-            SHOWROOM VISITS &amp; CUSTOM INQUIRIES
-          </span>
-          <h1 className="my-4 md:my-5 text-navy font-manrope font-semibold text-[45px] md:text-[clamp(42px,6vw,72px)] leading-[1.08] tracking-[-0.03em]">
-            Get in touch / <em className="text-gold not-italic">start a custom order.</em>
-          </h1>
-          <p className="max-w-[650px] m-0 text-cool text-[15px] md:text-[17px] leading-[1.8]">
-            Connect with our design team. From choosing your rug size and color to handweaving and delivery, we work closely with homeowners, interior designers, and architects.
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 mt-6 md:mt-0">
-          <div className="flex items-center gap-2.5 p-[15px] bg-ash border border-[#dbe1e5] text-gold">
-            <ShieldCheck size={18} />
-            <span className="text-navy text-[9px] font-bold tracking-[.1em] uppercase block">
-              Showroom visits
-              <small className="block mt-1 text-cool text-[11px] font-normal normal-case tracking-normal">
-                By appointment
-              </small>
-            </span>
-          </div>
-          <div className="flex items-center gap-2.5 p-[15px] bg-ash border border-[#dbe1e5] text-gold">
-            <Clock3 size={18} />
-            <span className="text-navy text-[9px] font-bold tracking-[.1em] uppercase block">
-              Quick response
-              <small className="block mt-1 text-cool text-[11px] font-normal normal-case tracking-normal">
-                Within 12 hours
-              </small>
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Layout */}
-      <section className="py-[50px] md:py-[100px] px-6 md:px-[5%] max-w-[1500px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-8 items-start">
-          {/* Sidebar */}
-          <aside className="flex flex-col gap-6">
-            {/* Salons Panel */}
-            <div className="bg-white border border-[#dbe1e5] p-[25px]">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 pb-[15px] mb-[15px] border-b border-[#dbe1e5]">
-                <span className="flex items-center gap-2 text-navy text-[10px] font-bold tracking-[.12em] uppercase">
-                  <MapPin size={14} className="text-gold" /> INTERNATIONAL ATELIERS
-                </span>
-                <small className="text-[#8a9298] text-[9px]">01 / 04 LOCATIONS</small>
+      <div className="bg-ash">
+        <section className="mx-auto max-w-[1920px] px-6 pt-[130px] pb-12 md:pt-[170px] md:pb-16 lg:px-[7.4%] lg:pr-[1.5%]">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.9fr_1.3fr] lg:gap-[80px]">
+            {/* ---------------- LEFT ---------------- */}
+            <div className="flex flex-col justify-between">
+              <div>
+                <h1 className="mt-8 font-manrope text-[44px] font-medium leading-[1.05] tracking-[-0.03em] text-navy md:text-[60px]">
+                  Get in touch /{" "}
+                  <em className="text-gold not-italic">
+                    start a custom order.
+                  </em>
+                </h1>
+                <p className="mt-9 max-w-[570px] text-[17px] leading-[1.95] text-cool">
+                  Connect with our design team. From choosing your rug size and
+                  color to handweaving and delivery, we work closely with
+                  homeowners, interior designers, and architects.
+                </p>
               </div>
-              <div className="flex flex-col gap-2.5">
-                {salons.map(({ country, name, address, phone, note, icon: Icon }) => (
-                  <div
-                    className="p-3.5 bg-ash border border-[#dbe1e5] border-l-[3px] border-l-navy"
-                    key={name}
-                  >
-                    <div className="flex items-start justify-between">
-                      <span className="inline-block px-1.5 py-0.5 text-white bg-navy text-[8px] font-bold tracking-[.1em] uppercase">
-                        {country}
-                      </span>
-                      <Icon size={18} className="text-gold" />
-                    </div>
-                    <h3 className="my-1.5 text-navy font-manrope font-normal text-[20px]">{name}</h3>
-                    <p className="text-cool text-[11px] m-0 mb-2">{address}</p>
-                    <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-2.5 pt-2.5 border-t border-[#dbe1e5]">
-                      <a href={`tel:${phone.replaceAll(' ', '')}`} className="text-navy text-[10px] font-bold no-underline hover:text-gold transition-colors">
-                        {phone}
-                      </a>
-                      <small className="text-[#8a9298] text-[10px]">{note}</small>
-                    </div>
+
+              <div className="mt-16 border-t border-line pt-9 lg:mt-0">
+                <div className="flex flex-col gap-8">
+                  <Detail
+                    label="Email inquiries"
+                    value="hello@atelierterroir.com"
+                    href="mailto:hello@atelierterroir.com"
+                  />
+                  <Detail
+                    label="WhatsApp / Phone"
+                    value="+33 1 40 50 20 10"
+                    href="https://wa.me/33140502010"
+                  />
+                  <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                    <Detail
+                      label="Quick response"
+                      value="Within 12 hours"
+                      sub="Showroom visits by appointment"
+                    />
+                    <Detail
+                      label="Atelier Workshops"
+                      value="Jaipur, India"
+                      sub="Amber Road Craft Enclave"
+                    />
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Concierge Panel */}
-            <div className="bg-ash border border-[#dbe1e5] p-[25px]">
-              <div className="flex items-center justify-between pb-[15px] mb-[15px] border-b border-[#dbe1e5]">
-                <span className="flex items-center gap-2 text-navy text-[10px] font-bold tracking-[.12em] uppercase">
-                  <Headphones size={16} className="text-gold" /> DIRECT CONCIERGE CHANNELS
-                </span>
-              </div>
-              <p className="text-cool text-xs leading-[1.7] m-0 mb-3">
-                Our senior textile engineers provide direct swatch availability, knot density feasibility calculations, and expedited trade accounts.
-              </p>
-              <div className="flex flex-col gap-2">
-                <a
-                  href="https://wa.me/33140502010"
-                  className="flex items-center justify-between p-3.5 bg-white border border-[#dbe1e5] text-navy text-[10px] font-bold tracking-[.08em] uppercase no-underline hover:border-gold transition-colors"
-                >
-                  <span className="flex items-center gap-2">
-                    <Phone size={16} className="text-gold" /> WhatsApp chat
-                  </span>
-                  <ArrowRight size={15} />
-                </a>
-                <a
-                  href="mailto:hello@atelierterroir.com"
-                  className="flex items-center justify-between p-3.5 bg-white border border-[#dbe1e5] text-navy text-[10px] font-bold tracking-[.08em] uppercase no-underline hover:border-gold transition-colors"
-                >
-                  <span className="flex items-center gap-2">
-                    <Mail size={16} className="text-gold" /> Email inquiries
-                  </span>
-                  <ArrowRight size={15} />
-                </a>
-              </div>
-            </div>
-
-            {/* Tactile Archive Vignette */}
-            <div className="bg-white border border-[#dbe1e5] overflow-hidden">
-              <img
-                src={siteImages.wool}
-                alt="Highland wool texture"
-                className="w-full h-[230px] object-cover block"
-              />
-              <span className="block pt-3.5 px-[18px] text-gold text-[9px] font-bold tracking-[.12em] uppercase">
-                TACTILE ARCHIVE
-              </span>
-              <p className="block px-[18px] pb-4 m-0 text-navy font-manrope font-normal text-[20px]">
-                Study in Highland Wool &amp; Raw Flax, Specimen #84
-              </p>
-            </div>
-          </aside>
-
-          {/* Form / Success Panel */}
-          <div className="bg-white border border-[#dbe1e5] p-[25px] md:p-8">
-            <div className="flex items-center justify-between pb-[15px] mb-[15px] border-b border-[#dbe1e5]">
-              <span className="text-navy text-[10px] font-bold tracking-[.12em] uppercase">
-                PROJECT INQUIRY
-              </span>
-              <small className="text-[#8a9298] text-[9px]">FORM ID: TR-2025</small>
-            </div>
-
-            {sent ? (
-              <div className="py-10 md:py-[70px] px-2 md:px-5 text-center">
-                <div className="grid place-items-center w-[55px] h-[55px] mx-auto mb-5 text-gold border border-gold rounded-full">
-                  <Check size={24} />
                 </div>
-                <span className="inline-flex items-center gap-2 text-gold text-[10px] font-bold tracking-[.13em] uppercase">
-                  <i className="w-2 h-2 inline-block bg-gold not-italic" />
-                  REGISTRATION TRANSMITTED
-                </span>
-                <h2 className="my-3 text-navy font-manrope font-normal text-[28px] md:text-[34px]">
-                  Commission dossier logged.
-                </h2>
-                <p className="max-w-[450px] mx-auto mb-6 text-cool text-[13px] md:text-[14px] leading-[1.8]">
-                  Your specifications have been assigned to an Atelier Terroir textile engineer. We will be in touch within 12 business hours.
-                </p>
-                <button
-                  className="inline-flex items-center justify-center min-h-[50px] px-6 text-white bg-navy text-[10px] font-bold tracking-[.13em] uppercase border-0 cursor-pointer hover:bg-navy/90 transition-colors"
-                  onClick={() => setSent(false)}
-                >
-                  Start another inquiry
-                </button>
               </div>
-            ) : (
-              <>
-                <h2 className="my-2 text-navy font-manrope font-normal text-[28px] md:text-[31px]">
-                  Tell us about your project.
-                </h2>
-                <p className="text-cool text-[13px] leading-[1.7] m-0 mb-6">
-                  Fill out the form below to discuss your custom rug ideas or request free sample swatches.
-                </p>
+            </div>
+
+            {/* ---------------- RIGHT: FORM ---------------- */}
+            <div className="border border-line px-6 py-10 md:px-[50px] md:py-[52px]">
+              {sent ? (
+                <div className="py-20 text-center">
+                  <div className="mx-auto mb-6 grid h-14 w-14 place-items-center rounded-full border border-gold text-gold">
+                    <Check size={24} />
+                  </div>
+                  <h2 className="font-manrope text-[30px] font-normal tracking-[-0.02em] text-navy">
+                    Commission dossier logged.
+                  </h2>
+                  <p className="mx-auto mt-4 max-w-[450px] text-[15px] leading-[1.8] text-cool">
+                    Your specifications have been assigned to an Atelier Terroir
+                    textile engineer. We will be in touch within 12 business
+                    hours.
+                  </p>
+                  <button
+                    onClick={() => setSent(false)}
+                    className="mt-8 border border-navy px-7 py-4 text-[13px] font-medium tracking-[.2em] text-navy uppercase transition-colors hover:bg-navy hover:text-white"
+                  >
+                    Start another inquiry
+                  </button>
+                </div>
+              ) : (
                 <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
+                  onSubmit={(e) => {
+                    e.preventDefault();
                     setSent(true);
                   }}
-                  className="flex flex-col gap-4"
+                  className="flex flex-col"
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                      Full name
-                      <input
-                        required
-                        placeholder="e.g. Jean-Michel Moreau"
-                        className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                      Company or residence
-                      <input
-                        placeholder="e.g. Moreau Architecture Studio"
-                        className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                      Email address
-                      <input
-                        required
-                        type="email"
-                        placeholder="j.moreau@studio-design.com"
-                        className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                      Phone number
-                      <input
-                        required
-                        type="tel"
-                        placeholder="+33 6 12 34 56 78"
-                        className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                      Room type
-                      <select
-                        required
-                        defaultValue=""
-                        className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
-                      >
-                        <option value="" disabled>Select room type</option>
-                        <option>Living room</option>
-                        <option>Bedroom</option>
-                        <option>Dining room</option>
-                        <option>Hotel / Office</option>
-                      </select>
-                    </label>
-                    <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                      Installation timeline
-                      <select
-                        required
-                        defaultValue=""
-                        className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
-                      >
-                        <option value="" disabled>Select timeline</option>
-                        <option>Expedited · 8–12 weeks</option>
-                        <option>Standard · 14–20 weeks</option>
-                        <option>Future project</option>
-                      </select>
-                    </label>
+                  <div className="grid grid-cols-1 gap-x-[40px] gap-y-8 md:grid-cols-2">
+                    <Input
+                      label="Full name"
+                      placeholder="e.g. Jean-Michel Moreau"
+                      required
+                    />
+                    <Input
+                      label="Company or residence"
+                      placeholder="e.g. Moreau Architecture Studio"
+                    />
+                    <Input
+                      label="Email address"
+                      placeholder="j.moreau@studio-design.com"
+                      type="email"
+                      required
+                    />
+                    <Input
+                      label="Phone number"
+                      placeholder="+33 6 12 34 56 78"
+                      type="tel"
+                      required
+                    />
+                    <Select
+                      label="Room type"
+                      placeholder="Select room type"
+                      options={[
+                        "Living room",
+                        "Bedroom",
+                        "Dining room",
+                        "Hotel / Office",
+                      ]}
+                      required
+                    />
+                    <Select
+                      label="Installation timeline"
+                      placeholder="Select timeline"
+                      options={[
+                        "Expedited · 8–12 weeks",
+                        "Standard · 14–20 weeks",
+                        "Future project",
+                      ]}
+                      required
+                    />
                   </div>
-                  <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                    Estimated rug size
-                    <input
+
+                  <div className="mt-8">
+                    <Input
+                      label="Estimated rug size"
                       placeholder="e.g. 3m × 4m or 10' × 13'"
-                      className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
                     />
-                  </label>
-                  <label className="flex flex-col gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase">
-                    Notes &amp; color ideas
+                  </div>
+
+                  <label className={`${labelCls} mt-8`}>
+                    <Label text="Notes & color ideas" />
                     <textarea
-                      rows={5}
+                      rows={3}
                       placeholder="Tell us about room lighting, flooring type, desired pile height, or paint codes..."
-                      className="w-full p-3 text-ink bg-ash border border-line outline-none text-[13px] normal-case tracking-normal focus:border-gold"
+                      className={`${lineCls} resize-none pb-12 text-[16px] leading-[1.5]`}
                     />
                   </label>
-                  <label className="flex items-start gap-2.5 p-3.5 bg-ash text-navy text-[10px] font-bold tracking-[.1em] cursor-pointer">
-                    <input type="checkbox" defaultChecked className="w-4 h-4 mt-0.5 accent-gold cursor-pointer" />
-                    <span className="text-cool text-xs leading-[1.5] normal-case tracking-normal">
-                      <strong className="text-navy font-bold">Send me a free sample swatch box</strong> — delivered with 8 yarn swatches matched to your colors.
+
+                  <label className="mt-8 flex cursor-pointer items-start gap-3">
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      className="mt-1 h-4 w-4 cursor-pointer accent-gold"
+                    />
+                    <span className="text-[13px] leading-[1.6] text-cool">
+                      <strong className="font-bold text-navy">
+                        Send me a free sample swatch box
+                      </strong>{" "}
+                      — delivered with 8 yarn swatches matched to your colors.
                     </span>
                   </label>
-                  <button
-                    className="w-full min-h-[50px] inline-flex items-center justify-center gap-2 px-6 text-white bg-navy text-[10px] font-bold tracking-[.13em] uppercase border-0 cursor-pointer hover:bg-navy/90 transition-colors"
-                    type="submit"
-                  >
-                    Send inquiry &amp; request free swatches <Send size={15} />
-                  </button>
-                  <small className="text-[#8a9298] text-center text-[10px] block mt-1">
-                    NDA protection: proprietary blueprints and residential client details are protected under our strict Atelier Confidentiality Covenant.
-                  </small>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
 
-      {/* Trade Benefits */}
-      <section className="bg-ash py-[70px] md:py-[100px] px-6 md:px-[5%]">
-        <div className="max-w-[1310px] mx-auto">
-          <SectionHeading
-            eyebrow="CURATED ARCHITECT SERVICES"
-            title="Trade benefits for designers & architects"
-            text="The tools, samples, and service details that keep a considered project moving."
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {['Free designer swatch box', 'Quick sample weaves', 'White-glove delivery'].map((benefit) => (
-              <div key={benefit} className="p-[25px] bg-white border border-[#dbe1e5]">
-                <div className="grid place-items-center w-[45px] h-[45px] mb-5 text-gold bg-ash">
-                  <Check size={20} />
-                </div>
-                <span className="text-gold text-[9px] font-bold tracking-[.13em] uppercase block">
-                  PRIVILEGE
-                </span>
-                <h3 className="my-2 text-navy font-manrope font-normal text-[23px]">
-                  {benefit}
-                </h3>
-                <p className="text-cool text-[13px] leading-[1.7] m-0">
-                  Direct support and beautifully documented material samples for your specification library.
-                </p>
-              </div>
-            ))}
+                  <div className="mt-11 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-[60px]">
+                    <button
+                      type="submit"
+                      className="inline-flex shrink-0 items-center gap-3 border border-navy px-9 py-[21px] text-[13px] font-medium tracking-[.2em] text-navy uppercase transition-colors hover:bg-navy hover:text-white"
+                    >
+                      Send inquiry &amp; request swatches{" "}
+                      <ArrowRight size={18} />
+                    </button>
+                    <p className="max-w-[400px] text-[12.5px] leading-[1.6] text-cool">
+                      NDA protection: proprietary blueprints and residential
+                      client details are protected under our strict Atelier
+                      Confidentiality Covenant.
+                    </p>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </PageFrame>
   );
 }

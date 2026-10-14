@@ -1,49 +1,88 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { siteImages } from "@/components/site/site-images";
-import { SectionIntro } from "./section-intro";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  CircleHelp,
+} from "lucide-react";
 import { Reveal, FadeImage } from "../ui/reveal";
+import { SectionIntro } from "./section-intro";
+import {
+  FEATURED_DESIGNS,
+  type FeaturedDesign,
+} from "../../data/featuredDesigns";
 
-export interface DesignPiece {
-  name: string;
-  image: string;
-  description: string;
-  density: string;
+const queryClassName =
+  "inline-flex shrink-0 items-center gap-1 rounded-full border-0 bg-white text-sm font-medium uppercase text-navy shadow-lg transition duration-300 hover:-translate-y-0.5 hover:text-gold";
+
+const arrowClassName =
+  "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-[0_4px_14px_rgba(0,0,0,0.18)] transition duration-300 hover:text-gold";
+
+// Exported so other pages can reuse the exact same card.
+// onOpenInquiry diya ho to Query button inquiry modal kholta hai,
+// warna /contact?design=<slug> par le jaata hai.
+export function FeaturedDesignCard({
+  design,
+  onOpenInquiry,
+}: {
+  design: FeaturedDesign;
+  onOpenInquiry?: () => void;
+}) {
+  return (
+    <article className="group relative h-[350px] w-full overflow-hidden rounded-xl border border-[#dbe1e5] bg-[#dbe1e5] transition duration-300 hover:border-gold hover:shadow-[0_16px_30px_rgba(42,41,103,0.07)]">
+      <FadeImage
+        src={design.image}
+        alt={design.name}
+        fill
+        sizes="(min-width: 721px) 33vw, 100vw"
+        className="object-cover object-bottom group-hover:scale-[1.06]"
+      />
+
+      {/* Neeche se dark overlay, upar ki taraf fade */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+
+      {/* Bottom row: left mein text, right mein Query button */}
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5">
+        <div className="min-w-0 flex-1">
+          <h3 className="line-clamp-2 font-manrope text-xl font-normal leading-[1.3] text-white">
+            {design.name}
+          </h3>
+          <p className="mt-1.5 line-clamp-3 text-sm leading-[1.25] text-gray-200/70">
+            {design.description}
+          </p>
+        </div>
+
+        {onOpenInquiry ? (
+          <button
+            type="button"
+            onClick={onOpenInquiry}
+            aria-label={`Send a query about ${design.name}`}
+            className={queryClassName}
+          >
+            <CircleHelp size={32} />
+          </button>
+        ) : (
+          <Link
+            href={`/contact?design=${design.slug}`}
+            aria-label={`Send a query about ${design.name}`}
+            className={`${queryClassName} no-underline`}
+          >
+            Query <ArrowUpRight size={16} />
+          </Link>
+        )}
+      </div>
+    </article>
+  );
 }
 
-export const defaultDesigns: DesignPiece[] = [
-  {
-    name: "Solstice No. VII",
-    image: siteImages.wool,
-    description:
-      "Hand-spun highland wool accented with unbleached mulberry silk and natural walnut abrash.",
-    density: "240 Knots / Sq. In.",
-  },
-  {
-    name: "Travertine Strata",
-    image: siteImages.relief,
-    description:
-      "Architectural striated relief with hand-carved elevation variation creating subtle shadows.",
-    density: "180 Knots / Sq. In.",
-  },
-  {
-    name: "Ochre Horizon",
-    image: siteImages.flat,
-    description:
-      "Botanical vegetable dye hand-spun wool inspired by desert elevations at dusk.",
-    density: "200 Knots / Sq. In.",
-  },
-];
-
 export interface FeaturedDesignsSectionProps {
-  designs?: DesignPiece[];
   onOpenInquiry?: () => void;
 }
 
 export function FeaturedDesignsSection({
-  designs = defaultDesigns,
   onOpenInquiry,
 }: FeaturedDesignsSectionProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -54,175 +93,92 @@ export function FeaturedDesignsSection({
     const el = scrollerRef.current;
     if (!el) return;
     setCanPrev(el.scrollLeft > 4);
-    setCanNext(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    setCanNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
   }, []);
 
   useEffect(() => {
     updateArrows();
     window.addEventListener("resize", updateArrows);
     return () => window.removeEventListener("resize", updateArrows);
-  }, [updateArrows, designs.length]);
+  }, [updateArrows]);
 
-  // Moves to the previous/next card and brings it to the horizontal center.
-  const scrollByCard = (direction: 1 | -1) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const cards = Array.from(el.children) as HTMLElement[];
+  // Arrow click par agla/pichla card screen ke horizontal center mein aata hai
+  const scrollByCard = (dir: 1 | -1) => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const cards = Array.from(scroller.children) as HTMLElement[];
     if (!cards.length) return;
 
-    const trackRect = el.getBoundingClientRect();
-    const trackCenter = trackRect.left + trackRect.width / 2;
-    const centerOf = (c: HTMLElement) => {
-      const r = c.getBoundingClientRect();
-      return r.left + r.width / 2;
-    };
-
-    // Card currently closest to the center
+    const center = scroller.scrollLeft + scroller.clientWidth / 2;
     let current = 0;
     let best = Infinity;
-    cards.forEach((c, i) => {
-      const d = Math.abs(centerOf(c) - trackCenter);
-      if (d < best) {
-        best = d;
+    cards.forEach((card, i) => {
+      const distance = Math.abs(
+        card.offsetLeft + card.offsetWidth / 2 - center,
+      );
+      if (distance < best) {
+        best = distance;
         current = i;
       }
     });
 
     const target =
-      cards[Math.min(Math.max(current + direction, 0), cards.length - 1)];
-    el.scrollBy({ left: centerOf(target) - trackCenter, behavior: "smooth" });
+      cards[Math.min(Math.max(current + dir, 0), cards.length - 1)];
+    const left =
+      target.offsetLeft - (scroller.clientWidth - target.offsetWidth) / 2;
+    scroller.scrollTo({ left, behavior: "smooth" });
   };
 
-  const arrowClass =
-    "absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white text-navy shadow-[0_8px_24px_rgba(42,41,103,0.18)] transition-all duration-300 hover:bg-navy hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold disabled:pointer-events-none disabled:opacity-0 md:h-12 md:w-12 md:border md:border-line";
-
   return (
-    <section
-      className="bg-ash py-[70px] md:py-[100px] px-6 md:px-[5%] overflow-hidden"
-      id="inspiration"
-    >
-      <div className="max-w-[1310px] mx-auto">
-        <Reveal>
-          <SectionIntro
-            eyebrow="Gallery Selection"
-            title="Featured Designs"
-            text="Each piece is made to order. Custom size, color, and fiber options available."
-          />
-        </Reveal>
+    <section className="mx-auto max-w-[1500px] bg-white px-6 py-[70px] md:px-[5%] md:py-[50px]">
+      <Reveal>
+        <SectionIntro
+          eyebrow="Curated Collection"
+          title="Featured Designs"
+          text="A closer look at the designs our clients enquire about most."
+        />
+      </Reveal>
 
-        <div className="relative">
-          <button
-            type="button"
-            aria-label="Previous design"
-            onClick={() => scrollByCard(-1)}
-            disabled={!canPrev}
-            className={`${arrowClass} left-2 md:-left-6`}
-          >
-            <ArrowLeft size={20} />
-          </button>
-          <button
-            type="button"
-            aria-label="Next design"
-            onClick={() => scrollByCard(1)}
-            disabled={!canNext}
-            className={`${arrowClass} right-2 md:-right-6`}
-          >
-            <ArrowRight size={20} />
-          </button>
+      <div className="relative">
+        <button
+          type="button"
+          aria-label="Previous design"
+          onClick={() => scrollByCard(-1)}
+          className={`${arrowClassName} left-3 ${
+            canPrev ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+        >
+          <ChevronLeft size={20} />
+        </button>
+        <button
+          type="button"
+          aria-label="Next design"
+          onClick={() => scrollByCard(1)}
+          className={`${arrowClassName} right-3 ${
+            canNext ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+        >
+          <ChevronRight size={20} />
+        </button>
 
-          {/*
-            Mobile: card width = 80vw - 32px, so one card + gap + 25% of the
-            next one fills the screen (about 1.25 cards visible).
-            Desktop (md+): fixed 390px cards.
-            overflow-y-hidden stops the track from scrolling vertically.
-          */}
-          <div
-            ref={scrollerRef}
-            onScroll={updateArrows}
-            className="-mx-6 -my-3 flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-smooth px-6 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-6 md:px-0"
-          >
-            {designs.map((piece, index) => {
-              const base = index * 160;
-
-              return (
-                <Reveal
-                  key={piece.name}
-                  delay={base}
-                  className="w-[calc(80vw-32px)] flex-none snap-center md:w-[390px]"
-                >
-                  <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-gold hover:shadow-[0_16px_30px_rgba(42,41,103,0.07)]">
-                    <Reveal delay={base + 150} y={14}>
-                      <div className="relative h-[170px] overflow-hidden bg-[#dbe1e5] md:h-[210px]">
-                        <FadeImage
-                          src={piece.image}
-                          alt={piece.name}
-                          fill
-                          sizes="(min-width: 768px) 390px, 80vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-                        />
-                      </div>
-                    </Reveal>
-
-                    <div className="flex flex-1 flex-col p-4 md:p-5">
-                      <Reveal delay={base + 250} y={14}>
-                        <h3 className="m-0 truncate text-navy font-manrope font-normal text-[20px] leading-[1.3] md:text-[24px]">
-                          {piece.name}
-                        </h3>
-                      </Reveal>
-
-                      {/* Description: clamped with ellipsis, always reserves the same space */}
-                      <Reveal delay={base + 350} y={14}>
-                        <p className="mt-1.5 line-clamp-2 min-h-[3.2em] text-cool text-[12px] leading-[1.6] md:mt-2 md:line-clamp-3 md:min-h-[5.1em] md:text-[13px] md:leading-[1.7]">
-                          {piece.description}
-                        </p>
-                      </Reveal>
-
-                      <Reveal
-                        delay={base + 450}
-                        y={14}
-                        className="flex flex-1 flex-col"
-                      >
-                        <dl className="my-3 rounded-lg border border-[#dbe1e5] bg-ash px-3 py-2 md:my-4 md:px-3.5 md:py-2.5">
-                          <div className="flex justify-between gap-4 border-b border-[#dbe1e5] py-1">
-                            <dt className="text-gold text-[9px] font-bold tracking-[.1em] uppercase">
-                              Weave Density
-                            </dt>
-                            <dd className="m-0 text-navy text-[11px] text-right font-medium">
-                              {piece.density}
-                            </dd>
-                          </div>
-                          <div className="flex justify-between gap-4 border-b border-[#dbe1e5] py-1">
-                            <dt className="text-gold text-[9px] font-bold tracking-[.1em] uppercase">
-                              Composition
-                            </dt>
-                            <dd className="m-0 text-navy text-[11px] text-right font-medium">
-                              Pure natural fiber
-                            </dd>
-                          </div>
-                          <div className="flex justify-between gap-4 py-1">
-                            <dt className="text-gold text-[9px] font-bold tracking-[.1em] uppercase">
-                              Craft Lead Time
-                            </dt>
-                            <dd className="m-0 text-navy text-[11px] text-right font-medium">
-                              12–18 weeks
-                            </dd>
-                          </div>
-                        </dl>
-
-                        <button
-                          type="button"
-                          className="mt-auto min-h-[44px] w-full cursor-pointer rounded-[8px] border-0 bg-navy px-6 text-[10px] font-bold uppercase tracking-[.13em] text-white transition-colors duration-200 hover:bg-navy/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-                          onClick={onOpenInquiry}
-                        >
-                          Enquire Now
-                        </button>
-                      </Reveal>
-                    </div>
-                  </article>
-                </Reveal>
-              );
-            })}
-          </div>
+        {/* Hamesha ek hi row: mobile par 1 card, desktop par 3 cards */}
+        <div
+          ref={scrollerRef}
+          onScroll={updateArrows}
+          className="relative -my-4 flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {FEATURED_DESIGNS.map((design, index) => (
+            <Reveal
+              key={design.slug}
+              delay={(index % 3) * 160}
+              className="h-full shrink-0 basis-full snap-center min-[721px]:basis-[calc((100%-3rem)/3)]"
+            >
+              <FeaturedDesignCard
+                design={design}
+                onOpenInquiry={onOpenInquiry}
+              />
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
