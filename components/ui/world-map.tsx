@@ -280,17 +280,8 @@ export function WorldMap({
                   fill={COLORS.land}
                   stroke={COLORS.landStroke}
                   strokeWidth={0.6}
-                  style={{
-                    default: { outline: "none" },
-                    hover: {
-                      outline: "none",
-                      fill: interactive ? COLORS.landHover : COLORS.land,
-                    },
-                    pressed: { outline: "none" },
-                    // This was missing: double-click focuses the path and
-                    // the browser drew its default black focus box.
-                    focus: { outline: "none" },
-                  }}
+                  className={`outline-none ${interactive ? "transition-colors duration-150 hover:fill-[#c9d2d9] cursor-pointer" : "pointer-events-none"}`}
+                  style={{ outline: "none" }}
                 />
               ))
             }
