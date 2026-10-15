@@ -8,6 +8,7 @@ import { Reveal, FadeImage } from "@/components/ui/reveal";
 import FounderSection from "@/components/about/FounderSection";
 import VisionMissionSection from "@/components/about/Visionmissionsection";
 import OurStorySection from "@/components/about/Ourstorysection";
+import ProcessSection from "@/components/about/process-section";
 
 const COMPANY = "Loomstone";
 const OWNER = "Pawan Yadav";
@@ -112,6 +113,8 @@ export default function AboutPage() {
           <FounderSection />
 
           <VisionMissionSection />
+
+          <ProcessSection />
 
           {/* Pillars */}
           <section className="mx-auto max-w-[90vw] py-16">

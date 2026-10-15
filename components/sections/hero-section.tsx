@@ -60,7 +60,7 @@ const defaultSlides = (heroImage: string): HeroSlide[] => [
     secondaryText: "Inquire About a Custom Rug",
   },
   {
-    image: "hero/hero-4.png",
+    image: "hero/hero-5.jpeg",
     heading: (
       <>
         Thoughtful design. <em className="text-gold not-italic">Timeless</em>{" "}

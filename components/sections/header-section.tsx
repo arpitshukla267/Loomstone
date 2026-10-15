@@ -179,7 +179,7 @@ export function HeaderSection({
       className={`fixed z-50 top-0 w-full border-b transition-all duration-300 motion-reduce:transition-none ${
         solid
           ? "bg-white/95 border-[#e4e9ec] backdrop-blur-[14px]"
-          : "bg-transparent border-transparent backdrop-blur-none"
+          : "bg-white/95 border-[#e4e9ec] backdrop-blur-[14px]"
       }`}
     >
       {/* Top bar: hamesha dikhta hai. Left mein arrows ke beech sliding contact options, right mein Inquiry button */}
@@ -289,13 +289,9 @@ export function HeaderSection({
                 key={link}
                 href={href}
                 className={`text-xs font-medium tracking-[.13em] uppercase no-underline transition-colors duration-200 md:py-[7px] border-b-2 ${
-                  solid
-                    ? active
-                      ? "text-navy border-gold"
-                      : "text-cool border-transparent hover:text-navy hover:border-gold"
-                    : active
-                      ? "text-white border-gold"
-                      : "text-white/80 border-transparent hover:text-white hover:border-gold"
+                  active
+                    ? "text-navy border-gold"
+                    : "text-cool border-transparent hover:text-navy hover:border-gold"
                 }`}
               >
                 {link}
