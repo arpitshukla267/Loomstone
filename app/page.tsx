@@ -5,11 +5,9 @@ import { Check } from 'lucide-react';
 import {
   HeaderSection,
   HeroSection,
-  FindYourRugSection,
   FindByRoomSection,
   CategoriesSection,
   FeaturedDesignsSection,
-  ProjectsSection,
   FaqSection,
   RecentBlogsSection,
   FooterSection,
@@ -52,6 +50,7 @@ export default function Home() {
     <main className="overflow-hidden bg-ash text-ink font-sans">
       <HeaderSection onShowToast={showToast} activePage="Home" />
       <HeroSection onOpenInquiry={openInquiry} />
+      <FindByRoomSection />
 
       <GlobalReachSection />
       <div className="text-4xl text-center">banner</div>

@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, MotionConfig, useInView } from "framer-motion";
 import { WorldMap, defaultDestinations, type Destination } from "../ui/world-map";
+import { SectionIntro } from "./section-intro";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -15,8 +16,6 @@ export interface GlobalReachSectionProps {
 }
 
 export function GlobalReachSection({
-  title = "Delivered across the world",
-  description = "From our looms in India, every rug travels to homes, hotels, and studios across continents, handled with the same care from first knot to final doorstep.",
   destinations = defaultDestinations,
 }: GlobalReachSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -27,7 +26,7 @@ export function GlobalReachSection({
       <section className="overflow-hidden bg-ash" id="global-reach">
         <div
           ref={ref}
-          className="mx-auto max-w-[90vw] px-6 py-[70px] md:px-[5%] md:py-[100px]"
+          className="mx-auto max-w-[90vw] px-0 py-[20px] md:px-[5%] md:py-[100px]"
         >
           {/* ================= HEADER ================= */}
           <motion.div
@@ -36,12 +35,11 @@ export function GlobalReachSection({
             transition={{ duration: 0.7, ease: EASE }}
             className="relative z-10 mx-auto flex w-full flex-col items-center text-center"
           >
-            <h2 className="mx-auto max-w-[900px] font-manrope text-[36px] font-normal leading-[1.15] text-navy sm:text-[46px] md:text-[clamp(42px,4.5vw,64px)]">
-              {title}
-            </h2>
-            <p className="mx-auto mt-5 max-w-[680px] text-[16px] leading-[1.8] text-cool sm:text-[18px]">
-              {description}
-            </p>
+            <SectionIntro
+              eyebrow="Artisanal Categories"
+              title="Delivered across the world"
+              text="From our looms in India, every rug travels to homes, hotels, and studios across continents, handled with the same care from first knot to final doorstep."
+            />
           </motion.div>
 
           {/* ================= MAP ================= */}
@@ -51,13 +49,13 @@ export function GlobalReachSection({
             transition={{ duration: 1, delay: 0.15, ease: EASE }}
             // Negative top margin pulls the map up *behind* the heading,
             // so the faded land surrounds the title like a background.
-            className="relative z-0 mx-auto w-full mt-4"
+            className="relative z-0 mx-auto w-full md:mt-4"
           >
             <WorldMap destinations={destinations} />
           </motion.div>
 
           {/* ================= MOBILE LIST ================= */}
-          <motion.ul
+          {/* <motion.ul
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.8, ease: EASE }}
@@ -71,7 +69,7 @@ export function GlobalReachSection({
                 {d.name}
               </li>
             ))}
-          </motion.ul>
+          </motion.ul> */}
         </div>
       </section>
     </MotionConfig>

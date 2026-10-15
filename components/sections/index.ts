@@ -1,7 +1,6 @@
 export * from "./section-intro";
 export * from "./hero-section";
 export * from "./categories-section";
-export * from "./find-your-rug-section";
 export * from "./find-by-room-section";
 export * from "./featured-designs-section";
 export * from "../about/process-section";

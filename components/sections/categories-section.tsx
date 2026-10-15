@@ -124,7 +124,7 @@ export function CategoriesSection({
 
           <div
             ref={trackRef}
-            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4"
+            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain overflow-y-hidden px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4"
           >
             {categories.map((category, index) => {
               const targetUrl = `/products?category=${encodeURIComponent(category.title)}`;

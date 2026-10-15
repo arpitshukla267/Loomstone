@@ -152,9 +152,9 @@ export function WorldMap({
   // Extra margin around the continents so the edge fade has room to work
   // (no land gets chopped by the viewBox before it has faded out).
   const WIDTH = isDesktop ? 1000 : 680;
-  const HEIGHT = isDesktop ? 560 : 400;
+  const HEIGHT = isDesktop ? 560 : 425;
   const center: [number, number] = isDesktop ? [18, 14] : [18, 12];
-  const scale = compact ? (isDesktop ? 130 : 100) : isDesktop ? 166 : 116;
+  const scale = compact ? (isDesktop ? 130 : 100) : isDesktop ? 166 : 121;
   const uiScale = isDesktop ? 1 : 1.35;
 
   const projection = useMemo(
