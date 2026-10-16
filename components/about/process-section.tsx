@@ -6,7 +6,9 @@ import {
   Compass,
   Droplets,
   Grid3x3,
-  PackageCheck,
+  Scissors,
+  Truck,
+  Wind,
   type LucideIcon,
 } from "lucide-react";
 
@@ -23,47 +25,77 @@ export interface ProcessStep {
 export const defaultProcessSteps: ProcessStep[] = [
   {
     title: "Design & Color Choice",
-    description: "Choose your size, colors, and yarn samples.",
-    phase: "PHASE 1 · 10–18 WEEKS",
+    description:
+      "Tell us your size, shape, and the colors you love. We match every shade to your space and send yarn samples, so you can see and feel the colors before a single knot is tied.",
+    phase: "PHASE 1 · DESIGN",
     highlights: ["Size & Shape", "Color Matching", "Yarn Samples"],
-    media: "/process/design.gif",
+    media: "/process/rug_design_colour_selection.gif",
     mediaAlt: "Choosing rug design and colors",
   },
   {
-    title: "Spinning & Dyeing",
-    description: "Natural wool hand-spun and dyed in small batches.",
-    phase: "PHASE 2 · 10–18 WEEKS",
-    highlights: ["Hand-Spun Wool", "Natural Dyes", "Small Batches"],
-    media: "/process/dyeing.gif",
-    mediaAlt: "Wool yarn being spun and dyed",
+    title: "Spinning",
+    description:
+      "Pure natural wool is cleaned, carded, and hand-spun into strong, even yarn. Spinning by hand keeps the fibre soft and gives your rug its rich, natural texture and long life.",
+    phase: "PHASE 2 · SPINNING",
+    highlights: ["Hand-Spun Wool", "Natural Fibre", "Soft Texture"],
+    media: "/process/spinning.png",
+    mediaAlt: "Wool being hand-spun into yarn",
+  },
+  {
+    title: "Dyeing",
+    description:
+      "The spun yarn is dyed in small batches using natural, colorfast dyes. Each batch is checked against your approved color, so the final shades stay deep, true, and fade-resistant.",
+    phase: "PHASE 3 · DYEING",
+    highlights: ["Natural Dyes", "Small Batches", "Colorfast"],
+    media: "/process/dyeing.png",
+    mediaAlt: "Wool yarn being dyed",
   },
   {
     title: "Loom Weaving",
-    description: "Woven knot by knot on upright wooden looms.",
-    phase: "PHASE 3 · 10–18 WEEKS",
+    description:
+      "Our master weavers knot your rug by hand on upright wooden looms, one row at a time. This slow craft takes weeks, but it gives the rug its sharp pattern and lasting strength.",
+    phase: "PHASE 4 · WEAVING",
     highlights: ["Wooden Looms", "Knot by Knot", "Master Weavers"],
-    media: "/process/weaving.gif",
+    media: "/process/loom-weaving.png",
     mediaAlt: "Artisan weaving a rug on a loom",
   },
   {
-    title: "Finishing & Delivery",
-    description: "Washed, hand-trimmed, inspected, and delivered.",
-    phase: "PHASE 4 · GLOBAL DELIVERY",
-    highlights: ["Hand-Trimmed", "Quality Inspection", "Global Delivery"],
-    media: "/process/finishing.gif",
-    mediaAlt: "Finishing and packing the rug",
+    title: "Finishing",
+    description:
+      "Once woven, the rug is washed, stretched, and hand-trimmed for an even pile and clean edges. Every inch is then inspected carefully so only a perfect piece moves ahead.",
+    phase: "PHASE 5 · FINISHING",
+    highlights: ["Hand-Trimmed", "Washed & Stretched", "Quality Inspection"],
+    media: "/process/finishing.png",
+    mediaAlt: "Finishing and trimming the rug",
+  },
+  {
+    title: "Delivery",
+    description:
+      "Your finished rug is carefully wrapped and packed to stay safe in transit. We ship worldwide and keep you updated, so it reaches your doorstep ready to be unrolled and enjoyed.",
+    phase: "PHASE 6 · GLOBAL DELIVERY",
+    highlights: ["Safe Packing", "Global Shipping", "Doorstep Delivery"],
+    media: "/process/delivery.png",
+    mediaAlt: "Rug packed and ready for delivery",
   },
 ];
 
-const STEP_ICONS: LucideIcon[] = [Compass, Droplets, Grid3x3, PackageCheck];
+const STEP_ICONS: LucideIcon[] = [
+  Compass,
+  Wind,
+  Droplets,
+  Grid3x3,
+  Scissors,
+  Truck,
+];
 
 function getIconForStep(title: string, index: number): LucideIcon {
   const lower = title.toLowerCase();
   if (lower.includes("design")) return Compass;
-  if (lower.includes("dye") || lower.includes("spin")) return Droplets;
+  if (lower.includes("spin")) return Wind;
+  if (lower.includes("dye")) return Droplets;
   if (lower.includes("loom") || lower.includes("weav")) return Grid3x3;
-  if (lower.includes("deliver") || lower.includes("finish"))
-    return PackageCheck;
+  if (lower.includes("finish")) return Scissors;
+  if (lower.includes("deliver")) return Truck;
   return STEP_ICONS[index % STEP_ICONS.length];
 }
 
@@ -113,7 +145,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
   };
 
   return (
-    <div ref={ref} className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
+    <div ref={ref} className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
       {/* ---------- MEDIA ---------- */}
       <motion.div
         variants={mediaVariants}
@@ -159,7 +191,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
 
         <motion.p
           variants={textItem}
-          className="mt-5 max-w-[620px] text-[16px] leading-[1.8] text-cool sm:text-[18px] lg:text-[20px]"
+          className="mt-4 max-w-[620px] text-[16px] leading-[1.7] text-cool sm:text-[18px] lg:text-[20px]"
         >
           {step.description}
         </motion.p>
@@ -200,7 +232,7 @@ export function ProcessSection({
             initial={{ opacity: 0, y: 20 }}
             animate={headerInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, ease: EASE }}
-            className="mx-auto mb-14 flex w-full flex-col items-center text-center md:mb-20"
+            className="mx-auto mb-10 flex w-full flex-col items-center text-center md:mb-14"
           >
             <h2 className="mx-auto max-w-[900px] font-manrope text-[36px] font-normal leading-[1.15] text-navy sm:text-[46px] md:text-[clamp(42px,4.5vw,64px)]">
               How we make your custom rug
@@ -211,7 +243,7 @@ export function ProcessSection({
           </motion.div>
 
           {/* ================= ZIG-ZAG ROWS ================= */}
-          <div className="flex flex-col gap-14 md:gap-20 lg:gap-24">
+          <div className="flex flex-col gap-8 md:gap-10 lg:gap-12">
             {steps.map((step, index) => {
               const firstOnLeft = firstMediaSide === "left";
               const mediaOnLeft = index % 2 === 0 ? firstOnLeft : !firstOnLeft;
