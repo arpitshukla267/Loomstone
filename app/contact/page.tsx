@@ -146,7 +146,7 @@ export default function ContactPage() {
                   <Detail
                     label="WhatsApp / Phone"
                     value="+33 1 40 50 20 10"
-                    href="https://wa.me/33140502010"
+                    href="https://wa.me/9916199988"
                   />
                   <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
                     <Detail
@@ -240,10 +240,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="mt-8">
-                    <Input
-                      label="Estimated rug size"
-                      placeholder=""
-                    />
+                    <Input label="Estimated rug size" placeholder="" />
                   </div>
 
                   <label className={`${labelCls} mt-8`}>

@@ -56,11 +56,11 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
         <div>
           <Link className="inline-flex items-center mb-[18px]" href="/">
             <Image
-              src="/logo-horizontal.png"
+              src="/logo-white.png"
               alt="Loomstone"
               width={140}
               height={45}
-              className="h-16 w-auto object-cover rounded bg-white"
+              className="h-20 w-auto object-cover rounded"
             />
           </Link>
           <p className="text-[12px] leading-[1.8] text-line max-w-[360px]">
@@ -126,24 +126,24 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
           <ul className="list-none m-0 p-0 space-y-3 text-[12px] leading-[1.8]">
             <li className="flex items-start gap-2">
               <MapPin size={14} className="mt-[5px] shrink-0 text-gold" />
-              <span>54 Greene Street, SoHo, New York</span>
+              <span></span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={14} className="shrink-0 text-gold" />
               <a
-                href="tel:+10000000000"
+                href="tel:+91 9916199988"
                 className="text-line no-underline hover:text-gold transition-colors"
               >
-                +1 000 000 0000
+                +91 9916199988
               </a>
             </li>
             <li className="flex items-center gap-2">
               <Mail size={14} className="shrink-0 text-gold" />
               <a
-                href="mailto:hello@loomstone.com"
+                href="mailto:office@loomstone.in"
                 className="text-line no-underline hover:text-gold transition-colors"
               >
-                hello@loomstone.com
+                office@loomstone.in
               </a>
             </li>
           </ul>
