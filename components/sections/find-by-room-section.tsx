@@ -35,7 +35,7 @@ const ROOMS: RoomCard[] = [
   {
     name: "Dining Room",
     tagline:
-      "Hard-wearing flatweaves and low piles allowing effortless chair gliding.",
+      "Hard-wearing handlooms, low piles and axminsters allowing effortless chair gliding.",
     image:
       "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=900&q=80",
     href: "/products?room=Dining+Room",

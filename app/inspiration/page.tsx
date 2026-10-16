@@ -14,14 +14,14 @@ const inspiration = [
     category: "Weave Textures",
     label: "Pure Mountain Wool",
     text: "Natural sheep wool washed with mountain water, soft and durable.",
-    image: siteImages.wool,
+    image: "/inspiration/1.jpeg",
   },
   {
     title: "Walnut Husks & Plant Roots",
     category: "Natural Dyes",
     label: "Natural Color",
     text: "Warm earthy tones made from boiled walnut husks and botanical extracts.",
-    image: siteImages.flat,
+    image: "/inspiration/2.png",
   },
   {
     title: "Warm Concrete & Soft Flax",
@@ -35,14 +35,14 @@ const inspiration = [
     category: "Artisan Workshops",
     label: "Knot Quality",
     text: "Artisans tying fine knots row by row on upright wooden looms.",
-    image: siteImages.relief,
+    image: "/inspiration/3.png",
   },
   {
     title: "Morning Light Across Wool Ribs",
     category: "Neutral Tones",
     label: "Shadow & Light",
     text: "Low morning sunlight showing the soft depth and texture of sculpted wool.",
-    image: siteImages.mono,
+    image: "/inspiration/2.png",
   },
   {
     title: "Milan Apartment Living Room",

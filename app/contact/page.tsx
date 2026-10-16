@@ -197,22 +197,22 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 gap-x-[40px] gap-y-8 md:grid-cols-2">
                     <Input
                       label="Full name"
-                      placeholder="e.g. Jean-Michel Moreau"
+                      placeholder="Your Full Name"
                       required
                     />
                     <Input
                       label="Company or residence"
-                      placeholder="e.g. Moreau Architecture Studio"
+                      placeholder="Company or Residence Name"
                     />
                     <Input
                       label="Email address"
-                      placeholder="j.moreau@studio-design.com"
+                      placeholder="Your Email Address"
                       type="email"
                       required
                     />
                     <Input
                       label="Phone number"
-                      placeholder="+33 6 12 34 56 78"
+                      placeholder="Your Phone Number"
                       type="tel"
                       required
                     />
@@ -242,37 +242,23 @@ export default function ContactPage() {
                   <div className="mt-8">
                     <Input
                       label="Estimated rug size"
-                      placeholder="e.g. 3m × 4m or 10' × 13'"
+                      placeholder=""
                     />
                   </div>
 
                   <label className={`${labelCls} mt-8`}>
-                    <Label text="Notes & color ideas" />
+                    <Label text="Description" />
                     <textarea
                       rows={3}
-                      placeholder="Tell us about room lighting, flooring type, desired pile height, or paint codes..."
+                      placeholder=""
                       className={`${lineCls} resize-none pb-12 text-[16px] leading-[1.5]`}
                     />
-                  </label>
-
-                  <label className="mt-8 flex cursor-pointer items-start gap-3">
-                    <input
-                      type="checkbox"
-                      defaultChecked
-                      className="mt-1 h-4 w-4 cursor-pointer accent-gold"
-                    />
-                    <span className="text-[13px] leading-[1.6] text-cool">
-                      <strong className="font-bold text-navy">
-                        Send me a free sample swatch box
-                      </strong>{" "}
-                      — delivered with 8 yarn swatches matched to your colors.
-                    </span>
                   </label>
 
                   <div className="mt-11 flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-[60px]">
                     <button
                       type="submit"
-                      className="inline-flex shrink-0 items-center gap-3 border border-navy px-9 py-[21px] text-[13px] font-medium tracking-[.2em] text-navy uppercase transition-colors hover:bg-navy hover:text-white"
+                      className="inline-flex shrink-0 items-center gap-3 border border-navy px-4 md:px-9 py-4 text-sm md:text-sm font-medium md:tracking-[.1em] text-navy title rounded-[8px] transition-colors hover:bg-navy hover:text-white"
                     >
                       Send inquiry &amp; request swatches{" "}
                       <ArrowRight size={18} />

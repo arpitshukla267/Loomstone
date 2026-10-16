@@ -77,7 +77,7 @@ const sortOptions: { value: SortOption; label: string; icon: LucideIcon }[] = [
   { value: "featured", label: "Featured & Curated", icon: TrendingUp },
   { value: "name-asc", label: "Name: A to Z", icon: ArrowDownAZ },
   { value: "name-desc", label: "Name: Z to A", icon: ArrowUpZA },
-  { value: "category", label: "Technique / Category", icon: Tag },
+  { value: "category", label: "Category", icon: Tag },
 ];
 
 /* ---------- Sort dropdown ---------- */
@@ -167,7 +167,7 @@ function SortSelect({
             setOpen((o) => !o);
           }}
           onKeyDown={onKeyDown}
-          className={`flex min-h-[44px] w-full items-center gap-2.5 rounded-lg border bg-white px-3 text-left text-[12px] text-navy outline-none transition-colors hover:border-navy focus-visible:border-navy ${
+          className={`flex min-h-[44px] w-full items-center gap-2.5 rounded-[8px] border bg-white px-3 text-left text-[12px] text-navy outline-none transition-colors hover:border-navy focus-visible:border-navy ${
             open ? "border-navy" : "border-line"
           }`}
         >
@@ -469,14 +469,14 @@ function ProductsContent() {
     }
   }, [searchParams]);
 
-  // Filter collapsible state (all closed initially)
+  // Filter collapsible state (category open by default for immediate accessibility)
   const [openFilters, setOpenFilters] = useState<{
     category: boolean;
     room: boolean;
     style: boolean;
     size: boolean;
   }>({
-    category: false,
+    category: true,
     room: false,
     style: false,
     size: false,
@@ -535,7 +535,8 @@ function ProductsContent() {
       result = result.filter(
         (p) =>
           p.category.toLowerCase() === selectedCategory.toLowerCase() ||
-          p.weave.toLowerCase() === selectedCategory.toLowerCase(),
+          p.weave.toLowerCase() === selectedCategory.toLowerCase() ||
+          selectedCategory.toLowerCase().includes(p.weave.toLowerCase()),
       );
     }
 
@@ -653,7 +654,7 @@ function ProductsContent() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by rug name, fiber, or color..."
-                  className="w-full rounded-lg border border-line bg-ash/50 py-2.5 pl-10 pr-9 text-[13px] text-ink outline-none transition-colors placeholder:text-cool/50 focus:border-navy focus:bg-white"
+                  className="w-full border border-line bg-ash/50 py-2.5 pl-10 pr-9 rounded-[8px] text-[13px] text-ink outline-none transition-colors placeholder:text-cool/50 focus:border-navy focus:bg-white"
                 />
                 {searchQuery && (
                   <button
@@ -681,88 +682,6 @@ function ProductsContent() {
                 </div>
               </div>
             </div>
-
-            {/* Active Filter Tags */}
-            {hasActiveFilters && (
-              <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-line/60 pt-3">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-cool/70">
-                  Active Filters:
-                </span>
-
-                {selectedCategory !== "All" && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
-                    Category: {selectedCategory}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCategory("All")}
-                      className="hover:text-gold"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-
-                {selectedRoom !== "All" && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
-                    Room: {selectedRoom}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedRoom("All")}
-                      className="hover:text-gold"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-
-                {selectedStyle !== "All" && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
-                    Style: {selectedStyle}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedStyle("All")}
-                      className="hover:text-gold"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-
-                {selectedSize !== "All" && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
-                    Size: {selectedSize}
-                    <button
-                      type="button"
-                      onClick={() => setSelectedSize("All")}
-                      className="hover:text-gold"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-
-                {searchQuery.trim() && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-navy/10 px-2.5 py-1 text-[11px] font-medium text-navy">
-                    Keyword: &quot;{searchQuery}&quot;
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery("")}
-                      className="hover:text-gold"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-
-                <button
-                  type="button"
-                  onClick={handleResetFilters}
-                  className="text-[11px] font-semibold text-gold underline underline-offset-2 hover:text-navy"
-                >
-                  Reset all
-                </button>
-              </div>
-            )}
           </div>
 
           {/* Grid Layout: Desktop Sidebar Filters + Products Grid */}
@@ -802,7 +721,7 @@ function ProductsContent() {
                       className="flex w-full items-center justify-between text-left transition-colors hover:text-navy"
                     >
                       <h4 className="text-xs font-semibold tracking-wider text-navy">
-                        Technique / Category
+                        Category
                       </h4>
                       <ChevronDown
                         size={16}
@@ -834,7 +753,10 @@ function ProductsContent() {
                                         p.category.toLowerCase() ===
                                           cat.toLowerCase() ||
                                         p.weave.toLowerCase() ===
-                                          cat.toLowerCase(),
+                                          cat.toLowerCase() ||
+                                        cat
+                                          .toLowerCase()
+                                          .includes(p.weave.toLowerCase()),
                                     ).length;
 
                               return (
@@ -873,7 +795,7 @@ function ProductsContent() {
                     </AnimatePresence>
                   </div>
 
-                  {/* 2. Room / Space */}
+                  {/* 2. Space */}
                   <div className="border-b border-line py-3.5">
                     <button
                       type="button"
@@ -881,7 +803,7 @@ function ProductsContent() {
                       className="flex w-full items-center justify-between text-left transition-colors hover:text-navy"
                     >
                       <h4 className="text-xs font-semibold tracking-wider text-navy">
-                        Room / Placement
+                        Placement
                       </h4>
                       <ChevronDown
                         size={16}
@@ -1206,7 +1128,7 @@ function ProductsContent() {
               className="flex w-full items-center justify-between text-left"
             >
               <h4 className="text-[12px] font-bold uppercase tracking-wider text-navy">
-                Technique / Category
+                Category
               </h4>
               <ChevronDown
                 size={16}
@@ -1267,7 +1189,7 @@ function ProductsContent() {
               className="flex w-full items-center justify-between text-left"
             >
               <h4 className="text-[12px] font-bold uppercase tracking-wider text-navy">
-                Room / Placement
+                Placement
               </h4>
               <ChevronDown
                 size={16}

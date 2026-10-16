@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { Hammer, Leaf, Lightbulb, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
@@ -54,7 +55,19 @@ const coreValues: CoreValue[] = [
 const CENTER = { x: 450, y: 440 };
 const DIST = 300; // centre -> node
 const R = 118; // white circle radius
+const RING_R = 108; // dotted ring radius
 const RING_ANGLES = [-90, 30, 150]; // top, bottom-right, bottom-left
+
+/* ---------------- animation ---------------- */
+
+const START_DELAY = 0.3; // s before the ring starts filling
+const DRAW_DURATION = 3; // s for the full ring
+const FADE_LEAD = 0.15; // node fade starts slightly before the fill reaches the dot
+const FLY_OFFSET = 50;
+// fraction of the ring (clockwise from the top) at which each marker sits
+const RING_FRACTIONS = RING_ANGLES.map(
+  (a) => ((((a + 90) % 360) + 360) % 360) / 360,
+);
 
 const rad = (d: number) => (d * Math.PI) / 180;
 const pt = (cx: number, cy: number, r: number, a: number) => ({
@@ -67,14 +80,29 @@ const arc = (cx: number, cy: number, r: number, a1: number, a2: number) => {
   return `M ${s.x} ${s.y} A ${r} ${r} 0 ${a2 - a1 > 180 ? 1 : 0} 1 ${e.x} ${e.y}`;
 };
 
-function ValueNode({ value, angle }: { value: CoreValue; angle: number }) {
+// full circle starting at the top, going clockwise (used only as the mask path)
+const RING_PATH = `M ${CENTER.x} ${CENTER.y - RING_R} A ${RING_R} ${RING_R} 0 1 1 ${CENTER.x} ${CENTER.y + RING_R} A ${RING_R} ${RING_R} 0 1 1 ${CENTER.x} ${CENTER.y - RING_R}`;
+
+function ValueNode({
+  value,
+  angle,
+  visible,
+  delay,
+  instant,
+}: {
+  value: CoreValue;
+  angle: number;
+  visible: boolean;
+  delay: number;
+  instant: boolean;
+}) {
   const node = pt(CENTER.x, CENTER.y, DIST, angle);
   // direction from the node towards the centre
   const theta =
     (Math.atan2(CENTER.y - node.y, CENTER.x - node.x) * 180) / Math.PI;
   const dir = { x: Math.cos(rad(theta)), y: Math.sin(rad(theta)) };
   const perp = { x: -dir.y, y: dir.x };
-
+  const out = { x: -dir.x, y: -dir.y };
   const base = { x: node.x + dir.x * 124, y: node.y + dir.y * 124 };
   const tip = { x: node.x + dir.x * 152, y: node.y + dir.y * 152 };
   const pointer = `${base.x + perp.x * 32},${base.y + perp.y * 32} ${tip.x},${tip.y} ${base.x - perp.x * 32},${base.y - perp.y * 32}`;
@@ -83,7 +111,18 @@ function ValueNode({ value, angle }: { value: CoreValue; angle: number }) {
   const titleStart = node.y - 12;
 
   return (
-    <g>
+    <g
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible
+          ? "translate(0px, 0px)"
+          : `translate(${out.x * FLY_OFFSET}px, ${out.y * FLY_OFFSET}px)`,
+        transition: instant
+          ? "none"
+          : `opacity 0.8s ease ${delay}s, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`,
+        willChange: "transform, opacity",
+      }}
+    >
       {/* thin outer arc (far side) */}
       <path
         d={arc(node.x, node.y, 138, theta + 105, theta + 255)}
@@ -156,102 +195,188 @@ function ValueNode({ value, angle }: { value: CoreValue; angle: number }) {
 }
 
 export default function CoreValuesSection() {
+  const diagramRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setReduceMotion(true);
+      setInView(true);
+      return;
+    }
+    const el = diagramRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect(); // play once
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section className="mx-auto max-w-[90vw] py-16">
-
+    <section className="mx-auto max-w-[90vw] px-4 py-8 md:flex md:min-h-screen md:items-center md:justify-center md:px-8">
       {/* ---------- Desktop / tablet diagram ---------- */}
-      <Reveal>
-        <div className="mx-auto hidden max-w-[820px] md:block">
-          <svg
-            viewBox="0 0 900 760"
-            className="h-auto w-full"
-            role="img"
-            aria-label="Core values: timeless craftsmanship, innovative approach, sustainable practices"
-          >
-            <defs>
-              <filter
-                id="cvShadow"
-                x="-30%"
-                y="-30%"
-                width="160%"
-                height="160%"
-              >
-                <feDropShadow
-                  dx="0"
-                  dy="8"
-                  stdDeviation="10"
-                  floodColor={NAVY}
-                  floodOpacity="0.18"
-                />
-              </filter>
-            </defs>
-
-            {/* centre dotted ring */}
-            <circle
-              cx={CENTER.x}
-              cy={CENTER.y}
-              r={108}
-              fill="none"
-              stroke="#94a3b8"
-              strokeWidth={4}
-              strokeDasharray="0 9"
-              strokeLinecap="round"
-            />
-            <text
-              x={CENTER.x}
-              y={CENTER.y - 4}
-              textAnchor="middle"
-              fontSize={36}
-              fontWeight={800}
-              fill={NAVY}
-              className="font-manrope"
+      <div className="hidden w-full md:block">
+        <Reveal>
+          <div ref={diagramRef} className="mx-auto w-full max-w-[870px]">
+            <svg
+              viewBox="-30 -30 960 790"
+              className="mx-auto h-auto max-h-[calc(100vh)] w-full overflow-visible"
+              role="img"
+              aria-label="Core values: timeless craftsmanship, innovative approach, sustainable practices"
             >
-              CORE
-            </text>
-            <text
-              x={CENTER.x}
-              y={CENTER.y + 38}
-              textAnchor="middle"
-              fontSize={36}
-              fontWeight={800}
-              fill={NAVY}
-              className="font-manrope"
-            >
-              VALUES
-            </text>
-
-            {/* small connector markers on the dotted ring */}
-            {RING_ANGLES.map((a) => {
-              const node = pt(CENTER.x, CENTER.y, DIST, a);
-              const toNode =
-                (Math.atan2(node.y - CENTER.y, node.x - CENTER.x) * 180) /
-                Math.PI;
-              const m = pt(CENTER.x, CENTER.y, 108, toNode);
-              return (
-                <g key={a}>
-                  <circle
-                    cx={m.x}
-                    cy={m.y}
-                    r={10}
-                    fill="#ffffff"
-                    stroke={NAVY}
-                    strokeWidth={2}
+              <defs>
+                <filter
+                  id="cvShadow"
+                  x="-30%"
+                  y="-30%"
+                  width="160%"
+                  height="160%"
+                >
+                  <feDropShadow
+                    dx="0"
+                    dy="8"
+                    stdDeviation="10"
+                    floodColor={NAVY}
+                    floodOpacity="0.18"
                   />
-                  <circle cx={m.x} cy={m.y} r={4} fill={GOLD} />
-                </g>
-              );
-            })}
+                </filter>
 
-            {coreValues.map((v, i) => (
-              <ValueNode
-                key={v.title.join(" ")}
-                value={v}
-                angle={RING_ANGLES[i]}
+                {/* mask that reveals the navy dotted ring clockwise from the top */}
+                <mask
+                  id="cvRingMask"
+                  maskUnits="userSpaceOnUse"
+                  x="0"
+                  y="0"
+                  width="900"
+                  height="760"
+                >
+                  <path
+                    d={RING_PATH}
+                    pathLength={100}
+                    fill="none"
+                    stroke="#ffffff"
+                    strokeWidth={30}
+                    strokeDasharray={100}
+                    strokeDashoffset={inView ? 0 : 100}
+                    style={{
+                      transition: reduceMotion
+                        ? "none"
+                        : `stroke-dashoffset ${DRAW_DURATION}s linear ${START_DELAY}s`,
+                    }}
+                  />
+                </mask>
+              </defs>
+
+              {/* grey dotted ring (empty track) */}
+              <circle
+                cx={CENTER.x}
+                cy={CENTER.y}
+                r={RING_R}
+                fill="none"
+                stroke="#94a3b8"
+                strokeWidth={4}
+                strokeDasharray="0 9"
+                strokeLinecap="round"
               />
-            ))}
-          </svg>
-        </div>
-      </Reveal>
+
+              {/* navy dotted ring: same dots, revealed progressively = "fills" */}
+              <circle
+                cx={CENTER.x}
+                cy={CENTER.y}
+                r={RING_R}
+                fill="none"
+                stroke={NAVY}
+                strokeWidth={5}
+                strokeDasharray="0 9"
+                strokeLinecap="round"
+                mask="url(#cvRingMask)"
+              />
+
+              <text
+                x={CENTER.x}
+                y={CENTER.y - 4}
+                textAnchor="middle"
+                fontSize={36}
+                fontWeight={800}
+                fill={NAVY}
+                className="font-manrope"
+              >
+                CORE
+              </text>
+              <text
+                x={CENTER.x}
+                y={CENTER.y + 38}
+                textAnchor="middle"
+                fontSize={36}
+                fontWeight={800}
+                fill={NAVY}
+                className="font-manrope"
+              >
+                VALUES
+              </text>
+
+              {/* connector markers: pop in when the fill reaches them */}
+              {RING_ANGLES.map((a, i) => {
+                const node = pt(CENTER.x, CENTER.y, DIST, a);
+                const toNode =
+                  (Math.atan2(node.y - CENTER.y, node.x - CENTER.x) * 180) /
+                  Math.PI;
+                const m = pt(CENTER.x, CENTER.y, RING_R, toNode);
+                const reachDelay =
+                  START_DELAY + RING_FRACTIONS[i] * DRAW_DURATION;
+                return (
+                  <g
+                    key={a}
+                    style={{
+                      opacity: inView ? 1 : 0,
+                      transform: inView ? "scale(1)" : "scale(0.2)",
+                      transformBox: "fill-box",
+                      transformOrigin: "center",
+                      transition: reduceMotion
+                        ? "none"
+                        : `opacity 0.3s ease ${reachDelay}s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ${reachDelay}s`,
+                    }}
+                  >
+                    <circle
+                      cx={m.x}
+                      cy={m.y}
+                      r={10}
+                      fill="#ffffff"
+                      stroke={NAVY}
+                      strokeWidth={2}
+                    />
+                    <circle cx={m.x} cy={m.y} r={4} fill={GOLD} />
+                  </g>
+                );
+              })}
+
+              {/* value circles: fade in when the fill reaches their marker */}
+              {coreValues.map((v, i) => (
+                <ValueNode
+                  key={v.title.join(" ")}
+                  value={v}
+                  angle={RING_ANGLES[i]}
+                  visible={inView}
+                  instant={reduceMotion}
+                  delay={Math.max(
+                    0,
+                    START_DELAY + RING_FRACTIONS[i] * DRAW_DURATION - FADE_LEAD,
+                  )}
+                />
+              ))}
+            </svg>
+          </div>
+        </Reveal>
+      </div>
 
       {/* ---------- Mobile fallback ---------- */}
       <div className="mx-auto grid max-w-[420px] gap-5 md:hidden">

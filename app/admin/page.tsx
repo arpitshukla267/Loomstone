@@ -520,7 +520,8 @@ export default function AdminCmsPage() {
               const count = products.filter(
                 (p) =>
                   p.category.toLowerCase() === cat.title.toLowerCase() ||
-                  p.weave.toLowerCase() === cat.title.toLowerCase()
+                  p.weave.toLowerCase() === cat.title.toLowerCase() ||
+                  cat.title.toLowerCase().includes(p.weave.toLowerCase())
               ).length;
 
               return (
@@ -662,11 +663,11 @@ export default function AdminCmsPage() {
                     onChange={(e) => setFormWeave(e.target.value as Product["weave"])}
                     className="mt-1.5 w-full rounded-lg border border-line bg-white p-2.5 text-xs text-ink outline-none focus:border-navy"
                   >
-                    <option value="Hand Knotted">Hand Knotted</option>
                     <option value="Hand Tufted">Hand Tufted</option>
+                    <option value="Hand Knotted">Hand Knotted</option>
                     <option value="Handloom">Handloom</option>
-                    <option value="Flatweave">Flatweave</option>
-                    <option value="Power Loomed">Power Loomed</option>
+                    <option value="Axminster">Axminster</option>
+                    <option value="Carpet Tile">Carpet Tile</option>
                   </select>
                 </div>
               </div>

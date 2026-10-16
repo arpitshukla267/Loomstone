@@ -124,7 +124,7 @@ export function CategoriesSection({
 
           <div
             ref={trackRef}
-            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain overflow-y-hidden px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-4"
+            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain overflow-y-hidden px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 md:gap-5 md:overflow-visible md:px-0"
           >
             {categories.map((category, index) => {
               const targetUrl = `/products?category=${encodeURIComponent(category.title)}`;
@@ -132,25 +132,25 @@ export function CategoriesSection({
               return (
                 <Reveal
                   key={category.title}
-                  delay={(index % 4) * 120}
+                  delay={(index % 5) * 100}
                   className="h-full w-[calc(80vw-32px)] shrink-0 snap-center md:w-auto md:shrink"
                 >
                   <Link
                     href={targetUrl}
                     className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_16px_32px_rgba(42,41,103,0.09)]"
                   >
-                    <div className="relative h-[190px] overflow-hidden bg-[#f1f2f3] md:h-[260px]">
+                    <div className="relative h-[190px] overflow-hidden bg-[#f1f2f3] md:h-[220px] xl:h-[240px]">
                       <FadeImage
                         src={category.image}
                         alt={category.title}
                         fill
-                        sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 80vw"
+                        sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 80vw"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                       />
                     </div>
 
-                    <div className="flex flex-1 flex-col p-4 md:p-6">
-                      <h3 className="m-0 min-h-[2.6em] text-[18px] font-normal leading-[1.3] text-navy transition-colors group-hover:text-gold md:text-[21px]">
+                    <div className="flex flex-1 flex-col p-4 md:p-5">
+                      <h3 className="m-0 min-h-[2.6em] text-[17px] font-normal leading-[1.3] text-navy transition-colors group-hover:text-gold xl:text-[19px]">
                         {category.title}
                       </h3>
 

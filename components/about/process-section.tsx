@@ -225,7 +225,7 @@ export function ProcessSection({
   return (
     <MotionConfig reducedMotion="user">
       <section className="overflow-hidden bg-ash" id="products">
-        <div className="mx-auto max-w-[85vw] px-6 py-[70px] md:px-[5%] md:py-[100px]">
+        <div className="mx-auto max-w-[85vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px]">
           {/* ================= HEADER ================= */}
           <motion.div
             ref={headerRef}

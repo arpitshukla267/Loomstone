@@ -60,7 +60,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
               alt="Loomstone"
               width={140}
               height={45}
-              className="h-16 w-auto object-contain rounded bg-white"
+              className="h-16 w-auto object-cover rounded bg-white"
             />
           </Link>
           <p className="text-[12px] leading-[1.8] text-line max-w-[360px]">

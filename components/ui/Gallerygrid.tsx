@@ -22,94 +22,6 @@ type GalleryGridProps = {
 const srcOf = (image: GalleryItem["image"]) =>
   typeof image === "string" ? image : image.src;
 
-/**
- * Mosaic layouts on a 12-column grid. Each tile is [col, colSpan, row, rowSpan].
- * Every layout fills a full rectangle with no gaps, like a photo collage.
- */
-type Tile = [number, number, number, number];
-const LAYOUTS: Record<number, { rows: number; tiles: Tile[] }> = {
-  1: { rows: 3, tiles: [[1, 12, 1, 3]] },
-  2: {
-    rows: 3,
-    tiles: [
-      [1, 7, 1, 3],
-      [8, 5, 1, 3],
-    ],
-  },
-  3: {
-    rows: 3,
-    tiles: [
-      [1, 6, 1, 3],
-      [7, 6, 1, 1],
-      [7, 6, 2, 2],
-    ],
-  },
-  4: {
-    rows: 2,
-    tiles: [
-      [1, 6, 1, 2],
-      [7, 6, 1, 1],
-      [7, 3, 2, 1],
-      [10, 3, 2, 1],
-    ],
-  },
-  5: {
-    rows: 3,
-    tiles: [
-      [1, 7, 1, 1],
-      [8, 5, 1, 2],
-      [1, 4, 2, 1],
-      [5, 3, 2, 1],
-      [1, 12, 3, 1],
-    ],
-  },
-  6: {
-    rows: 4,
-    tiles: [
-      [1, 7, 1, 1],
-      [8, 5, 1, 2],
-      [1, 4, 2, 1],
-      [5, 3, 2, 1],
-      [1, 6, 3, 2],
-      [7, 6, 3, 2],
-    ],
-  },
-};
-
-function buildTiles(count: number) {
-  const placed: { index: number; tile: Tile }[] = [];
-  let rowOffset = 0;
-  let index = 0;
-  while (index < count) {
-    const chunk = Math.min(6, count - index);
-    const layout = LAYOUTS[chunk];
-    layout.tiles.forEach((t, i) => {
-      placed.push({
-        index: index + i,
-        tile: [t[0], t[1], t[2] + rowOffset, t[3]],
-      });
-    });
-    rowOffset += layout.rows;
-    index += chunk;
-  }
-  return { placed, totalRows: rowOffset };
-}
-
-// Row height follows the screen height, so the collage length adapts to the screen.
-function useRowHeight() {
-  const [rowHeight, setRowHeight] = useState(190);
-  useEffect(() => {
-    const update = () =>
-      setRowHeight(
-        Math.max(110, Math.min(240, Math.round(window.innerHeight * 0.17))),
-      );
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-  return rowHeight;
-}
-
 // Natural aspect ratio of the opened image so the lens maps 1:1 onto it
 function useRatio(src: string | null) {
   const [ratio, setRatio] = useState(1.5);
@@ -126,13 +38,8 @@ function useRatio(src: string | null) {
   return ratio;
 }
 
-const GAP = 8;
-
 export default function GalleryGrid({ items }: GalleryGridProps) {
-  const rowHeight = useRowHeight();
   const [active, setActive] = useState<number | null>(null);
-
-  const { placed, totalRows } = buildTiles(items.length);
 
   const close = useCallback(() => setActive(null), []);
   const next = useCallback(
@@ -189,44 +96,30 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
 
   return (
     <>
-      {/* Mosaic collage */}
-      <div
-        className="grid w-full"
-        style={{
-          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-          gridTemplateRows: `repeat(${totalRows}, ${rowHeight}px)`,
-          gap: GAP,
-        }}
-      >
-        {placed.map(({ index, tile }) => {
-          const item = items[index];
-          return (
-            <motion.button
-              key={item.title}
-              type="button"
-              layout
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: index * 0.04 }}
-              onClick={() => setActive(index)}
-              aria-label={`Open ${item.title}`}
-              className="group relative min-w-0 cursor-zoom-in overflow-hidden"
-              style={{
-                gridColumn: `${tile[0]} / span ${tile[1]}`,
-                gridRow: `${tile[2]} / span ${tile[3]}`,
-                background: "#eee",
-              }}
-            >
-              <Image
-                src={srcOf(item.image)}
-                alt={item.title}
-                fill
-                sizes="(max-width: 768px) 60vw, 40vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-              />
-            </motion.button>
-          );
-        })}
+      {/* Masonry: every image keeps its own natural width/height ratio */}
+      <div className="columns-1 gap-2 sm:columns-2 lg:columns-3">
+        {items.map((item, index) => (
+          <motion.button
+            key={item.title}
+            type="button"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: index * 0.04 }}
+            onClick={() => setActive(index)}
+            aria-label={`Open ${item.title}`}
+            className="group mb-2 block w-full break-inside-avoid cursor-zoom-in overflow-hidden bg-[#eee]"
+          >
+            <Image
+              src={srcOf(item.image)}
+              alt={item.title}
+              width={0}
+              height={0}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="block h-auto w-full transition-transform duration-700 group-hover:scale-[1.06]"
+              style={{ width: "100%", height: "auto" }}
+            />
+          </motion.button>
+        ))}
       </div>
 
       {/* Lightbox: black overlay, image only, rendered above the whole page */}

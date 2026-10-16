@@ -48,10 +48,12 @@ export default function AboutPage() {
 
           <VisionMissionSection />
 
-          <ProcessSection />
-
           {/* ================= Core Values ================= */}
           <CoreValuesSection />
+          
+          {/* ================= Process ================= */}
+          <ProcessSection />
+
         </main>
       </div>
     </PageFrame>
