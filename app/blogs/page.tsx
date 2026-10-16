@@ -11,7 +11,7 @@ export default function BlogsPage() {
   return (
     <PageFrame active="Blogs">
       <section className="bg-white px-6 pb-20 pt-[130px] md:px-[5%] md:pb-28 md:pt-[150px]">
-        <div className="mx-auto max-w-[1200px]">
+        <div className="mx-auto max-w-[90vw]">
           {/* Header - Simple, no eyebrow, no icons, no decoratives */}
           <div className="max-w-[700px]">
             <h1 className="font-manrope text-[36px] font-normal tracking-[-0.03em] text-navy md:text-[52px]">
@@ -25,7 +25,7 @@ export default function BlogsPage() {
           </div>
 
           {/* Blog Cards Grid */}
-          <div className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-2 lg:gap-12">
+          <div className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12">
             {BLOG_POSTS.map((post) => (
               <article key={post.slug} className="flex flex-col">
                 <Link
@@ -46,7 +46,7 @@ export default function BlogsPage() {
                   {/* Clean Content */}
                   <div className="mt-5">
                     <span className="text-[12px] text-cool/70">
-                      {post.date} &middot; {post.readTime}
+                      {post.date} 
                     </span>
 
                     <h2 className="mt-2 font-manrope text-[22px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[24px]">

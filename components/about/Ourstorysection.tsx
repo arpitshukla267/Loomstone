@@ -97,7 +97,7 @@ export default function OurStorySection() {
         <Reveal delay={200}>
           <Link
             href="/contact"
-            className="mt-8 inline-flex items-center gap-2.5 rounded-lg bg-[#2a2a6b] px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#e8a21c] hover:text-[#2a2a6b]"
+            className="mt-8 inline-flex items-center gap-2.5 rounded-[8px] bg-[#2a2a6b] px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#e8a21c] hover:text-[#2a2a6b]"
           >
             Get in touch <ArrowUpRight size={16} />
           </Link>

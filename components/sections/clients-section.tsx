@@ -143,7 +143,7 @@ export function ClientsSection({
   titleBottom = "from various industries",
   description = "Learn why professionals trust our solutions to complete their customer journeys.",
   ctaLabel = "Read Success Stories",
-  ctaHref = "#",
+  ctaHref = "about",
   images = [],
   imageFit = "cover",
 }: TestimonialsSectionProps) {
