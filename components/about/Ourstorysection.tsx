@@ -17,7 +17,10 @@ const digitBase: React.CSSProperties = {
 
 export default function OurStorySection() {
   return (
-    <section className="mx-auto grid max-w-[85vw] items-center gap-10 pb-20 lg:grid-cols-[1.05fr_1fr] lg:gap-20">
+    <section 
+      className="mx-auto grid max-w-[85vw] items-center gap-10 pb-20 lg:grid-cols-[1.05fr_1fr] lg:gap-20 pt-10"
+      id="our-story"
+    >
       {/* ================= Big "03" filled with carpet image ================= */}
       <Reveal>
         <div className="flex min-h-[440px] flex-col items-center justify-center py-12 lg:min-h-[640px]">
