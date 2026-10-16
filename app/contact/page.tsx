@@ -140,12 +140,12 @@ export default function ContactPage() {
                 <div className="flex flex-col gap-8">
                   <Detail
                     label="Email inquiries"
-                    value="hello@atelierterroir.com"
-                    href="mailto:hello@atelierterroir.com"
+                    value="office@loomstone.in"
+                    href="mailto:office@loomstone.in"
                   />
                   <Detail
                     label="WhatsApp / Phone"
-                    value="+33 1 40 50 20 10"
+                    value="+91 9916199988"
                     href="https://wa.me/9916199988"
                   />
                   <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">

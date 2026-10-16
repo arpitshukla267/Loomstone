@@ -152,7 +152,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
           <ul className="list-none m-0 p-0 space-y-3 text-[12px] leading-[1.8]">
             <li className="flex items-start gap-2">
               <MapPin size={14} className="mt-[5px] shrink-0 text-gold" />
-              <span></span>
+              <span>Jaipur, India</span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={14} className="shrink-0 text-gold" />
