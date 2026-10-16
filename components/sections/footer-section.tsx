@@ -1,26 +1,36 @@
-'use client';
+"use client";
 
-import { Mail, MapPin, Phone } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 const quickLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'Products Archive', href: '/products' },
-  { label: 'About Atelier', href: '/about' },
-  { label: 'Projects & Contracts', href: '/projects' },
-  { label: 'Inspiration Gallery', href: '/inspiration' },
-  { label: 'Blogs & Stories', href: '/blogs' },
-  { label: 'Direct Consultation', href: '/contact' },
-  { label: 'Atelier CMS Portal', href: '/admin' },
+  { label: "Home", href: "/" },
+  { label: "Products Archive", href: "/products" },
+  { label: "About Atelier", href: "/about" },
+  { label: "Projects & Contracts", href: "/projects" },
+  { label: "Inspiration Gallery", href: "/inspiration" },
+  { label: "Blogs & Stories", href: "/blogs" },
+  { label: "Direct Consultation", href: "/contact" },
+  { label: "Atelier CMS Portal", href: "/admin" },
 ];
 
 const iconClass =
-  'flex items-center justify-center w-9 h-9 rounded-full border border-white/25 text-white hover:text-gold hover:border-gold transition-colors';
+  "flex items-center justify-center w-9 h-9 rounded-full border border-white/25 text-white hover:text-gold hover:border-gold transition-colors";
 
 function InstagramIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
@@ -30,7 +40,17 @@ function InstagramIcon() {
 
 function FacebookIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
     </svg>
   );
@@ -38,7 +58,13 @@ function FacebookIcon() {
 
 function XIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
@@ -131,7 +157,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
             <li className="flex items-center gap-2">
               <Phone size={14} className="shrink-0 text-gold" />
               <a
-                href="tel:+91 9916199988"
+                href="tel:+919916199988"
                 className="text-line no-underline hover:text-gold transition-colors"
               >
                 +91 9916199988
@@ -150,8 +176,27 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
         </div>
       </div>
 
-      <div className="max-w-[1310px] mx-auto mt-[45px] pt-5 border-t border-white/[0.11] text-[10px] text-center md:text-left">
-        © {new Date().getFullYear()} Loomstone. All rights reserved.
+      {/* Bottom bar: copyright + created by */}
+      <div className="max-w-[1310px] mx-auto mt-[45px] pt-5 border-t border-white/[0.11] text-[10px] flex flex-col md:flex-row items-center justify-between gap-3">
+        <span>
+          © {new Date().getFullYear()} Loomstone. All rights reserved.
+        </span>
+
+        <a
+          href="https://visitinglink.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 hover:text-gold transition-colors"
+        >
+          <span>Designed & Developed by VisitingLink</span>
+          <Image
+            src="/vl-logo.png"
+            alt="Visiting Link"
+            width={90}
+            height={24}
+            className="h-4 -mt-[1px] -ml-0.5 w-auto object-contain"
+          />
+        </a>
       </div>
     </footer>
   );
