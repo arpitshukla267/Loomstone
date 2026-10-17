@@ -82,7 +82,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
         <div>
           <Link className="inline-flex items-center mb-[18px]" href="/">
             <Image
-              src="/logo-white.png"
+              src="/logo-vertical.png"
               alt="Loomstone"
               width={140}
               height={45}
