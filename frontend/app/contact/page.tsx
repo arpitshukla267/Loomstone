@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ArrowRight, Check, ChevronDown } from "lucide-react";
 import { PageFrame } from "@/components/site/site-chrome";
+import { useContactInfo, waHref } from "@/lib/contact-info";
 
 /* ---------- shared styles (our theme: navy / gold / ash / cool / ink / line) ---------- */
 const labelCls =
@@ -114,6 +115,7 @@ function Detail({
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
+  const info = useContactInfo();
 
   return (
     <PageFrame active="Contact">
@@ -138,28 +140,38 @@ export default function ContactPage() {
 
               <div className="mt-16 border-t border-line pt-9 lg:mt-0">
                 <div className="flex flex-col gap-8">
-                  <Detail
-                    label="Email inquiries"
-                    value="office@loomstone.in"
-                    href="mailto:office@loomstone.in"
-                  />
-                  <Detail
-                    label="WhatsApp / Phone"
-                    value="+91 9916199988"
-                    href="https://wa.me/9916199988"
-                  />
-                  <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                  {info.email && (
                     <Detail
-                      label="Quick response"
-                      value="Within 12 hours"
-                      sub="Showroom visits by appointment"
+                      label="Email inquiries"
+                      value={info.email}
+                      href={`mailto:${info.email}`}
                     />
+                  )}
+                  {info.phone && (
                     <Detail
-                      label="Atelier Workshops"
-                      value="Jaipur, India"
-                      sub="Amber Road Craft Enclave"
+                      label="WhatsApp / Phone"
+                      value={info.phone}
+                      href={waHref(info.phone)}
                     />
-                  </div>
+                  )}
+                  {(info.responseTime || info.workshopLocation) && (
+                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                      {info.responseTime && (
+                        <Detail
+                          label="Quick response"
+                          value={info.responseTime}
+                          sub={info.responseNote || undefined}
+                        />
+                      )}
+                      {info.workshopLocation && (
+                        <Detail
+                          label=" Workshop Address:"
+                          value={info.workshopLocation}
+                          sub={info.workshopNote || undefined}
+                        />
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

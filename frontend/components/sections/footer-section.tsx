@@ -3,16 +3,16 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useContactInfo, telHref } from "@/lib/contact-info";
 
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "Products Archive", href: "/products" },
-  { label: "About Atelier", href: "/about" },
+  { label: "About Loomstone", href: "/about" },
   { label: "Projects & Contracts", href: "/projects" },
   { label: "Inspiration Gallery", href: "/inspiration" },
   { label: "Blogs & Stories", href: "/blogs" },
   { label: "Direct Consultation", href: "/contact" },
-  { label: "Atelier CMS Portal", href: "/admin" },
 ];
 
 const iconClass =
@@ -75,6 +75,25 @@ interface FooterSectionProps {
 }
 
 export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
+  const info = useContactInfo();
+
+  // Khali link wale icons nahi dikhte
+  const socials = [
+    {
+      key: "instagram",
+      label: "Instagram",
+      href: info.instagram,
+      icon: <InstagramIcon />,
+    },
+    {
+      key: "facebook",
+      label: "Facebook",
+      href: info.facebook,
+      icon: <FacebookIcon />,
+    },
+    { key: "x", label: "X", href: info.x, icon: <XIcon /> },
+  ].filter((s) => s.href);
+
   return (
     <footer className="pt-[55px] md:pt-[70px] pb-6 px-6 md:px-[5%] text-line bg-[#22215c]">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px] md:gap-[45px] max-w-[1310px] mx-auto">
@@ -94,35 +113,22 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
             Axminster floorcoverings engineered for luxury residences, hotels,
             and commercial spaces.
           </p>
-          <div className="flex items-center gap-3 mt-5">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className={iconClass}
-            >
-              <InstagramIcon />
-            </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className={iconClass}
-            >
-              <FacebookIcon />
-            </a>
-            <a
-              href="https://x.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="X"
-              className={iconClass}
-            >
-              <XIcon />
-            </a>
-          </div>
+          {socials.length > 0 && (
+            <div className="flex items-center gap-3 mt-5">
+              {socials.map((s) => (
+                <a
+                  key={s.key}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className={iconClass}
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Column 2: Quick links */}
@@ -150,28 +156,34 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
             Contact
           </h4>
           <ul className="list-none m-0 p-0 space-y-3 text-[12px] leading-[1.8]">
-            <li className="flex items-start gap-2">
-              <MapPin size={14} className="mt-[5px] shrink-0 text-gold" />
-              <span>Jaipur, India</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Phone size={14} className="shrink-0 text-gold" />
-              <a
-                href="tel:+919916199988"
-                className="text-line no-underline hover:text-gold transition-colors"
-              >
-                +91 9916199988
-              </a>
-            </li>
-            <li className="flex items-center gap-2">
-              <Mail size={14} className="shrink-0 text-gold" />
-              <a
-                href="mailto:office@loomstone.in"
-                className="text-line no-underline hover:text-gold transition-colors"
-              >
-                office@loomstone.in
-              </a>
-            </li>
+            {info.address && (
+              <li className="flex items-start gap-2">
+                <MapPin size={14} className="mt-[5px] shrink-0 text-gold" />
+                <span>{info.address}</span>
+              </li>
+            )}
+            {info.phone && (
+              <li className="flex items-center gap-2">
+                <Phone size={14} className="shrink-0 text-gold" />
+                <a
+                  href={telHref(info.phone)}
+                  className="text-line no-underline hover:text-gold transition-colors"
+                >
+                  {info.phone}
+                </a>
+              </li>
+            )}
+            {info.email && (
+              <li className="flex items-center gap-2">
+                <Mail size={14} className="shrink-0 text-gold" />
+                <a
+                  href={`mailto:${info.email}`}
+                  className="text-line no-underline hover:text-gold transition-colors"
+                >
+                  {info.email}
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

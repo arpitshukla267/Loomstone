@@ -3,29 +3,27 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   checkHealth,
-  productsApi,
   heroApi,
-  servicesApi,
-  applicationsApi,
-  type Application,
+  roomApi,
+  categoryApi,
+  productApi,
+  type HeroSlide,
+  type Room,
+  type Category,
+  type Product,
 } from "@/lib/api";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  ShoppingBag,
   Clapperboard,
   ExternalLink,
   ArrowUpRight,
-  Footprints,
-  Star,
-  Wrench,
-  Settings,
-  Zap,
-  Inbox,
-  CalendarCheck,
-  UserCheck,
-  Clock,
   Activity,
+  Layers,
+  Image as ImageIcon,
+  Tag,
+  Package,
+  Phone,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -34,71 +32,14 @@ import {
   Cell,
   Tooltip,
   Legend,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
 } from "recharts";
 
 /* ───────────────────────────── helpers ───────────────────────────── */
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3005";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-const monthKey = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-
-const monthLabel = (key: string, short = false) => {
-  const [y, m] = key.split("-").map(Number);
-  return new Date(y, m - 1, 1).toLocaleString("en-US", {
-    month: short ? "short" : "long",
-    year: short ? undefined : "numeric",
-  });
-};
-
-/** Last `n` months, newest first: ["2026-09", "2026-08", ...] */
-const lastMonths = (n: number) => {
-  const now = new Date();
-  return Array.from({ length: n }, (_, i) =>
-    monthKey(new Date(now.getFullYear(), now.getMonth() - i, 1)),
-  );
-};
-
-const inMonth = (date: string | Date | undefined, key: string) => {
-  if (!date) return false;
-  if (key === "all") return true;
-  return monthKey(new Date(date)) === key;
-};
-
-/** Date of the first history entry with this action (falls back to a given date) */
-const eventDate = (app: Application, action: string, fallback?: string) =>
-  app.history?.find((h) => h.action === action)?.timestamp || fallback;
-
-const receivedIn = (a: Application, key: string) => inMonth(a.createdAt, key);
-const interviewTakenIn = (a: Application, key: string) =>
-  inMonth(eventDate(a, "interview_taken"), key);
-const hiredIn = (a: Application, key: string) =>
-  inMonth(eventDate(a, "hired", a.hiringDetails?.hiredAt), key);
-
-const STATUS_META: Record<string, { label: string; color: string }> = {
-  pending: { label: "Pending", color: "#F59E0B" },
-  reviewed: { label: "Reviewed", color: "#64748B" },
-  shortlisted: { label: "Shortlisted", color: "#8B5CF6" },
-  interview: { label: "Interview Scheduled", color: "#0EA5E9" },
-  interview_taken: { label: "Interview Taken", color: "#00355F" },
-  hired: { label: "Hired", color: "#10B981" },
-  accepted: { label: "Accepted", color: "#14B8A6" },
-  rejected: { label: "Rejected", color: "#EF4444" },
-};
-
-const timeAgo = (iso: string) => {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${Math.max(mins, 1)}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
-};
+const cleanHeading = (h: string) =>
+  (h || "").replace(/\*/g, "").replace(/\\n|\n/g, " ");
 
 /* ───────────────────────────── small UI pieces ───────────────────────────── */
 
@@ -160,7 +101,7 @@ function DonutChart({
   if (total === 0) {
     return (
       <div className="h-64 flex items-center justify-center text-xs text-slate-400">
-        No data available for this period
+        No items yet
       </div>
     );
   }
@@ -197,7 +138,6 @@ function DonutChart({
           />
         </PieChart>
       </ResponsiveContainer>
-      {/* Center total (offset up to account for the legend) */}
       <div className="absolute inset-0 -mt-6 flex flex-col items-center justify-center pointer-events-none">
         <span className="text-2xl font-bold text-slate-900">{total}</span>
         <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
@@ -212,165 +152,71 @@ function DonutChart({
 
 export default function DashboardPage() {
   const [health, setHealth] = useState<boolean | null>(null);
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [month, setMonth] = useState<string>(lastMonths(1)[0]); // current month
+  const [slides, setSlides] = useState<HeroSlide[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [counts, setCounts] = useState({
-    products: 0,
-    activeProducts: 0,
-    slides: 0,
-    activeSlides: 0,
-    services: 0,
-    activeServices: 0,
-  });
 
   useEffect(() => {
     checkHealth().then(setHealth);
 
-    (async () => {
-      const [products, slides, services, apps] = await Promise.allSettled([
-        productsApi.list(),
-        heroApi.list(),
-        servicesApi.list(),
-        applicationsApi.list(),
-      ]);
-
-      setCounts({
-        products: products.status === "fulfilled" ? products.value.length : 0,
-        activeProducts:
-          products.status === "fulfilled"
-            ? products.value.filter((p) => p.isActive).length
-            : 0,
-        slides: slides.status === "fulfilled" ? slides.value.length : 0,
-        activeSlides:
-          slides.status === "fulfilled"
-            ? slides.value.filter((s) => s.isActive).length
-            : 0,
-        services: services.status === "fulfilled" ? services.value.length : 0,
-        activeServices:
-          services.status === "fulfilled"
-            ? services.value.filter((s) => s.isActive).length
-            : 0,
-      });
-      if (apps.status === "fulfilled") setApplications(apps.value);
-      setLoaded(true);
-    })();
+    Promise.all([
+      heroApi.list().catch(() => []),
+      roomApi.list().catch(() => []),
+      categoryApi.list().catch(() => []),
+      productApi.list().catch(() => []),
+    ])
+      .then(([s, r, c, p]) => {
+        setSlides(s);
+        setRooms(r);
+        setCategories(c);
+        setProducts(p);
+      })
+      .finally(() => setLoaded(true));
   }, []);
 
-  const monthOptions = useMemo(() => lastMonths(12), []);
+  const slideStats = useMemo(() => {
+    const active = slides.filter((s) => s.isActive).length;
+    const sorted = [...slides].sort((a, b) => a.order - b.order);
+    return {
+      total: slides.length,
+      active,
+      hidden: slides.length - active,
+      sorted,
+    };
+  }, [slides]);
 
-  /* ---- application analytics ---- */
-  const analytics = useMemo(() => {
-    const received = applications.filter((a) => receivedIn(a, month));
-    const interviewsTaken = applications.filter((a) =>
-      interviewTakenIn(a, month),
-    );
-    const hired = applications.filter((a) => hiredIn(a, month));
+  const roomStats = useMemo(() => {
+    const active = rooms.filter((r) => r.isActive).length;
+    const sorted = [...rooms].sort((a, b) => a.order - b.order);
+    return {
+      total: rooms.length,
+      active,
+      hidden: rooms.length - active,
+      sorted,
+    };
+  }, [rooms]);
 
-    const pending = applications
-      .filter((a) => a.status === "pending")
-      .sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      );
+  const categoryStats = useMemo(() => {
+    const active = categories.filter((c) => c.isActive).length;
+    return {
+      total: categories.length,
+      active,
+      hidden: categories.length - active,
+    };
+  }, [categories]);
 
-    const statusData = Object.entries(STATUS_META).map(([key, meta]) => ({
-      name: meta.label,
-      color: meta.color,
-      value: received.filter((a) => a.status === key).length,
-    }));
+  const productStats = useMemo(() => {
+    const active = products.filter((p) => p.isActive).length;
+    return { total: products.length, active, hidden: products.length - active };
+  }, [products]);
 
-    const trend = lastMonths(6)
-      .reverse()
-      .map((k) => ({
-        month: monthLabel(k, true),
-        Received: applications.filter((a) => receivedIn(a, k)).length,
-        "Interviews Taken": applications.filter((a) => interviewTakenIn(a, k))
-          .length,
-        Hired: applications.filter((a) => hiredIn(a, k)).length,
-      }));
-
-    return { received, interviewsTaken, hired, pending, statusData, trend };
-  }, [applications, month]);
-
-  const periodLabel = month === "all" ? "All time" : monthLabel(month);
-
-  const contentData = [
-    {
-      name: "Live on site",
-      value:
-        counts.activeProducts + counts.activeSlides + counts.activeServices,
-      color: "#00355F",
-    },
-    {
-      name: "Hidden",
-      value:
-        counts.products -
-        counts.activeProducts +
-        (counts.slides - counts.activeSlides) +
-        (counts.services - counts.activeServices),
-      color: "#CBD5E1",
-    },
-  ];
-
-  const quickTiles = [
-    {
-      label: "Products Catalogue",
-      desc: "Heavy structures & parts",
-      icon: ShoppingBag,
-      href: "/dashboard/products",
-    },
-    {
-      label: "Hero Slides",
-      desc: "Homepage banners",
-      icon: Clapperboard,
-      href: "/dashboard/hero",
-    },
-    {
-      label: "Services & Capabilities",
-      desc: "Core engineering expertise",
-      icon: Wrench,
-      href: "/dashboard/services",
-    },
-    {
-      label: "Process Steps",
-      desc: "Engineering workflow",
-      icon: Footprints,
-      href: "/dashboard/process-steps",
-    },
-    {
-      label: "Quality Points",
-      desc: "Quality standards",
-      icon: Star,
-      href: "/dashboard/quality-points",
-    },
-    {
-      label: "Site Settings",
-      desc: "Company contact & policies",
-      icon: Settings,
-      href: "/dashboard/site-settings",
-    },
-  ];
-
-  const contentSummary = [
-    {
-      title: "Products",
-      badge: `${counts.activeProducts}/${counts.products} live`,
-      icon: ShoppingBag,
-      href: "/dashboard/products",
-    },
-    {
-      title: "Hero Carousel",
-      badge: `${counts.activeSlides}/${counts.slides} live`,
-      icon: Clapperboard,
-      href: "/dashboard/hero",
-    },
-    {
-      title: "Core Services",
-      badge: `${counts.activeServices}/${counts.services} live`,
-      icon: Wrench,
-      href: "/dashboard/services",
-    },
+  const distributionData = [
+    { name: "Live Slides", value: slideStats.active, color: "#00355F" },
+    { name: "Live Rooms", value: roomStats.active, color: "#4A90C4" },
+    { name: "Categories", value: categoryStats.active, color: "#F59E0B" },
+    { name: "Live Products", value: productStats.active, color: "#10B981" },
   ];
 
   return (
@@ -380,11 +226,11 @@ export default function DashboardPage() {
         <div className="absolute -right-12 -top-12 w-64 h-64 bg-[#00355F]/5 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 space-y-1">
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
-            Conbell Engineering CMS
+            Loomstone CMS
           </h1>
           <p className="text-sm text-slate-500 max-w-xl">
-            Manage website content and track your recruitment pipeline from a
-            single dashboard.
+            Manage your homepage hero banners, room spaces, categories,
+            products, and contact details from one central workspace.
           </p>
         </div>
 
@@ -416,271 +262,232 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* ── Recruitment section header + month filter ── */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-bold text-slate-900">
-            Recruitment Overview
-          </h2>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Showing: <span className="font-semibold">{periodLabel}</span>
-          </p>
-        </div>
-        <select
-          value={month}
-          onChange={(e) => setMonth(e.target.value)}
-          aria-label="Select month"
-          className="w-full sm:w-52 rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#00355F]/20 focus:border-[#00355F]"
-        >
-          <option value="all">All time</option>
-          {monthOptions.map((k) => (
-            <option key={k} value={k}>
-              {monthLabel(k)}
-            </option>
-          ))}
-        </select>
-      </div>
-
       {/* ── KPI cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <KpiCard
-          label="Applications Received"
-          value={loaded ? analytics.received.length : "–"}
-          sub={periodLabel}
-          icon={Inbox}
-          href="/dashboard/applications"
+          label="Hero Slides"
+          value={loaded ? slideStats.total : "–"}
+          sub={`${slideStats.active} live on homepage`}
+          icon={Clapperboard}
+          href="/dashboard/hero"
           tone="blue"
         />
         <KpiCard
-          label="Interviews Taken"
-          value={loaded ? analytics.interviewsTaken.length : "–"}
-          sub={periodLabel}
-          icon={CalendarCheck}
-          href="/dashboard/applications"
-          tone="slate"
+          label="Rooms"
+          value={loaded ? roomStats.total : "–"}
+          sub={`${roomStats.active} active spaces`}
+          icon={Layers}
+          href="/dashboard/rooms"
+          tone="blue"
         />
         <KpiCard
-          label="Candidates Hired"
-          value={loaded ? analytics.hired.length : "–"}
-          sub={periodLabel}
-          icon={UserCheck}
-          href="/dashboard/applications"
-          tone="green"
-        />
-        <KpiCard
-          label="Pending Review"
-          value={loaded ? analytics.pending.length : "–"}
-          sub="Awaiting action (all time)"
-          icon={Clock}
-          href="/dashboard/applications"
+          label="Categories"
+          value={loaded ? categoryStats.total : "–"}
+          sub={`${categoryStats.active} filter tags`}
+          icon={Tag}
+          href="/dashboard/categories"
           tone="amber"
         />
+        <KpiCard
+          label="Products"
+          value={loaded ? productStats.total : "–"}
+          sub={`${productStats.active} designs live`}
+          icon={Package}
+          href="/dashboard/products"
+          tone="green"
+        />
       </div>
 
-      {/* ── Charts row ── */}
+      {/* ── Content Grid ── */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Monthly trend */}
-        <Card className="xl:col-span-2">
-          <CardHeader>
-            <h2 className="font-bold text-slate-900 text-base">
-              Monthly Recruitment Trend
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">Last 6 months</p>
-          </CardHeader>
-          <CardBody className="p-6">
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={analytics.trend} barGap={4}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="#E2E8F0"
-                    vertical={false}
-                  />
-                  <XAxis
-                    dataKey="month"
-                    tick={{ fontSize: 11, fill: "#64748B" }}
-                    axisLine={false}
-                    tickLine={false}
-                  />
-                  <YAxis
-                    allowDecimals={false}
-                    tick={{ fontSize: 11, fill: "#64748B" }}
-                    axisLine={false}
-                    tickLine={false}
-                    width={28}
-                  />
-                  <Tooltip
-                    cursor={{ fill: "#F1F5F9" }}
-                    contentStyle={{
-                      borderRadius: 12,
-                      border: "1px solid #e2e8f0",
-                      fontSize: 12,
-                    }}
-                  />
-                  <Legend
-                    iconType="circle"
-                    iconSize={8}
-                    wrapperStyle={{ fontSize: 11, color: "#64748B" }}
-                  />
-                  <Bar
-                    dataKey="Received"
-                    fill="#00355F"
-                    radius={[6, 6, 0, 0]}
-                    maxBarSize={28}
-                  />
-                  <Bar
-                    dataKey="Interviews Taken"
-                    fill="#0EA5E9"
-                    radius={[6, 6, 0, 0]}
-                    maxBarSize={28}
-                  />
-                  <Bar
-                    dataKey="Hired"
-                    fill="#10B981"
-                    radius={[6, 6, 0, 0]}
-                    maxBarSize={28}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </CardBody>
-        </Card>
-
-        {/* Status pie */}
-        <Card>
-          <CardHeader>
-            <h2 className="font-bold text-slate-900 text-base">
-              Application Status
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">{periodLabel}</p>
-          </CardHeader>
-          <CardBody className="p-4">
-            <DonutChart
-              data={analytics.statusData}
-              centerLabel="Applications"
-            />
-          </CardBody>
-        </Card>
-      </div>
-
-      {/* ── Pending applications + content donut ── */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Hero Slides Preview */}
         <Card className="xl:col-span-2">
           <CardHeader className="flex items-center justify-between">
             <div>
               <h2 className="font-bold text-slate-900 text-base">
-                Pending Applications
+                Homepage Hero Slides
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Latest candidates waiting for review
+                Slides in display order
               </p>
             </div>
             <Link
-              href="/dashboard/applications"
+              href="/dashboard/hero"
               className="text-xs font-semibold text-[#00355F] hover:underline"
             >
-              View all
+              Manage all
             </Link>
           </CardHeader>
           <CardBody className="p-0">
-            {analytics.pending.length === 0 ? (
+            {slideStats.sorted.length === 0 ? (
               <div className="py-12 text-center text-xs text-slate-400">
                 {loaded
-                  ? "All caught up. There are no pending applications."
+                  ? health === false
+                    ? "Backend connection offline."
+                    : "No hero slides found. Add your first slide."
                   : "Loading…"}
               </div>
             ) : (
               <ul className="divide-y divide-slate-100">
-                {analytics.pending.slice(0, 5).map((a) => (
-                  <li key={a._id}>
-                    <Link
-                      href="/dashboard/applications"
-                      className="flex items-center gap-4 px-6 py-3.5 hover:bg-slate-50 transition-colors"
-                    >
-                      <div className="w-9 h-9 rounded-full bg-[#EEF4FF] text-[#00355F] border border-[#B2CDFA]/50 flex items-center justify-center text-xs font-bold shrink-0">
-                        {a.applicantName?.charAt(0)?.toUpperCase() || "?"}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-slate-900 truncate">
-                          {a.applicantName}
-                        </p>
-                        <p className="text-xs text-slate-500 truncate">
-                          {a.jobTitle}
-                        </p>
-                      </div>
-                      <span className="text-[11px] text-slate-400 shrink-0">
-                        {timeAgo(a.createdAt)}
-                      </span>
-                      <span className="hidden sm:inline-flex px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-100 text-[10px] font-bold uppercase tracking-wide shrink-0">
-                        Pending
-                      </span>
-                    </Link>
-                  </li>
-                ))}
+                {slideStats.sorted.slice(0, 4).map((s) => {
+                  const img = s.image || s.imageUrl;
+                  return (
+                    <li key={s._id}>
+                      <Link
+                        href="/dashboard/hero"
+                        className="flex items-center gap-4 px-6 py-3.5 hover:bg-slate-50 transition-colors"
+                      >
+                        <div className="w-14 h-10 rounded-lg bg-slate-900 overflow-hidden shrink-0 flex items-center justify-center">
+                          {img ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={img}
+                              alt=""
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display =
+                                  "none";
+                              }}
+                            />
+                          ) : (
+                            <ImageIcon className="w-4 h-4 text-slate-500" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-slate-900 truncate">
+                            {cleanHeading(s.heading)}
+                          </p>
+                          <p className="text-xs text-slate-500 truncate">
+                            {s.description || "No description"}
+                          </p>
+                        </div>
+                        <span className="text-[11px] text-slate-400 shrink-0">
+                          {s.order}
+                        </span>
+                        <Badge variant={s.isActive ? "success" : "warning"}>
+                          {s.isActive ? "Active" : "Hidden"}
+                        </Badge>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </CardBody>
         </Card>
 
+        {/* Visibility Chart */}
         <Card>
           <CardHeader>
             <h2 className="font-bold text-slate-900 text-base">
-              Website Content
+              Content Overview
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Products, slides and services
+              Live vs hidden content
             </p>
           </CardHeader>
           <CardBody className="p-4">
-            <DonutChart data={contentData} centerLabel="Items" />
+            <DonutChart data={distributionData} centerLabel="Items" />
           </CardBody>
         </Card>
       </div>
 
-      {/* ── Content summary ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {contentSummary.map((sec) => (
-          <Card
-            key={sec.title}
-            className="hover:border-[#B2CDFA] transition-all duration-200"
-          >
-            <CardBody className="p-5 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="w-11 h-11 rounded-2xl bg-[#EEF4FF] text-[#00355F] border border-[#B2CDFA]/50 flex items-center justify-center shrink-0">
-                  <sec.icon className="w-5 h-5" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-bold text-slate-900 text-sm truncate">
-                    {sec.title}
-                  </h3>
-                  <Badge variant="purple">{sec.badge}</Badge>
-                </div>
-              </div>
-              <Link href={sec.href}>
-                <button className="px-3.5 py-2 rounded-xl text-xs font-semibold border border-slate-200 text-slate-700 bg-white hover:bg-[#00355F] hover:text-white hover:border-[#00355F] transition-all shrink-0 cursor-pointer">
-                  Manage
-                </button>
-              </Link>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
-
-      {/* ── Quick access ── */}
+      {/* ── Rooms Showcase Preview ── */}
       <Card>
         <CardHeader className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-[#00355F]" />
-            <h2 className="font-bold text-slate-900 text-base">Quick Access</h2>
+          <div>
+            <h2 className="font-bold text-slate-900 text-base">
+              Rooms &amp; Spaces
+            </h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Curated categories for living rooms, hallways, bedrooms
+            </p>
           </div>
+          <Link
+            href="/dashboard/rooms"
+            className="text-xs font-semibold text-[#00355F] hover:underline"
+          >
+            Manage all rooms
+          </Link>
+        </CardHeader>
+        <CardBody className="p-0">
+          {roomStats.sorted.length === 0 ? (
+            <div className="py-12 text-center text-xs text-slate-400">
+              {loaded ? "No rooms configured yet." : "Loading…"}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-5">
+              {roomStats.sorted.slice(0, 6).map((r) => (
+                <Link
+                  key={r._id}
+                  href="/dashboard/rooms"
+                  className="group block rounded-xl border border-slate-200 overflow-hidden hover:border-[#B2CDFA] hover:shadow-md transition-all"
+                >
+                  <div className="relative w-full h-28 bg-slate-900 overflow-hidden">
+                    {r.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={r.image}
+                        alt={r.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-500">
+                        <ImageIcon className="w-6 h-6" />
+                      </div>
+                    )}
+                    <div className="absolute top-2 right-2">
+                      <Badge variant={r.isActive ? "success" : "warning"}>
+                        {r.isActive ? "Active" : "Hidden"}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <p className="text-xs font-bold text-slate-900 truncate group-hover:text-[#00355F]">
+                      {r.name}
+                    </p>
+                    <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                      {r.desc}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </CardBody>
+      </Card>
+
+      {/* ── Quick Access ── */}
+      <Card>
+        <CardHeader className="flex items-center justify-between">
+          <h2 className="font-bold text-slate-900 text-base">Quick Access</h2>
           <span className="text-xs text-slate-400 font-medium">
-            Jump directly to a module
+            Loomstone modules
           </span>
         </CardHeader>
         <CardBody className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {quickTiles.map((q) => (
-              <Link key={q.href} href={q.href} className="group">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              {
+                label: "Hero Slides",
+                desc: "Homepage banners, headings & buttons",
+                icon: Clapperboard,
+                href: "/dashboard/hero",
+              },
+              {
+                label: "Rooms & Spaces",
+                desc: "Room rug categories and showcases",
+                icon: Layers,
+                href: "/dashboard/rooms",
+              },
+              {
+                label: "Contact Info",
+                desc: "Email, phone, address & social links",
+                icon: Phone,
+                href: "/dashboard/contactinfo",
+              },
+            ].map((q) => (
+              <Link key={q.label} href={q.href} className="group">
                 <div className="p-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:shadow-md hover:border-[#B2CDFA] transition-all duration-200 flex items-start gap-3.5 h-full">
                   <div className="w-9 h-9 rounded-xl bg-[#EEF4FF] text-[#00355F] border border-[#B2CDFA]/50 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                     <q.icon className="w-4 h-4" />

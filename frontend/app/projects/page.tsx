@@ -100,7 +100,7 @@ export default function ProjectsPage() {
           </h1>
           <p className="max-w-[650px] m-0 text-cool text-[15px] md:text-[17px] leading-[1.8]">
             From private residences to hospitality spaces and cultural
-            interiors, every Atelier Terroir commission begins with the
+            interiors, every Loomstone Terroir commission begins with the
             architecture around it.
           </p>
         </div>
@@ -185,9 +185,9 @@ export default function ProjectsPage() {
                     {step.text}
                   </p>
                 </div>
-                <small className="mt-5 flex items-center justify-between border-t border-[#dbe1e5] pt-4 text-gold text-[9px] font-bold tracking-[.12em]">
+                {/* <small className="mt-5 flex items-center justify-between border-t border-[#dbe1e5] pt-4 text-gold text-[9px] font-bold tracking-[.12em]">
                   ATELIER PHASE {index + 1} <Check size={12} />
-                </small>
+                </small> */}
               </div>
             ))}
           </div>

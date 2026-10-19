@@ -1,21 +1,76 @@
 import "dotenv/config";
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import heroSectionRoutes from "./routes/heroSectionRoutes.js";
+import roomRoutes from "./routes/roomRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import contactInfoRoutes from "./routes/contactInfoRoutes.js";
+
+import { ensureDefaultAdmin } from "./controllers/authController.js";
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+// Allowed origins for CORS (Frontend, CMS, and local dev ports)
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.CMS_URL,
+  "http://localhost:3000",
+  "http://localhost:3010",
+  "http://localhost:3005",
+  "https://localhost:3000",
+  "https://localhost:3010",
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.startsWith("http://localhost:") ||
+        origin.startsWith("http://127.0.0.1:")
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("MongoDB error:", err.message));
+// API Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/hero-section", heroSectionRoutes);
+app.use("/api/rooms", roomRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/contact-info", contactInfoRoutes);
 
+// Health check
 app.get("/", (req, res) => {
-  res.json({ message: "Loomstone CMS API running" });
+  res.json({ message: "Loomstone CMS API running", status: "ok" });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 4000;
+
+// Connect database, ensure default admin exists, then start server
+connectDB().then(async () => {
+  try {
+    await ensureDefaultAdmin();
+  } catch (err) {
+    console.error("[AUTH] Error initializing default admin:", err.message);
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+});
+
+export default app;

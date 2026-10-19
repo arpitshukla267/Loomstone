@@ -237,7 +237,7 @@ export default function AdminCmsPage() {
             <span className="h-5 w-px bg-line" />
             <div>
               <h1 className="font-manrope text-[18px] font-bold text-navy sm:text-[22px]">
-                Loomstone Atelier CMS
+                Loomstone CMS
               </h1>
               <span className="text-[11px] font-medium text-cool/70">
                 Products, Weave Typologies & Spatial Showcase Management

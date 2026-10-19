@@ -13,7 +13,7 @@ const IMAGES_DIR =
   process.env.HERO_IMAGES_DIR ||
   path.resolve(__dirname, "../../frontend/public/hero");
 
-const CLOUDINARY_FOLDER = "loomstone/hero-section";
+const CLOUDINARY_FOLDER = "loomstone";
 
 // Heading format: *word* = gold word, \n = line break
 const slides = [
@@ -78,7 +78,9 @@ const uploadImage = async (fileName) => {
 const seed = async () => {
   const force = process.argv.includes("--force");
 
-  await mongoose.connect(process.env.MONGO_URI);
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
+  if (!uri) throw new Error("Neither MONGODB_URI nor MONGO_URI is defined");
+  await mongoose.connect(uri);
   console.log("MongoDB connected");
 
   const existing = await HeroSection.find();

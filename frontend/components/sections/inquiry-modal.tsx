@@ -61,7 +61,7 @@ export function InquiryModal({ isOpen, onClose, productName, productDetails }: I
               Your consultation is on its way.
             </h2>
             <p className="max-w-[460px] mb-[22px] text-cool text-[13px] leading-[1.7]">
-              Thank you. An Atelier Terroir textile curator will reach out within
+              Thank you.A Loomstone curator will reach out within
               24 hours with yarn recommendations and technical parameters.
             </p>
             <button

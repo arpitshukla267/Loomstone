@@ -55,7 +55,7 @@ export function RecentBlogsSection() {
             onClick={() => scrollByCard(-1)}
             disabled={!canPrev}
             className={`absolute left-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-md transition-opacity duration-200 md:hidden ${
-              canPrev ? "opacity-100" : "pointer-events-none opacity-0"
+              canPrev ? "opacity-100" : "pointer-events-none opacity-50"
             }`}
           >
             <ChevronLeft size={20} />
@@ -67,7 +67,7 @@ export function RecentBlogsSection() {
             onClick={() => scrollByCard(1)}
             disabled={!canNext}
             className={`absolute right-0 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-md transition-opacity duration-200 md:hidden ${
-              canNext ? "opacity-100" : "pointer-events-none opacity-0"
+              canNext ? "opacity-100" : "pointer-events-none opacity-50"
             }`}
           >
             <ChevronRight size={20} />

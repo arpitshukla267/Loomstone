@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   Lock,
+  Mail,
   Eye,
   EyeOff,
   Loader2,
@@ -11,6 +12,7 @@ import {
   KeyRound,
   ShieldCheck,
   CheckCircle2,
+  Terminal,
 } from "lucide-react";
 import { API_URL, authFetch, clearToken, getToken, setToken } from "@/lib/auth";
 
@@ -20,13 +22,14 @@ const inputCls =
   "w-full border border-slate-200 rounded-lg py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00355F]/30 focus:border-[#00355F] transition-colors";
 
 const primaryBtn =
-  "w-full flex items-center justify-center gap-2 bg-[#0B1C30] text-white rounded-lg py-3 text-sm font-semibold hover:bg-[#00355F] disabled:opacity-60 transition-colors shadow-sm";
+  "w-full flex items-center justify-center gap-2 bg-[#0B1C30] text-white rounded-lg py-3 text-sm font-semibold hover:bg-[#00355F] disabled:opacity-60 transition-colors shadow-sm cursor-pointer";
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
   const [authed, setAuthed] = useState(false);
   const [checking, setChecking] = useState(true);
 
   const [view, setView] = useState<View>("login");
+  const [email, setEmail] = useState("shuklaarpit440@gmail.com");
   const [pw, setPw] = useState("");
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
@@ -39,10 +42,22 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const [showNew, setShowNew] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
-  // On page load, verify the saved token with the backend
+  // On page load, verify the saved token with the backend & load admin email
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      // Fetch currently registered admin email
+      try {
+        const resEmail = await fetch(`${API_URL}/api/auth/admin-email`);
+        if (resEmail.ok) {
+          const emailData = await resEmail.json();
+          if (!cancelled && emailData.email) setEmail(emailData.email);
+        }
+      } catch {
+        /* Fallback remains shuklaarpit440@gmail.com */
+      }
+
+      // Check existing JWT
       if (getToken()) {
         try {
           const res = await authFetch("/api/auth/me");
@@ -91,10 +106,11 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     setLoading(true);
     setError("");
     try {
+      // Login directly with password (no OTP required for login)
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: pw }),
+        body: JSON.stringify({ email, password: pw }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok)
@@ -112,13 +128,15 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const sendOtp = async () => {
+  const sendOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      // Backend (API_URL) par jaata hai, sidebar ki tarah
       const res = await fetch(`${API_URL}/api/auth/password/send-otp`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not send the OTP.");
@@ -145,7 +163,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
       const res = await fetch(`${API_URL}/api/auth/password/reset`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp, newPassword }),
+        body: JSON.stringify({ email, otp, newPassword }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Password was not changed.");
@@ -174,8 +192,8 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
         <div className="relative z-10">
           <Image
-            src="/logo.png"
-            alt="Conbell Engineering"
+            src="/logo-white.png"
+            alt="LoomStone"
             width={220}
             height={110}
             priority
@@ -183,15 +201,15 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           />
         </div>
 
-        <div className="relative z-10 max-w-sm -mt-16">
+        <div className="relative z-10 max-w-sm -mt-44">
           <div className="relative z-10">
             <Image
-              src="/logo.png"
-              alt="Conbell Engineering"
+              src="/logo-white.png"
+              alt="LoomStone"
               width={220}
               height={110}
               priority
-              className="h-auto w-96 object-contain mb-6 -ml-10"
+              className="h-auto w-96 object-contain -ml-10"
             />
           </div>
           <h1 className="text-3xl font-semibold leading-snug text-white">
@@ -219,7 +237,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             <div className="rounded-xl bg-[#0B1C30] px-5 py-3">
               <Image
                 src="/logo.png"
-                alt="Conbell Engineering"
+                alt="LoomStone"
                 width={140}
                 height={70}
                 className="h-auto w-32 object-contain"
@@ -235,37 +253,64 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                   Sign in
                 </h2>
                 <p className="mt-1.5 text-sm text-slate-500">
-                  Enter your CMS password to continue.
+                  Enter your email and CMS password to continue.
                 </p>
               </div>
 
               <form onSubmit={login} className="space-y-4">
-                <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <input
-                    type={show ? "text" : "password"}
-                    value={pw}
-                    onChange={(e) => {
-                      setPw(e.target.value);
-                      setError("");
-                    }}
-                    placeholder="Enter your CMS password"
-                    autoFocus
-                    autoComplete="current-password"
-                    className={`${inputCls} pl-10 pr-10`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShow(!show)}
-                    aria-label={show ? "Hide password" : "Show password"}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  >
-                    {show ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </button>
+                {/* Email Field */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                    Admin Email
+                  </label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setError("");
+                      }}
+                      placeholder="shuklaarpit440@gmail.com"
+                      autoComplete="username"
+                      className={`${inputCls} pl-10 pr-3.5`}
+                    />
+                  </div>
+                </div>
+
+                {/* Password Field */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type={show ? "text" : "password"}
+                      value={pw}
+                      onChange={(e) => {
+                        setPw(e.target.value);
+                        setError("");
+                      }}
+                      placeholder="Enter your CMS password"
+                      autoFocus
+                      autoComplete="current-password"
+                      className={`${inputCls} pl-10 pr-10`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShow(!show)}
+                      aria-label={show ? "Hide password" : "Show password"}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    >
+                      {show ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 {error && <p className="text-xs text-red-500">{error}</p>}
@@ -298,23 +343,47 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                   Change password
                 </h2>
                 <p className="mt-1.5 text-sm text-slate-500 leading-relaxed">
-                  For security, a 6 digit OTP will be sent to the registered
-                  admin email. Your password changes only after the OTP is
-                  verified.
+                  Enter the admin email below. A 6-digit OTP will be generated and printed to your backend server terminal.
                 </p>
               </div>
 
-              {error && <p className="mb-4 text-xs text-red-500">{error}</p>}
+              <form onSubmit={sendOtp} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1.5">
+                    Admin Email for OTP
+                  </label>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setError("");
+                      }}
+                      placeholder="shuklaarpit440@gmail.com"
+                      required
+                      className={`${inputCls} pl-10 pr-3.5`}
+                    />
+                  </div>
+                </div>
 
-              <button
-                type="button"
-                onClick={sendOtp}
-                disabled={loading}
-                className={primaryBtn}
-              >
-                {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-                Send OTP
-              </button>
+                <div className="flex items-center gap-2 p-2.5 rounded-lg bg-amber-50 border border-amber-200/70 text-amber-800 text-xs">
+                  <Terminal className="w-4 h-4 shrink-0 text-amber-600" />
+                  <span>The OTP will be logged directly to your terminal screen.</span>
+                </div>
+
+                {error && <p className="text-xs text-red-500">{error}</p>}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={primaryBtn}
+                >
+                  {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  Send OTP
+                </button>
+              </form>
 
               <BackToSignIn onClick={() => goTo("login")} />
             </>
@@ -328,8 +397,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                   Verify &amp; set password
                 </h2>
                 <p className="mt-1.5 text-sm text-slate-500">
-                  The OTP has been sent to the admin email. It is valid for 10
-                  minutes.
+                  The OTP for <span className="font-semibold text-slate-700">{email}</span> has been printed to the backend terminal. It is valid for 10 minutes.
                 </p>
               </div>
 
@@ -394,7 +462,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
                 <button
                   type="button"
-                  onClick={sendOtp}
+                  onClick={() => sendOtp()}
                   disabled={loading || cooldown > 0}
                   className="w-full text-xs text-slate-500 hover:text-[#00355F] disabled:hover:text-slate-500 disabled:opacity-70 transition-colors"
                 >

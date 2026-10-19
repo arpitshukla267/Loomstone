@@ -15,11 +15,57 @@ export interface CategoriesSectionProps {
 }
 
 export function CategoriesSection({
-  categories = defaultCategories,
+  categories: initialCategories = defaultCategories,
 }: CategoriesSectionProps) {
+  const [categories, setCategories] = useState<CategoryItem[]>(initialCategories);
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
+
+  // Fetch categories from CMS API
+  useEffect(() => {
+    const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+    if (!base) return;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 4000);
+
+    fetch(`${base}/api/categories`, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load categories");
+        return res.json();
+      })
+      .then((data) => {
+        const list = Array.isArray(data) ? data : data?.data;
+        if (!Array.isArray(list) || list.length === 0) return;
+
+        const mapped: CategoryItem[] = list
+          .filter((c) => c?.name && c?.isActive !== false)
+          .map((c) => {
+            const fallback = defaultCategories.find(
+              (dc) => dc.title.toLowerCase() === c.name.toLowerCase()
+            );
+            return {
+              title: c.name,
+              text: c.desc || c.text || fallback?.text || "",
+              image: c.image || fallback?.image || "/carpet.jpeg",
+            };
+          });
+
+        if (mapped.length > 0) {
+          setCategories(mapped);
+        }
+      })
+      .catch(() => {
+        // Fallback to default categories
+      })
+      .finally(() => clearTimeout(timer));
+
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, []);
 
   const updateArrows = useCallback(() => {
     const el = trackRef.current;
@@ -42,6 +88,11 @@ export function CategoriesSection({
       window.removeEventListener("resize", updateArrows);
     };
   }, [updateArrows]);
+
+  useEffect(() => {
+    trackRef.current?.scrollTo({ left: 0 });
+    updateArrows();
+  }, [categories, updateArrows]);
 
   const scrollByCard = (direction: 1 | -1) => {
     const el = trackRef.current;
@@ -104,7 +155,7 @@ export function CategoriesSection({
             onClick={() => scrollByCard(-1)}
             disabled={!canPrev}
             className={`${arrowClass} left-2 ${
-              canPrev ? "opacity-100" : "pointer-events-none opacity-0"
+              canPrev ? "opacity-100" : "pointer-events-none opacity-50"
             }`}
           >
             <ChevronLeft size={20} />
@@ -116,7 +167,7 @@ export function CategoriesSection({
             onClick={() => scrollByCard(1)}
             disabled={!canNext}
             className={`${arrowClass} right-2 ${
-              canNext ? "opacity-100" : "pointer-events-none opacity-0"
+              canNext ? "opacity-100" : "pointer-events-none opacity-50"
             }`}
           >
             <ChevronRight size={20} />

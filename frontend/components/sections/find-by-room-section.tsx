@@ -6,58 +6,112 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Reveal } from "../ui/reveal";
 
 interface RoomCard {
-  name: string;
-  tagline: string;
+  id: string;
+  heading: string;
+  desc: string;
   image: string;
   href: string;
-  count?: string;
 }
 
-const ROOMS: RoomCard[] = [
+// Backend se aane wala room (sirf wahi fields jo yahan kaam aati hain)
+interface ApiRoom {
+  _id: string;
+  name?: string;
+  heading?: string;
+  desc?: string;
+  image?: string;
+  href?: string;
+}
+
+// Backend jaisa hi href format: "Hallway & Entryway" -> /products?room=Hallway+%26+Entryway
+const buildHref = (name: string) =>
+  `/products?room=${encodeURIComponent(name).replace(/%20/g, "+")}`;
+
+// Backend band ho ya data khali ho to yahi dikhega
+const DEFAULT_ROOMS: RoomCard[] = [
   {
-    name: "Living Room",
-    tagline:
-      "Statement centerpieces designed for seating arrangements & conversation.",
+    id: "living-room",
+    heading: "Living Room",
+    desc: "Statement centerpieces designed for seating arrangements & conversation.",
     image:
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=900&q=80",
     href: "/products?room=Living+Room",
-    count: "8+ Curated Designs",
   },
   {
-    name: "Bedroom",
-    tagline:
-      "Serene, tactile luxury providing acoustic warmth and soft morning steps.",
+    id: "bedroom",
+    heading: "Bedroom",
+    desc: "Serene, tactile luxury providing acoustic warmth and soft morning steps.",
     image:
       "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=900&q=80",
     href: "/products?room=Bedroom",
-    count: "6+ Curated Designs",
   },
   {
-    name: "Dining Room",
-    tagline:
-      "Hard-wearing handlooms, low piles and axminsters allowing effortless chair gliding.",
+    id: "dining-room",
+    heading: "Dining Room",
+    desc: "Hard-wearing handlooms, low piles and axminsters allowing effortless chair gliding.",
     image:
       "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=900&q=80",
     href: "/products?room=Dining+Room",
-    count: "5+ Curated Designs",
   },
   {
-    name: "Hallway & Entryway",
-    tagline:
-      "Durable gallery runners welcoming guests and softening circulation zones.",
+    id: "hallway-entryway",
+    heading: "Hallway & Entryway",
+    desc: "Durable gallery runners welcoming guests and softening circulation zones.",
     image:
       "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=900&q=80",
     href: "/products?room=Hallway+%26+Entryway",
-    count: "4+ Curated Designs",
   },
 ];
 
-const MOBILE_GAP = 12; // gap-3 = 12px
+const FETCH_TIMEOUT_MS = 4000;
 
 export function FindByRoomSection() {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [rooms, setRooms] = useState<RoomCard[]>(DEFAULT_ROOMS);
   const [canPrev, setCanPrev] = useState(false);
-  const [canNext, setCanNext] = useState(true);
+  const [canNext, setCanNext] = useState(false);
+
+  // Backend se rooms lao; kuch bhi gadbad ho to chup-chaap hardcoded rehne do
+  useEffect(() => {
+    const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+    if (!base) return;
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+    fetch(`${base}/api/rooms`, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load rooms");
+        return res.json();
+      })
+      .then((data) => {
+        const list: ApiRoom[] | undefined = Array.isArray(data)
+          ? data
+          : data?.data;
+        if (!Array.isArray(list) || list.length === 0) return;
+
+        const mapped: RoomCard[] = list
+          .filter((r) => r?.image && (r.heading || r.name))
+          .map((r) => ({
+            id: r._id,
+            heading: (r.heading || r.name) as string,
+            desc: r.desc || "",
+            image: r.image as string,
+            href: r.href || buildHref(r.name || (r.heading as string)),
+          }));
+
+        if (mapped.length > 0) setRooms(mapped);
+      })
+      .catch(() => {
+        /* hardcoded rooms chalte rehte hain */
+      })
+      .finally(() => clearTimeout(timer));
+
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, []);
 
   const updateArrows = useCallback(() => {
     const el = scrollerRef.current;
@@ -72,13 +126,20 @@ export function FindByRoomSection() {
     return () => window.removeEventListener("resize", updateArrows);
   }, [updateArrows]);
 
+  // Rooms badalne par (backend wale aaye) carousel shuru se dikhao aur arrows dobara check karo
+  useEffect(() => {
+    scrollerRef.current?.scrollTo({ left: 0 });
+    updateArrows();
+  }, [rooms, updateArrows]);
+
   const scrollByCard = (dir: 1 | -1) => {
     const el = scrollerRef.current;
     if (!el) return;
     const firstCard = el.firstElementChild as HTMLElement | null;
     if (!firstCard) return;
-    // exactly one card (width + gap) so the next card lands in the center
-    const step = firstCard.offsetWidth + MOBILE_GAP;
+    // gap screen ke hisaab se badalta hai (mobile 12px, sm+ 24px), isliye CSS se padho
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const step = firstCard.offsetWidth + gap;
     el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
@@ -101,17 +162,17 @@ export function FindByRoomSection() {
           </Reveal>
         </div>
 
-        {/* Mobile: centered snap carousel (prev/next peek) | sm+: grid */}
+        {/* Hamesha ek hi row: mobile 1 card, sm 2 cards, lg 4 cards, baaki arrows se scroll */}
         <div className="relative mt-12">
           <div
             ref={scrollerRef}
             onScroll={updateArrows}
-            className="flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden scroll-smooth px-[10%] pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4"
+            className="flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden scroll-smooth px-[10%] pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mt-2 sm:-mb-6 sm:gap-6 sm:px-0 sm:pt-2 sm:pb-8"
           >
-            {ROOMS.map((room, index) => (
+            {rooms.map((room, index) => (
               <div
-                key={room.name}
-                className="w-full shrink-0 snap-center sm:w-auto sm:shrink sm:snap-align-none [&>*]:h-full"
+                key={room.id}
+                className="w-full shrink-0 snap-center sm:w-[calc((100%_-_1.5rem)/2)] sm:snap-start lg:w-[calc((100%_-_4.5rem)/4)] [&>*]:h-full"
               >
                 <Reveal delay={index * 120} y={24}>
                   <Link
@@ -123,7 +184,7 @@ export function FindByRoomSection() {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={room.image}
-                        alt={room.name}
+                        alt={room.heading}
                         loading="lazy"
                         className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
@@ -135,11 +196,11 @@ export function FindByRoomSection() {
                     {/* Content */}
                     <div className="flex flex-1 flex-col p-4 sm:p-5">
                       <h3 className="font-manrope text-[18px] font-normal text-navy transition-colors duration-200 group-hover:text-gold sm:text-[20px]">
-                        {room.name}
+                        {room.heading}
                       </h3>
 
                       <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.6] text-cool sm:mt-2 sm:leading-[1.7]">
-                        {room.tagline}
+                        {room.desc}
                       </p>
 
                       <div className="mt-auto pt-3 sm:pt-4">
@@ -154,13 +215,13 @@ export function FindByRoomSection() {
             ))}
           </div>
 
-          {/* Mobile arrows: vertically centered on cards */}
+          {/* Arrows: mobile par andar, sm+ par kinare par; sirf jab scroll karne ko kuch ho */}
           <button
             type="button"
             aria-label="Previous rooms"
             onClick={() => scrollByCard(-1)}
             disabled={!canPrev}
-            className="absolute left-1 top-[calc(50%-8px)] z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#dbe1e5] bg-white text-navy shadow-md transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-0 sm:hidden"
+            className="absolute left-1 top-[calc(50%-8px)] z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#dbe1e5] bg-white text-navy shadow-md transition-all hover:border-gold hover:text-gold active:scale-95 disabled:pointer-events-none disabled:opacity-50 sm:-left-5 sm:top-1/2 sm:h-11 sm:w-11"
           >
             <ChevronLeft size={18} />
           </button>
@@ -169,7 +230,7 @@ export function FindByRoomSection() {
             aria-label="Next rooms"
             onClick={() => scrollByCard(1)}
             disabled={!canNext}
-            className="absolute right-1 top-[calc(50%-8px)] z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#dbe1e5] bg-white text-navy shadow-md transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-0 sm:hidden"
+            className="absolute right-1 top-[calc(50%-8px)] z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-[#dbe1e5] bg-white text-navy shadow-md transition-all hover:border-gold hover:text-gold active:scale-95 disabled:pointer-events-none disabled:opacity-50 sm:-right-5 sm:top-1/2 sm:h-11 sm:w-11"
           >
             <ChevronRight size={18} />
           </button>

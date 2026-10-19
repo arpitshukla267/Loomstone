@@ -2,16 +2,16 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinary.js";
 
-const makeUploader = (subFolder = "") =>
+const makeUploader = () =>
   multer({
     storage: new CloudinaryStorage({
       cloudinary,
       params: {
-        folder: subFolder ? `loomstone/${subFolder}` : "loomstone",
+        folder: "loomstone",
         allowed_formats: ["jpg", "jpeg", "png", "webp"],
       },
     }),
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   });
 
 export default makeUploader;

@@ -145,7 +145,7 @@ export function FeaturedDesignsSection({
           aria-label="Previous design"
           onClick={() => scrollByCard(-1)}
           className={`${arrowClassName} left-3 ${
-            canPrev ? "opacity-100" : "pointer-events-none opacity-0"
+            canPrev ? "opacity-100" : "pointer-events-none opacity-50"
           }`}
         >
           <ChevronLeft size={20} />
@@ -155,7 +155,7 @@ export function FeaturedDesignsSection({
           aria-label="Next design"
           onClick={() => scrollByCard(1)}
           className={`${arrowClassName} right-3 ${
-            canNext ? "opacity-100" : "pointer-events-none opacity-0"
+            canNext ? "opacity-100" : "pointer-events-none opacity-50"
           }`}
         >
           <ChevronRight size={20} />

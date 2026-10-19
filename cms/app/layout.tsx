@@ -11,8 +11,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Conbell Engineering — CMS",
-  description: "Content Management System for Conbell Engineering website",
+  title: "LoomStone — CMS",
+  description: "Content Management System for Loomstone website",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -45,7 +45,7 @@ import { getAllProducts, type Product } from "@/data/products";
 
 const heroImage = "/inventory.png";
 
-const ROOM_OPTIONS = [
+const DEFAULT_ROOM_OPTIONS = [
   "All",
   "Living Room",
   "Bedroom",
@@ -403,12 +403,61 @@ function ProductsContent() {
 
   // Load products & handle updates from CMS
   const [productsList, setProductsList] = useState<Product[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<string[]>([
+    "All",
+    ...defaultCategories.map((c) => c.title),
+  ]);
 
+  // Load products from backend (fallback to local mock data)
   useEffect(() => {
-    setProductsList(getAllProducts());
+    const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+
+    const loadLocal = () => {
+      setProductsList(getAllProducts());
+    };
+
+    if (base) {
+      fetch(`${base}/api/products`)
+        .then((res) => {
+          if (!res.ok) throw new Error("API error");
+          return res.json();
+        })
+        .then((data) => {
+          const list = Array.isArray(data) ? data : data?.data;
+          if (Array.isArray(list) && list.length > 0) {
+            const mapped: Product[] = list.map((p) => ({
+              id: p._id,
+              slug: p.slug || p._id,
+              name: p.name,
+              category: p.category || "Handmade Rugs",
+              weave: p.category || "Handmade",
+              style: p.options?.[0] || "Curated Design",
+              rooms: p.rooms || [],
+              sizes: p.sizes && p.sizes.length > 0 ? p.sizes : ["Custom Size"],
+              materials: p.options?.join(", ") || "100% Fine Handcrafted Fibers",
+              colorPalette: "",
+              priceDisplay: "Request a Quote",
+              image: p.images?.[0]?.url || "/products/hand-knotted.webp",
+              roomImage: p.images?.[1]?.url || p.images?.[0]?.url || "/products/hand-knotted.webp",
+              description: p.desc || "",
+              craftDetails: p.desc || "",
+              leadTime: "Made to Order",
+              isFeatured: true,
+            }));
+            setProductsList(mapped);
+          } else {
+            loadLocal();
+          }
+        })
+        .catch(() => {
+          loadLocal();
+        });
+    } else {
+      loadLocal();
+    }
 
     const handleUpdate = () => {
-      setProductsList(getAllProducts());
+      loadLocal();
     };
     window.addEventListener("loomstone_products_updated", handleUpdate);
     return () => {
@@ -418,11 +467,66 @@ function ProductsContent() {
 
   // Filter states
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [roomOptions, setRoomOptions] = useState<string[]>(DEFAULT_ROOM_OPTIONS);
   const [selectedRoom, setSelectedRoom] = useState<string>("All");
   const [selectedStyle, setSelectedStyle] = useState<string>("All");
   const [selectedSize, setSelectedSize] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [sort, setSort] = useState<SortOption>("featured");
+
+  // Fetch categories and rooms from backend to keep filter options synced with CMS
+  useEffect(() => {
+    const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+    if (!base) return;
+
+    // Fetch Categories
+    fetch(`${base}/api/categories`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load categories");
+        return res.json();
+      })
+      .then((data) => {
+        const list = Array.isArray(data) ? data : data?.data;
+        if (Array.isArray(list) && list.length > 0) {
+          const apiCats: string[] = list
+            .filter((c) => c.isActive !== false)
+            .map((c) => c.name?.trim())
+            .filter(Boolean);
+
+          const merged = [
+            "All",
+            ...Array.from(new Set([...apiCats, ...defaultCategories.map((c) => c.title)])),
+          ];
+          setCategoryOptions(merged);
+        }
+      })
+      .catch(() => {});
+
+    // Fetch Rooms
+    fetch(`${base}/api/rooms`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load rooms");
+        return res.json();
+      })
+      .then((data) => {
+        const list = Array.isArray(data) ? data : data?.data;
+        if (Array.isArray(list) && list.length > 0) {
+          const apiRooms: string[] = list
+            .filter((r) => r.isActive !== false)
+            .map((r) => ((r.heading || r.name) as string)?.trim())
+            .filter(Boolean);
+
+          const merged = [
+            "All",
+            ...Array.from(
+              new Set([...apiRooms, ...DEFAULT_ROOM_OPTIONS.slice(1)]),
+            ),
+          ];
+          setRoomOptions(merged);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Sync initial query params on mount or when URL changes
   useEffect(() => {
@@ -451,10 +555,11 @@ function ProductsContent() {
     }
 
     if (roomParam) {
-      const matchedRoom = ROOM_OPTIONS.find(
-        (r) => r.toLowerCase() === roomParam.toLowerCase(),
+      const decoded = decodeURIComponent(roomParam.replace(/\+/g, " "));
+      const matchedRoom = roomOptions.find(
+        (r) => r.toLowerCase() === decoded.toLowerCase(),
       );
-      if (matchedRoom) setSelectedRoom(matchedRoom);
+      setSelectedRoom(matchedRoom || decoded);
     }
 
     if (styleParam) {
@@ -467,7 +572,7 @@ function ProductsContent() {
     if (sizeParam) {
       setSelectedSize(sizeParam);
     }
-  }, [searchParams]);
+  }, [searchParams, roomOptions]);
 
   // Filter collapsible state (category open by default for immediate accessibility)
   const [openFilters, setOpenFilters] = useState<{
@@ -507,10 +612,6 @@ function ProductsContent() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
-
-  const categoryOptions = useMemo(() => {
-    return ["All", ...defaultCategories.map((c) => c.title)];
   }, []);
 
   // Filter logic
@@ -826,7 +927,7 @@ function ProductsContent() {
                           className="overflow-hidden"
                         >
                           <div className="mt-3 space-y-2">
-                            {ROOM_OPTIONS.map((room) => {
+                            {roomOptions.map((room) => {
                               const count =
                                 room === "All"
                                   ? productsList.length
@@ -1212,7 +1313,7 @@ function ProductsContent() {
                   className="overflow-hidden"
                 >
                   <div className="mt-2 space-y-2">
-                    {ROOM_OPTIONS.map((room) => (
+                    {roomOptions.map((room) => (
                       <label
                         key={room}
                         className="flex min-h-[38px] cursor-pointer items-center gap-3 border-b border-line/30 last:border-b-0"

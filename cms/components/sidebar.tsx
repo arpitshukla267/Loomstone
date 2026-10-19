@@ -6,69 +6,32 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
-  ShoppingBag,
   Clapperboard,
-  Footprints,
-  Star,
-  Globe,
-  Wrench,
-  Settings,
+  Layers,
   ChevronRight,
-  Users,
-  HelpCircle,
-  Briefcase,
-  UserCheck,
   KeyRound,
   X,
   Loader2,
   Eye,
   EyeOff,
   CheckCircle2,
+  LogOut,
+  Mail,
+  Terminal,
+  Tag,
+  Package,
+  Phone,
 } from "lucide-react";
 import Image from "next/image";
-import { authFetch, setToken } from "@/lib/auth";
-import { applicationsApi } from "@/lib/api";
+import { authFetch, setToken, clearToken } from "@/lib/auth";
 
 const NAV = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  {
-    label: "Careers & Hiring",
-    icon: Briefcase,
-    children: [
-      { label: "Job Vacancies", href: "/dashboard/vacancies", icon: Briefcase },
-      {
-        label: "Job Responses",
-        href: "/dashboard/applications",
-        icon: UserCheck,
-      },
-    ],
-  },
-  {
-    label: "Site Content",
-    icon: Globe,
-    children: [
-      { label: "Hero Slides", href: "/dashboard/hero", icon: Clapperboard },
-      { label: "Products", href: "/dashboard/products", icon: ShoppingBag },
-      { label: "Services", href: "/dashboard/services", icon: Wrench },
-      { label: "Clients", href: "/dashboard/clients", icon: Users },
-      { label: "FAQs", href: "/dashboard/faqs", icon: HelpCircle },
-      {
-        label: "Process Steps",
-        href: "/dashboard/process-steps",
-        icon: Footprints,
-      },
-      {
-        label: "Quality Points",
-        href: "/dashboard/quality-points",
-        icon: Star,
-      },
-      {
-        label: "Site Settings",
-        href: "/dashboard/site-settings",
-        icon: Settings,
-      },
-    ],
-  },
+  { label: "Hero Slides", href: "/dashboard/hero", icon: Clapperboard },
+  { label: "Rooms", href: "/dashboard/rooms", icon: Layers },
+  { label: "Categories", href: "/dashboard/categories", icon: Tag },
+  { label: "Products", href: "/dashboard/products", icon: Package },
+  { label: "Contact Info", href: "/dashboard/contactinfo", icon: Phone },
 ];
 
 /* ───────────────────────── Change Password Modal ───────────────────────── */
@@ -77,6 +40,7 @@ type Step = "request" | "verify" | "done";
 
 function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState<Step>("request");
+  const [email, setEmail] = useState("shuklaarpit440@gmail.com");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -84,6 +48,16 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [cooldown, setCooldown] = useState(0);
+
+  // Fetch current admin email on modal open
+  useEffect(() => {
+    authFetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.user?.email) setEmail(d.user.email);
+      })
+      .catch(() => {});
+  }, []);
 
   // Resend cooldown timer
   useEffect(() => {
@@ -98,6 +72,8 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
     try {
       const res = await authFetch("/api/auth/password/send-otp", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok)
@@ -105,7 +81,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
           data.error || "Unable to send the OTP. Please try again.",
         );
       setStep("verify");
-      setCooldown(60); // Matches the 60-second cooldown enforced by the backend
+      setCooldown(30);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -127,14 +103,13 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
       const res = await authFetch("/api/auth/password/reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp, newPassword }),
+        body: JSON.stringify({ email, otp, newPassword }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok)
         throw new Error(
           data.error || "Unable to change the password. Please try again.",
         );
-      // Previous sessions are invalidated, so store the newly issued token
       if (data.token) setToken(data.token);
       setStep("done");
     } catch (e: any) {
@@ -172,7 +147,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
           </div>
           <button
             onClick={onClose}
-            className="text-slate-500 hover:text-white transition-colors"
+            className="text-slate-500 hover:text-white transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -181,16 +156,35 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
 
         {step === "request" && (
           <div className="space-y-4">
-            <p className="text-xs text-slate-400 leading-relaxed">
-              For your security, we will send a 6-digit one-time password (OTP)
-              to the registered administrator email address. Your password will
-              only be changed after the OTP has been verified.
-            </p>
+            <div>
+              <label className="block text-[11px] font-medium text-slate-400 mb-1.5">
+                Admin Email for OTP
+              </label>
+              <div className="relative">
+                <Mail className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="shuklaarpit440@gmail.com"
+                  className={cn(inputCls, "pl-9")}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200/90 text-[11px]">
+              <Terminal className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+              <span>OTP is sent to email and logged to backend terminal.</span>
+            </div>
+
             {error && <p className="text-xs text-red-400">{error}</p>}
             <button
               onClick={sendOtp}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#00355F] hover:bg-[#0F4C81] disabled:opacity-60 text-white text-xs font-semibold py-2.5 transition-colors"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#00355F] hover:bg-[#0F4C81] disabled:opacity-60 text-white text-xs font-semibold py-2.5 transition-colors cursor-pointer"
             >
               {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               Send OTP
@@ -201,8 +195,8 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
         {step === "verify" && (
           <div className="space-y-3">
             <p className="text-xs text-slate-400">
-              An OTP has been sent to the registered email address. It is valid
-              for 10 minutes.
+              OTP for <span className="text-white font-medium">{email}</span>{" "}
+              has been sent. Valid for 10 min.
             </p>
             <input
               inputMode="numeric"
@@ -220,19 +214,18 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
                 type={showPass ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="New password"
-                className={inputCls}
+                placeholder="New password (min. 8 characters)"
+                className={cn(inputCls, "pr-9")}
               />
               <button
                 type="button"
-                onClick={() => setShowPass((s) => !s)}
+                onClick={() => setShowPass(!showPass)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
-                aria-label={showPass ? "Hide password" : "Show password"}
               >
                 {showPass ? (
-                  <EyeOff className="w-4 h-4" />
+                  <EyeOff className="w-3.5 h-3.5" />
                 ) : (
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-3.5 h-3.5" />
                 )}
               </button>
             </div>
@@ -247,33 +240,26 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
             <button
               onClick={resetPassword}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#00355F] hover:bg-[#0F4C81] disabled:opacity-60 text-white text-xs font-semibold py-2.5 transition-colors"
+              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#00355F] hover:bg-[#0F4C81] disabled:opacity-60 text-white text-xs font-semibold py-2.5 transition-colors cursor-pointer"
             >
               {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              Verify & Change Password
-            </button>
-            <button
-              onClick={sendOtp}
-              disabled={loading || cooldown > 0}
-              className="w-full text-[11px] text-slate-500 hover:text-slate-300 disabled:hover:text-slate-500 transition-colors"
-            >
-              {cooldown > 0 ? `Resend OTP in ${cooldown}s` : "Resend OTP"}
+              Update Password
             </button>
           </div>
         )}
 
         {step === "done" && (
-          <div className="flex flex-col items-center gap-3 py-2 text-center">
-            <CheckCircle2 className="w-10 h-10 text-emerald-400" />
-            <p className="text-sm font-semibold text-white">
-              Password changed successfully
-            </p>
+          <div className="text-center py-4 space-y-3">
+            <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
+            <h4 className="text-sm font-semibold text-white">
+              Password Changed
+            </h4>
             <p className="text-xs text-slate-400">
-              Please use your new password the next time you sign in.
+              Your password has been updated successfully.
             </p>
             <button
               onClick={onClose}
-              className="mt-2 w-full rounded-xl bg-[#00355F] hover:bg-[#0F4C81] text-white text-xs font-semibold py-2.5 transition-colors"
+              className="w-full rounded-xl bg-[#00355F] hover:bg-[#0F4C81] text-white text-xs font-semibold py-2.5 transition-colors cursor-pointer"
             >
               Done
             </button>
@@ -284,165 +270,93 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-/* ─────────────────── Pending applications badge hook ─────────────────── */
-
-function usePendingApplications() {
-  const pathname = usePathname();
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const res = await applicationsApi.count("pending");
-        if (!cancelled) setCount(res.count);
-      } catch {
-        /* keep the previous count if the request fails */
-      }
-    };
-    load();
-    const id = setInterval(load, 60_000); // refresh every minute
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-    };
-  }, [pathname]); // also refresh on every page navigation
-
-  return count;
-}
-
 /* ───────────────────────────────── Sidebar ───────────────────────────────── */
 
 export function Sidebar() {
   const pathname = usePathname();
   const [showChangePassword, setShowChangePassword] = useState(false);
-  const pendingCount = usePendingApplications();
 
   return (
     <aside className="w-64 shrink-0 bg-[#0B1C30] h-full flex flex-col border-r border-slate-800/60 text-slate-300">
       {/* Brand Header */}
       <div className="px-6 py-6 border-b border-slate-800/70">
-        <div className="flex flex-col items-center gap-3.5">
+        <div className="flex flex-col items-center gap-3">
           <Image
-            src="/logo.png"
-            alt="Conbell Engineering"
-            width={120}
+            src="/logo-white.png"
+            alt="Loomstone"
+            width={160}
             height={60}
-            className="w-full h-16 object-contain"
+            priority
+            className="w-full h-12 object-cover"
           />
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-5 overflow-y-auto space-y-6">
-        <div className="flex flex-col gap-1.5">
-          {NAV.map((item) => {
-            if ("children" in item && item.children) {
-              return (
-                <div
-                  key={item.label}
-                  className="mt-4 pt-4 border-t border-slate-800/80 space-y-1"
-                >
-                  <div className="flex items-center gap-2 px-3 py-1.5 mb-1 text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-                    <item.icon className="w-3.5 h-3.5 text-[#4A90C4]" />
-                    {item.label}
-                  </div>
-                  {item.children.map((child) => {
-                    const active =
-                      pathname === child.href ||
-                      pathname.startsWith(child.href + "/");
-                    return (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className={cn(
-                          "relative flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-colors group",
-                          active
-                            ? "text-white font-semibold"
-                            : "text-slate-400 hover:text-slate-200 hover:bg-white/5",
-                        )}
-                      >
-                        {active && (
-                          <motion.div
-                            layoutId="active-sidebar-pill"
-                            className="absolute inset-0 bg-[#00355F] rounded-xl shadow-md shadow-[#00355F]/50"
-                            transition={{
-                              type: "spring",
-                              stiffness: 380,
-                              damping: 30,
-                            }}
-                          />
-                        )}
-                        <child.icon
-                          className={cn(
-                            "w-4 h-4 shrink-0 relative z-10 transition-transform group-hover:scale-110",
-                            active ? "text-white" : "text-slate-400",
-                          )}
-                        />
-                        <span className="relative z-10 flex-1">
-                          {child.label}
-                        </span>
-                        {child.href === "/dashboard/applications" &&
-                          pendingCount > 0 && (
-                            <span
-                              aria-label={`${pendingCount} new applications`}
-                              className="relative z-10 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white shadow-sm shadow-red-500/40"
-                            >
-                              {pendingCount > 99 ? "99+" : pendingCount}
-                            </span>
-                          )}
-                      </Link>
-                    );
-                  })}
-                </div>
-              );
-            }
-
-            const href = item.href as string;
-            const active =
-              href === "/dashboard"
-                ? pathname === "/dashboard"
-                : pathname === href || pathname.startsWith(href + "/");
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  "relative flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-colors group",
-                  active
-                    ? "text-white font-semibold"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-white/5",
-                )}
-              >
-                {active && (
-                  <motion.div
-                    layoutId="active-sidebar-pill"
-                    className="absolute inset-0 bg-[#00355F] rounded-xl shadow-md shadow-[#00355F]/50"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <item.icon
-                  className={cn(
-                    "w-4 h-4 shrink-0 relative z-10 transition-transform group-hover:scale-110",
-                    active ? "text-white" : "text-slate-400",
-                  )}
+      <nav className="flex-1 px-4 py-5 overflow-y-auto space-y-2">
+        {NAV.map((item) => {
+          const href = item.href;
+          const active =
+            href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname === href || pathname.startsWith(href + "/");
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "relative flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium transition-colors group",
+                active
+                  ? "text-white font-semibold"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5",
+              )}
+            >
+              {active && (
+                <motion.div
+                  layoutId="active-sidebar-pill"
+                  className="absolute inset-0 bg-[#00355F] rounded-xl shadow-md shadow-[#00355F]/50"
+                  transition={{
+                    type: "spring",
+                    stiffness: 380,
+                    damping: 30,
+                  }}
                 />
-                <span className="relative z-10 flex-1">{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
+              )}
+              <item.icon
+                className={cn(
+                  "w-4 h-4 shrink-0 relative z-10 transition-transform group-hover:scale-110",
+                  active ? "text-white" : "text-slate-400",
+                )}
+              />
+              <span className="relative z-10 flex-1">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Footer: Change Password */}
-      <div className="px-5 py-4 border-t border-slate-800/80 bg-slate-950/40">
+      {/* Footer: Change Password & Sign Out */}
+      <div className="px-5 py-4 border-t border-slate-800/80 bg-slate-950/40 space-y-2">
         <button
           onClick={() => setShowChangePassword(true)}
-          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium hover:border-[#0F4C81]/50 hover:text-white transition-all group"
+          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 text-xs font-medium hover:border-[#0F4C81]/50 hover:text-white transition-all group cursor-pointer"
         >
           <div className="flex items-center gap-2">
             <KeyRound className="w-3.5 h-3.5 text-[#4A90C4]" />
             <span>Change Password</span>
+          </div>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" />
+        </button>
+
+        <button
+          onClick={() => {
+            clearToken();
+            window.dispatchEvent(new Event("cms-logout"));
+          }}
+          className="w-full flex items-center justify-between p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-rose-400/90 text-xs font-medium hover:border-rose-500/40 hover:bg-rose-500/10 hover:text-rose-300 transition-all group cursor-pointer"
+        >
+          <div className="flex items-center gap-2">
+            <LogOut className="w-3.5 h-3.5 text-rose-400" />
+            <span>Sign Out</span>
           </div>
           <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" />
         </button>
