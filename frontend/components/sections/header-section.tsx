@@ -99,7 +99,7 @@ export function HeaderSection({
     ["Home", "/"],
     ["About", "/about"],
     ["Flooring Solutions", "/products"],
-    ["Projects", "/projects"],
+    // ["Projects", "/projects"],
     ["Inspirations", "/inspiration"],
     // ["Blogs", "/blogs"],
     // ["Contact Us", "/contact"],
