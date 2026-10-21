@@ -23,7 +23,10 @@ export function GlobalReachSection({
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="overflow-hidden bg-ash" id="global-reach">
+      <section
+        className="overflow-hidden bg-[#FFFCF4]/50 ash"
+        id="global-reach"
+      >
         <div
           ref={ref}
           className="mx-auto max-w-[90vw] px-0 py-[20px] md:px-[5%] md:py-[100px]"

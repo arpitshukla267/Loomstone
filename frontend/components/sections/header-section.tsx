@@ -223,14 +223,14 @@ export function HeaderSection({
               </Link>
             );
           })}
-        </nav>
 
-        <button
-          className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all duration-200 ease-out py-[13px] px-[17px] text-white bg-navy text-sm font-medium tracking-[.03em] hover:bg-navy/90 hover:-translate-y-0.5 cursor-pointer rounded-full"
-          onClick={handleDownloadBrochure}
-        >
-          <Download size={15} /> Download Brochure
-        </button>
+          <button
+            className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all -mt-0.5 duration-200 ease-out text-navy text-sm font-bold cursor-pointer"
+            onClick={handleDownloadBrochure}
+            >
+            <Download size={15} /> Download Brochure
+          </button>
+        </nav>
 
         {/* Mobile toggle: icon rotate + fade se badalta hai */}
         <button
