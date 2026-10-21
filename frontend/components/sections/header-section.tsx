@@ -206,14 +206,14 @@ export function HeaderSection({
         </Link>
 
         {/* Desktop nav: pehle jaisa hi */}
-        <nav className="hidden md:flex md:flex-row md:items-center md:gap-4 lg:gap-[27px]">
+        <nav className="hidden md:flex md:flex-row md:items-center md:gap-4 lg:gap-5 xl:gap-7">
           {navLinks.map(([link, href], index) => {
             const active = isLinkActive(link, href, index);
             return (
               <Link
                 key={link}
                 href={href}
-                className={`text-sm font-medium tracking-[.03em] uppercase no-underline transition-colors duration-200 md:py-[7px] border-b-2 ${
+                className={`text-xs lg:text-xs xl:text-sm font-medium xl:tracking-[.03em] uppercase no-underline transition-colors duration-200 md:py-[7px] border-b-2 ${
                   active
                     ? "text-navy border-gold"
                     : "text-navy border-transparent hover:text-navy"
@@ -225,10 +225,10 @@ export function HeaderSection({
           })}
 
           <button
-            className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all -mt-0.5 duration-200 ease-out text-navy text-sm font-bold cursor-pointer"
+            className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all -mt-0.5 duration-200 ease-out text-navy text-xs lg:text-xs xl:text-sm font-bold cursor-pointer"
             onClick={handleDownloadBrochure}
-            >
-            <Download size={15} /> Download Brochure
+          >
+            {/* <Download size={15} /> */}Brochure
           </button>
         </nav>
 
