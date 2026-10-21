@@ -101,7 +101,7 @@ export function HeaderSection({
     ["Flooring Solutions", "/products"],
     ["Projects", "/projects"],
     ["Inspirations", "/inspiration"],
-    ["Blogs", "/blogs"],
+    // ["Blogs", "/blogs"],
     // ["Contact Us", "/contact"],
   ];
 
