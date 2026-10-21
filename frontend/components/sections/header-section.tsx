@@ -199,7 +199,7 @@ export function HeaderSection({
             width={160}
             height={50}
             className={`-mx-6 w-auto rounded object-contain transition-[height] duration-300 motion-reduce:transition-none ${
-              scrolled ? "h-24 md:h-24" : "h-24 md:h-24"
+              scrolled ? "h-20 md:h-24" : "h-20 md:h-24"
             }`}
             priority
           />
