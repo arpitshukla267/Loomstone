@@ -98,11 +98,11 @@ export function HeaderSection({
   const navLinks = [
     ["Home", "/"],
     ["About", "/about"],
-    ["Products", "/products"],
-    // ["Projects", "/projects"],
-    ["Inspiration", "/inspiration"],
+    ["Flooring Solutions", "/products"],
+    ["Projects", "/projects"],
+    ["Inspirations", "/inspiration"],
     ["Blogs", "/blogs"],
-    ["Contact", "/contact"],
+    // ["Contact Us", "/contact"],
   ];
 
   const handleDownloadBrochure = () => {
@@ -176,91 +176,16 @@ export function HeaderSection({
 
   return (
     <header
-      className={`fixed z-50 top-0 w-full border-b transition-all duration-300 motion-reduce:transition-none ${
+      className={`fixed z-50 top-0 w-full border-b transition-all py-2 duration-300 motion-reduce:transition-none ${
         solid
-          ? "bg-white/95 border-[#e4e9ec] backdrop-blur-[14px]"
-          : "bg-white/95 border-[#e4e9ec] backdrop-blur-[14px]"
+          ? "bg-[#FFFCF4] border-[#e4e9ec] backdrop-blur-[14px]"
+          : "bg-[#FFFCF4] border-[#e4e9ec] backdrop-blur-[14px]"
       }`}
     >
-      {/* Top bar: hamesha dikhta hai. Left mein arrows ke beech sliding contact options, right mein Inquiry button */}
-      <div className="bg-navy">
-        <div className="mx-auto flex h-9 max-w-[1400px] items-center justify-between gap-4 px-6 md:h-10 lg:px-10">
-          <div className="flex items-center gap-1 text-white/80">
-            <button
-              type="button"
-              aria-label="Previous option"
-              onClick={() => goMessage(-1)}
-              className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-inherit transition-colors hover:text-gold"
-            >
-              <ChevronLeft size={14} />
-            </button>
-
-            {/* Options ki window: naya option slide hokar aata hai, purana slide hokar jaata hai */}
-            <div className="relative h-6 w-[130px] overflow-hidden md:w-[150px]">
-              {topMessages.map((message, i) => {
-                const isActive = i === slide.active;
-                const rel =
-                  (i - slide.active + topMessages.length) % topMessages.length;
-                const animate = isActive || i === slide.prev;
-                return (
-                  <div
-                    key={message.label}
-                    aria-hidden={!isActive}
-                    className={`absolute inset-0 flex items-center justify-center ${
-                      animate
-                        ? "transition-all duration-500 ease-out motion-reduce:transition-none"
-                        : "transition-none"
-                    } ${
-                      isActive
-                        ? "translate-x-0 opacity-100"
-                        : rel === 1
-                          ? "pointer-events-none translate-x-full opacity-0"
-                          : "pointer-events-none -translate-x-full opacity-0"
-                    }`}
-                  >
-                    <TopLink
-                      href={message.href}
-                      external={message.external}
-                      className={messageClassName}
-                      tabIndex={isActive ? 0 : -1}
-                    >
-                      {message.label}
-                    </TopLink>
-                  </div>
-                );
-              })}
-            </div>
-
-            <button
-              type="button"
-              aria-label="Next option"
-              onClick={() => goMessage(1)}
-              className="flex h-6 w-6 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-inherit transition-colors hover:text-gold"
-            >
-              <ChevronRight size={14} />
-            </button>
-          </div>
-
-          {onOpenInquiry ? (
-            <button
-              type="button"
-              onClick={onOpenInquiry}
-              className={inquiryClassName}
-            >
-              <MessageSquare size={14} /> Inquiry
-            </button>
-          ) : (
-            <Link href="/contact" className={inquiryClassName}>
-              <MessageSquare size={14} /> Inquiry
-            </Link>
-          )}
-        </div>
-      </div>
-
       {/* Main row: scroll par height (padding) kam ho jaati hai */}
       <div
-        className={`mx-auto flex max-w-[1400px] items-center justify-between gap-[30px] px-6 transition-[height] duration-300 motion-reduce:transition-none lg:px-10 ${
-          scrolled ? "h-14 md:h-16" : "h-[68px] md:h-20"
+        className={`mx-auto flex max-w-[100vw] items-center justify-between gap-[30px] px-2 transition-[height] duration-300 motion-reduce:transition-none lg:px-10 ${
+          scrolled ? "h-[68px] md:h-20" : "h-[68px] md:h-20"
         }`}
       >
         <Link
@@ -269,12 +194,12 @@ export function HeaderSection({
           onClick={() => setMenuOpen(false)}
         >
           <Image
-            src="/logo-horizontal.png"
+            src="/logo-vertical.png"
             alt="Loomstone Logo"
             width={160}
             height={50}
             className={`-mx-6 w-auto rounded object-contain transition-[height] duration-300 motion-reduce:transition-none ${
-              scrolled ? "h-24 md:h-28" : "h-28 md:h-36"
+              scrolled ? "h-28 md:h-30" : "h-28 md:h-30"
             }`}
             priority
           />
@@ -288,10 +213,10 @@ export function HeaderSection({
               <Link
                 key={link}
                 href={href}
-                className={`text-xs font-medium tracking-[.13em] uppercase no-underline transition-colors duration-200 md:py-[7px] border-b-2 ${
+                className={`text-sm font-medium tracking-[.03em] uppercase no-underline transition-colors duration-200 md:py-[7px] border-b-2 ${
                   active
                     ? "text-navy border-gold"
-                    : "text-cool border-transparent hover:text-navy hover:border-gold"
+                    : "text-navy border-transparent hover:text-navy"
                 }`}
               >
                 {link}
@@ -301,7 +226,7 @@ export function HeaderSection({
         </nav>
 
         <button
-          className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all duration-200 ease-out py-[13px] px-[17px] text-white bg-navy text-xs font-medium tracking-[.03em] uppercase hover:bg-navy/90 hover:-translate-y-0.5 cursor-pointer rounded-full"
+          className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all duration-200 ease-out py-[13px] px-[17px] text-white bg-navy text-sm font-medium tracking-[.03em] hover:bg-navy/90 hover:-translate-y-0.5 cursor-pointer rounded-full"
           onClick={handleDownloadBrochure}
         >
           <Download size={15} /> Download Brochure

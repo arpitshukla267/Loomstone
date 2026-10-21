@@ -10,7 +10,7 @@ export const metadata = {
 export default function BlogsPage() {
   return (
     <PageFrame active="Blogs">
-      <section className="bg-white px-6 pb-20 pt-[130px] md:px-[5%] md:pb-28 md:pt-[150px]">
+      <section className="bg-[#FFFCF4] px-6 pb-20 pt-[130px] md:px-[5%] md:pb-28 md:pt-[150px]">
         <div className="mx-auto max-w-[90vw]">
           {/* Header - Simple, no eyebrow, no icons, no decoratives */}
           <div className="max-w-[700px]">
@@ -46,7 +46,7 @@ export default function BlogsPage() {
                   {/* Clean Content */}
                   <div className="mt-5">
                     <span className="text-[12px] text-cool/70">
-                      {post.date} 
+                      {post.date}
                     </span>
 
                     <h2 className="mt-2 font-manrope text-[22px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[24px]">

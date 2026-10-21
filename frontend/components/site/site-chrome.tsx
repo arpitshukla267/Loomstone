@@ -17,7 +17,7 @@ export function PageFrame({
   children: ReactNode;
 }) {
   return (
-    <main className="overflow-hidden bg-ash text-ink font-sans">
+    <main className="overflow-hidden bg-[#FFFCF4]  text-ink font-sans">
       <HeaderSection activePage={active} />
       {children}
       <FooterSection />

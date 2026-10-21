@@ -151,7 +151,10 @@ export function ClientsSection({
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="relative overflow-hidden bg-ash" id="testimonials">
+      <section
+        className="relative overflow-hidden bg-[#FFFCF4] ash"
+        id="testimonials"
+      >
         {/* ================= COLLAGE ================= */}
         {/* On mobile the collage is drawn 2.2x wider and centered, so the
             cards stay a readable size and the edges are cropped. */}

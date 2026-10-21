@@ -64,7 +64,7 @@ export default function InspirationPage() {
   return (
     <PageFrame active="Inspiration">
       {/* Inner Hero */}
-      <section className="bg-white flex flex-col md:flex-row md:items-end justify-between gap-10 md:gap-[60px] min-h-auto md:min-h-[420px] pt-[130px] md:pt-[170px] pb-[55px] md:pb-[70px] px-6 md:px-[5%]">
+      <section className="bg-[#FFFCF4] flex flex-col md:flex-row md:items-end justify-between gap-10 md:gap-[60px] min-h-auto md:min-h-[420px] pt-[130px] md:pt-[170px] pb-[55px] md:pb-[70px] px-6 md:px-[5%]">
         <div className="max-w-[800px]">
           <h1 className="my-4 md:my-5 text-navy font-manrope font-semibold text-[45px] md:text-[clamp(42px,6vw,72px)] leading-[1.08] tracking-[-0.03em]">
             Inspiration &amp;{" "}
@@ -78,7 +78,7 @@ export default function InspirationPage() {
       </section>
 
       {/* Gallery Section */}
-      <section className="bg-white pt-[30px] pb-[70px] md:pb-[100px] px-6 md:px-[5%]">
+      <section className="bg-[#FFFCF4] pt-[30px] pb-[70px] md:pb-[100px] px-6 md:px-[5%]">
         <div className="max-w-[1310px] mx-auto">
           {/* Filter Bar */}
           <div className="flex items-center flex-wrap gap-2 pt-3.5 pb-6 mb-[30px] border-t border-line">

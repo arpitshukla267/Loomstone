@@ -69,7 +69,7 @@ function Badge({
 
 export default function VisionMissionSection() {
   return (
-    <section className="bg-[#f4f9fc] py-16 px-4 md:px-0">
+    <section className="bg-[#f4f9fc] pt-16 px-4 md:px-0">
       <div className="mx-auto max-w-full">
         {/* ================= Desktop ================= */}
         <Reveal>

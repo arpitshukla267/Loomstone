@@ -7,12 +7,12 @@ import { useContactInfo, telHref } from "@/lib/contact-info";
 
 const quickLinks = [
   { label: "Home", href: "/" },
-  { label: "Products Archive", href: "/products" },
+  { label: "Flooring Solutions", href: "/products" },
   { label: "About Loomstone", href: "/about" },
-  { label: "Projects & Contracts", href: "/projects" },
-  { label: "Inspiration Gallery", href: "/inspiration" },
-  { label: "Blogs & Stories", href: "/blogs" },
-  { label: "Direct Consultation", href: "/contact" },
+  { label: "Projects", href: "/projects" },
+  { label: "Inspiration", href: "/inspiration" },
+  { label: "Blogs", href: "/blogs" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const iconClass =
@@ -95,7 +95,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
   ].filter((s) => s.href);
 
   return (
-    <footer className="pt-[55px] md:pt-[70px] pb-6 px-6 md:px-[5%] text-line bg-[#22215c]">
+    <footer className="pt-[55px] md:pt-[70px] pb-6 px-6 md:px-[5%] text-line bg-[#272763]">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px] md:gap-[45px] max-w-[1310px] mx-auto">
         {/* Column 1: Logo + description + social icons */}
         <div>

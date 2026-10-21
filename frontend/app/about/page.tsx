@@ -14,7 +14,7 @@ const heroImage = "/about.png";
 export default function AboutPage() {
   return (
     <PageFrame active="About">
-      <div className="font-poppins min-h-screen overflow-x-hidden bg-[#f4f9fc] text-[15px] leading-relaxed text-slate-600 pt-20">
+      <div className="font-poppins min-h-screen overflow-x-hidden bg-[#FFFCF4] [#f4f9fc] text-[15px] leading-relaxed text-slate-600 pt-20">
         <main>
           {/* Hero: centered title on background image */}
           <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px]">
@@ -50,10 +50,9 @@ export default function AboutPage() {
 
           {/* ================= Core Values ================= */}
           <CoreValuesSection />
-          
+
           {/* ================= Process ================= */}
           <ProcessSection />
-
         </main>
       </div>
     </PageFrame>

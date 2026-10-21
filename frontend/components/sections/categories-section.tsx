@@ -137,7 +137,7 @@ export function CategoriesSection({
   return (
     <section
       id="categories"
-      className="bg-white px-6 py-[70px] md:px-[5%] md:py-[60px]"
+      className="bg-[#FFFCF4] px-6 py-[70px] md:px-[5%] md:py-[60px]"
     >
       <div className="mx-auto max-w-[1310px]">
         <Reveal>
@@ -212,7 +212,10 @@ export function CategoriesSection({
                       <div className="mt-auto">
                         <span className="inline-flex w-full items-center justify-center gap-2 rounded-[8px] border border-navy bg-navy py-3 text-xs font-medium title tracking-[.1em] text-white transition-all duration-200 group-hover:border-gold group-hover:bg-gold group-hover:text-navy">
                           View Products
-                          <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                          <ArrowRight
+                            size={14}
+                            className="transition-transform group-hover:translate-x-1"
+                          />
                         </span>
                       </div>
                     </div>

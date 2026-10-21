@@ -50,7 +50,7 @@ export function FaqSection({ faqs = defaultFaqs }: FaqSectionProps) {
 
   return (
     <section
-      className="bg-ash py-[70px] md:py-[100px] px-6 md:px-[5%]"
+      className="bg-[#FFFCF4] ash py-[70px] md:py-[100px] px-6 md:px-[5%]"
       id="contact"
     >
       <div className="mx-auto grid max-w-[1310px] grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-10">

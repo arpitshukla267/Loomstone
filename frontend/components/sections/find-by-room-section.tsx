@@ -144,7 +144,7 @@ export function FindByRoomSection() {
   };
 
   return (
-    <section className="bg-ash px-6 py-16 md:px-[5%] md:py-24">
+    <section className="bg-[#FFFCF4] ash px-6 py-16 md:px-[5%] md:py-24">
       <div className="mx-auto max-w-[1310px]">
         {/* Section Intro */}
         <div className="text-center">
