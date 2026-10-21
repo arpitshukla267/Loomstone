@@ -17,7 +17,8 @@ export interface CategoriesSectionProps {
 export function CategoriesSection({
   categories: initialCategories = defaultCategories,
 }: CategoriesSectionProps) {
-  const [categories, setCategories] = useState<CategoryItem[]>(initialCategories);
+  const [categories, setCategories] =
+    useState<CategoryItem[]>(initialCategories);
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -43,7 +44,7 @@ export function CategoriesSection({
           .filter((c) => c?.name && c?.isActive !== false)
           .map((c) => {
             const fallback = defaultCategories.find(
-              (dc) => dc.title.toLowerCase() === c.name.toLowerCase()
+              (dc) => dc.title.toLowerCase() === c.name.toLowerCase(),
             );
             return {
               title: c.name,
@@ -94,45 +95,25 @@ export function CategoriesSection({
     updateArrows();
   }, [categories, updateArrows]);
 
-  const scrollByCard = (direction: 1 | -1) => {
+  // Ek click par utne hi cards khisakte hain jitne abhi visible hain
+  // (mobile: 1, tablet: 2, laptop: 3, xl: 4)
+  const scrollByPage = (direction: 1 | -1) => {
     const el = trackRef.current;
-    if (!el) return;
+    const first = el?.firstElementChild as HTMLElement | null;
+    if (!el || !first) return;
 
-    const cards = Array.from(el.children) as HTMLElement[];
-    if (!cards.length) return;
-
-    const trackCenter = el.getBoundingClientRect().left + el.clientWidth / 2;
-
-    const centerOf = (card: HTMLElement) => {
-      const rect = card.getBoundingClientRect();
-      return rect.left + rect.width / 2;
-    };
-
-    let current = 0;
-    let best = Infinity;
-
-    cards.forEach((card, index) => {
-      const distance = Math.abs(centerOf(card) - trackCenter);
-
-      if (distance < best) {
-        best = distance;
-        current = index;
-      }
-    });
-
-    const targetIndex = Math.min(
-      Math.max(current + direction, 0),
-      cards.length - 1,
-    );
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const step = first.offsetWidth + gap;
+    const visible = Math.max(1, Math.round((el.clientWidth + gap) / step));
 
     el.scrollBy({
-      left: centerOf(cards[targetIndex]) - trackCenter,
+      left: direction * visible * step,
       behavior: "smooth",
     });
   };
 
   const arrowClass =
-    "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-md transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold md:hidden";
+    "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-md transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
 
   return (
     <section
@@ -152,9 +133,9 @@ export function CategoriesSection({
           <button
             type="button"
             aria-label="Previous category"
-            onClick={() => scrollByCard(-1)}
+            onClick={() => scrollByPage(-1)}
             disabled={!canPrev}
-            className={`${arrowClass} left-2 ${
+            className={`${arrowClass} left-2 md:-left-5 ${
               canPrev ? "opacity-100" : "pointer-events-none opacity-50"
             }`}
           >
@@ -164,9 +145,9 @@ export function CategoriesSection({
           <button
             type="button"
             aria-label="Next category"
-            onClick={() => scrollByCard(1)}
+            onClick={() => scrollByPage(1)}
             disabled={!canNext}
-            className={`${arrowClass} right-2 ${
+            className={`${arrowClass} right-2 md:-right-5 ${
               canNext ? "opacity-100" : "pointer-events-none opacity-50"
             }`}
           >
@@ -175,7 +156,7 @@ export function CategoriesSection({
 
           <div
             ref={trackRef}
-            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain overflow-y-hidden px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 md:gap-5 md:overflow-visible md:px-0"
+            className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain overflow-y-hidden px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:gap-5 md:px-0"
           >
             {categories.map((category, index) => {
               const targetUrl = `/products?category=${encodeURIComponent(category.title)}`;
@@ -183,8 +164,8 @@ export function CategoriesSection({
               return (
                 <Reveal
                   key={category.title}
-                  delay={(index % 5) * 100}
-                  className="h-full w-[calc(80vw-32px)] shrink-0 snap-center md:w-auto md:shrink"
+                  delay={(index % 4) * 100}
+                  className="h-full w-[calc(80vw-32px)] shrink-0 snap-center md:w-[calc((100%-20px)/2)] md:snap-start lg:w-[calc((100%-40px)/3)] xl:w-[calc((100%-60px)/4)]"
                 >
                   <Link
                     href={targetUrl}
@@ -195,7 +176,7 @@ export function CategoriesSection({
                         src={category.image}
                         alt={category.title}
                         fill
-                        sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 80vw"
+                        sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 80vw"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                       />
                     </div>
@@ -205,7 +186,7 @@ export function CategoriesSection({
                         {category.title}
                       </h3>
 
-                      <p className="mb-5 mt-2 line-clamp-4 text-[12px] leading-[1.7] text-cool md:text-[13px]">
+                      <p className="mb-5 mt-2 line-clamp-3 text-[12px] leading-[1.7] text-cool md:text-[13px]">
                         {category.text}
                       </p>
 

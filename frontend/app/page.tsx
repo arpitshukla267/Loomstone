@@ -59,7 +59,7 @@ export default function Home() {
       <CategoriesSection onOpenInquiry={openInquiry} onShowToast={showToast} />
 
       {/* Banner - Categories ke neeche */}
-      <section className="relative w-full h-[80vh]">
+      {/* <section className="relative w-full h-[80vh]">
         <Link href="/products">
           <Image
             src="/banner.webp"
@@ -69,7 +69,7 @@ export default function Home() {
             className="object-cover"
           />
         </Link>
-      </section>
+      </section> */}
 
       <FeaturedDesignsSection onOpenInquiry={openInquiry} />
       <ClientsSection images={clientLogos} imageFit="contain" />

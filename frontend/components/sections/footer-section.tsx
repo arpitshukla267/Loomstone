@@ -133,15 +133,15 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
 
         {/* Column 2: Quick links */}
         <div>
-          <h4 className="m-0 mb-[18px] text-white text-[10px] font-bold tracking-[.13em] uppercase">
+          <h4 className="m-0 mb-[18px] text-white text-sm font-semibold tracking-[.03em]">
             Quick Links
           </h4>
-          <ul className="list-none m-0 p-0 space-y-2">
+          <ul className="list-none m-0 p-0 space-y-1">
             {quickLinks.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}
-                  className="text-[12px] leading-[1.8] text-line no-underline hover:text-gold transition-colors"
+                  className="text-xs text-line no-underline hover:text-gold transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -152,7 +152,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
 
         {/* Column 3: Contact */}
         <div>
-          <h4 className="m-0 mb-[18px] text-white text-[10px] font-bold tracking-[.13em] uppercase">
+          <h4 className="m-0 mb-[18px] text-white text-sm font-semibold tracking-[.03em]">
             Contact
           </h4>
           <ul className="list-none m-0 p-0 space-y-3 text-[12px] leading-[1.8]">
