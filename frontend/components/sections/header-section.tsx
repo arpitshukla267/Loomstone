@@ -98,9 +98,9 @@ export function HeaderSection({
   const navLinks = [
     ["Home", "/"],
     ["About", "/about"],
-    ["Flooring Solutions", "/products"],
-    // ["Projects", "/projects"],
-    ["Inspirations", "/inspiration"],
+    ["Products", "/products"],
+    ["Clientele & Inspiration", "/inspiration"],
+    ["Designs & Projects", "/projects"]
     // ["Blogs", "/blogs"],
     // ["Contact Us", "/contact"],
   ];

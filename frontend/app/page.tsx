@@ -7,7 +7,6 @@ import {
   HeaderSection,
   HeroSection,
   FindByRoomSection,
-  CategoriesSection,
   FeaturedDesignsSection,
   FaqSection,
   RecentBlogsSection,
@@ -28,11 +27,11 @@ const clientLogos = [
   "moxy.avif",
   "dlf-ultima.webp",
   "dlf.webp",
-  "tec.jpeg",
+  "marriott.webp",
   "courtyard.avif",
   "Fortune-Hotel-logo.webp",
   "fcml.png",
-  "leela.webp",
+  "tec.jpeg",
 ].map((name) => `/clients/${name}`);
 
 export default function Home() {
@@ -49,27 +48,26 @@ export default function Home() {
   };
 
   return (
-    <main className="overflow-hidden bg-ash text-ink font-sans">
+    <main className="overflow-hidden bg-[#FFFCF4] text-ink font-sans">
       <HeaderSection onShowToast={showToast} activePage="Home" />
       <HeroSection onOpenInquiry={openInquiry} />
-      <FindByRoomSection />
-
-      <GlobalReachSection />
-
-      <CategoriesSection onOpenInquiry={openInquiry} onShowToast={showToast} />
 
       {/* Banner - Categories ke neeche */}
-      {/* <section className="relative w-full h-[80vh]">
-        <Link href="/products">
+      <section className="bg-[#F7F3ED] w-full py-12">
+        <div className="relative w-full h-[90vh] my-12">
           <Image
-            src="/banner.webp"
-            alt="Banner"
+            src="/why_loomstone.png"
+            alt="Why Loomstone"
             fill
             sizes="100vw"
-            className="object-cover"
+            className="object-fill"
           />
-        </Link>
-      </section> */}
+        </div>
+      </section>
+
+      {/* <FindByRoomSection /> */}
+
+      <GlobalReachSection />
 
       <FeaturedDesignsSection onOpenInquiry={openInquiry} />
       <ClientsSection images={clientLogos} imageFit="contain" />

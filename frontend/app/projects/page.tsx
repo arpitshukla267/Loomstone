@@ -1,222 +1,183 @@
 "use client";
 
-import { ArrowRight, ArrowUpRight, Check, MapPin, Ruler } from "lucide-react";
-import {
-  PageFrame,
-  SectionHeading,
-  siteImages,
-} from "@/components/site/site-chrome";
-
-const projects = [
-  {
-    title: "Villa Amanpuri, Phuket",
-    type: "Private Residence",
-    location: "Phuket, Thailand",
-    image: siteImages.projectOne,
-    size: "9.5m × 6.2m",
-    text: "A seamless raw silk rug designed to harmonise with tropical humidity, softened daylight, and the villa’s natural stone palette.",
-  },
-  {
-    title: "The Bellerive Penthouse",
-    type: "Alpine Penthouse",
-    location: "Geneva, Switzerland",
-    image: siteImages.relief,
-    size: "6.8m × 4.4m",
-    text: "A sculpted relief installation tuned to absorb acoustic flutter across floor-to-ceiling glass envelopes and pale oak floors.",
-  },
-  {
-    title: "Studio Luca Bellini",
-    type: "Architecture Studio",
-    location: "Milan, Italy",
-    image: siteImages.projectOne,
-    size: "Custom contour",
-    text: "A precision-notched rug collaboration integrating brass floor channels with the geometry of an 18th-century palazzo restoration.",
-  },
-  {
-    title: "Maison des Pins",
-    type: "Private Residence",
-    location: "Provence, France",
-    image: siteImages.flat,
-    size: "5.2m × 3.8m",
-    text: "A warm flatweave in hand-spun flax and undyed wool, commissioned to ground a sunlit salon beside original limestone walls.",
-  },
-  {
-    title: "Aman Kyoto Guest Salon",
-    type: "Boutique Hospitality",
-    location: "Kyoto, Japan",
-    image: siteImages.wool,
-    size: "7.4m × 5.1m",
-    text: "A low-contrast botanical dye study balancing quiet wayfinding with the tactile calm of a private guest salon.",
-  },
-  {
-    title: "Galerie No. 8",
-    type: "Cultural Commission",
-    location: "New York, USA",
-    image: siteImages.mono,
-    size: "12m seamless width",
-    text: "A monochrome wool and flax field engineered for gallery circulation, flexible exhibitions, and long-term daily use.",
-  },
-];
-
-// Stats are computed from the data above, so they stay correct when projects change
-const stats = [
-  { value: projects.length, label: "Featured commissions" },
-  {
-    value: new Set(projects.map((p) => p.location.split(",").pop()?.trim()))
-      .size,
-    label: "Countries",
-  },
-  { value: new Set(projects.map((p) => p.type)).size, label: "Space types" },
-];
+import { PageFrame } from "@/components/site/site-chrome";
 
 const steps = [
   {
-    title: "Read the room",
-    text: "We study plans, light, circulation, and the emotional rhythm of the space.",
+    title: "Design Consultation",
+    text: "Every project begins with a deep understanding of the design narrative. Working closely with architects, interior designers, developers, and stakeholders, we align creative intent, operational requirements, technical specifications, and project objectives to establish a foundation for exceptional outcomes.",
+    image: "", // e.g. "/process/consultation.jpg"
   },
   {
-    title: "Calibrate the material",
-    text: "We develop fiber, color, density, and scale through physical and digital samples.",
+    title: "Bespoke Design Development",
+    text: "Drawing inspiration from the project’s vision, we develop custom flooring concepts tailored in pattern, texture, colour, material, and scale. Every design is thoughtfully curated to complement the architectural language and enhance the overall spatial experience.",
+    image: "",
   },
   {
-    title: "Build the piece",
-    text: "Master artisans weave, carve, wash, and finish the commission by hand.",
+    title: "Sampling & Prototyping",
+    text: "Through detailed samples and bespoke prototypes, concepts are translated into tangible experiences. This process allows every element to be reviewed, refined, and perfected, ensuring complete confidence before production begins.",
+    image: "",
   },
   {
-    title: "Place with care",
-    text: "Our team coordinates delivery, placement, and final care notes for the room.",
+    title: "Technical & Value Engineering",
+    text: "Our expertise ensures that aesthetic aspirations are seamlessly balanced with durability, functionality, specification requirements, and commercial considerations. The result is a flooring solution that delivers both visual impact and long-term performance without compromise.",
+    image: "",
+  },
+  {
+    title: "Production & Project Coordination",
+    text: "We oversee every stage of production, quality assurance, logistics, and project coordination. Our disciplined approach ensures exceptional craftsmanship, consistency, and reliable delivery at every stage.",
+    image: "",
+  },
+  {
+    title: "Installation & Continued Support",
+    text: "Our commitment extends beyond delivery. From installation guidance and site coordination to ongoing support, we remain an engaged partner throughout the lifecycle of the project, ensuring enduring quality, performance, and client satisfaction.",
+    image: "",
   },
 ];
 
 export default function ProjectsPage() {
   return (
     <PageFrame active="Projects">
-      {/* Inner Hero */}
-      <section className="bg-white flex flex-col lg:flex-row lg:items-end justify-between gap-10 lg:gap-[60px] min-h-auto md:min-h-[420px] pt-[130px] md:pt-[170px] pb-[55px] md:pb-[70px] px-6 md:px-[5%]">
-        <div className="max-w-[800px]">
-          <h1 className="my-4 md:my-5 text-navy font-manrope font-semibold text-[45px] md:text-[clamp(42px,6vw,72px)] leading-[1.08] tracking-[-0.03em]">
-            Rugs made for{" "}
-            <em className="text-gold not-italic">the life of a room.</em>
-          </h1>
-          <p className="max-w-[650px] m-0 text-cool text-[15px] md:text-[17px] leading-[1.8]">
-            From private residences to hospitality spaces and cultural
-            interiors, every Loomstone Terroir commission begins with the
-            architecture around it.
-          </p>
-        </div>
-      </section>
-
-      {/* Projects Grid */}
-      <section className="bg-ash py-[70px] md:py-[100px] px-6 md:px-[5%]">
-        <div className="max-w-[1310px] mx-auto">
-          <SectionHeading
-            title="Material, scale, and atmosphere"
-            text="A selection of custom installations shaped by the rooms, people, and rituals they were made to hold."
+      <div className="bg-[#FFFCF4]">
+        {/* Hero with background image */}
+        <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden px-6 pt-[130px] pb-[60px] md:min-h-[560px] md:px-[5%] md:pt-[170px] md:pb-[90px]">
+          <img
+            src="/design-project.png"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {projects.map((project) => (
-              <article
-                className="group flex flex-col overflow-hidden rounded-xl bg-white border border-[#dbe1e5] transition-all duration-300 hover:-translate-y-1.5 hover:border-gold hover:shadow-[0_18px_34px_rgba(42,41,103,0.10)]"
-                key={project.title}
-              >
-                {/* Image */}
-                <div className="relative h-[190px] overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.07]"
-                  />
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent" />
-                  <span className="absolute bottom-3 left-3 right-3 flex items-center gap-1 text-white text-[11px] font-medium">
-                    <MapPin size={12} className="shrink-0" />
-                    <span className="truncate">{project.location}</span>
-                  </span>
-                </div>
+          <div className="absolute inset-0 bg-black/40" />
 
-                {/* Body */}
-                <div className="flex flex-1 flex-col p-4">
-                  <h3 className="m-0 mb-1.5 text-navy font-manrope font-medium text-[18px] leading-[1.25]">
-                    {project.title}
-                  </h3>
-                  <p className="m-0 mb-4 line-clamp-3 text-cool text-[12px] leading-[1.7]">
-                    {project.text}
-                  </p>
+          <div className="relative z-10 mx-auto flex max-w-[900px] flex-col items-center text-center">
+            <h1 className="font-manrope text-[40px] font-semibold leading-[1.1] tracking-[-0.03em] text-white md:text-[clamp(42px,5.5vw,68px)]">
+              From Vision to{" "}
+              <em className="not-italic text-gold">Exceptional Spaces</em>
+            </h1>
+          </div>
+        </section>
 
-                  <a
-                    className="mt-4 inline-flex items-center gap-1.5 text-navy text-[10px] font-bold tracking-[.1em] uppercase no-underline transition-colors hover:text-gold"
-                    href="/contact"
+        {/* Process */}
+        <section className="px-6 py-[70px] md:px-[5%] md:py-[100px]">
+          <div className="mx-auto flex max-w-[1310px] flex-col gap-10 md:gap-14 lg:gap-20">
+            {steps.map((step, index) => {
+              const mediaOnLeft = index % 2 === 0;
+              return (
+                <div
+                  key={step.title}
+                  className="grid items-center gap-6 lg:grid-cols-2 lg:gap-14"
+                >
+                  <div
+                    className={`relative aspect-[16/10] w-full overflow-hidden bg-[#dbe1e5] ${
+                      mediaOnLeft ? "lg:order-1" : "lg:order-2"
+                    }`}
                   >
-                    Inquire similar design
-                    <ArrowRight
-                      size={13}
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    />
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+                    {step.image && (
+                      <img
+                        src={step.image}
+                        alt={step.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </div>
 
-      {/* Project Process */}
-      <section className="bg-white py-[70px] md:py-[85px] px-6 md:px-[5%]">
-        <div className="max-w-[1310px] mx-auto">
-          <SectionHeading
-            eyebrow="FROM BRIEF TO INSTALLATION"
-            title="A considered collaboration"
-            text="The strongest rooms are built through conversation. Our design directors work alongside architects, homeowners, and curators at every stage."
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {steps.map((step, index) => (
-              <div
-                className="group flex min-h-[230px] flex-col justify-between rounded-xl border border-[#dbe1e5] bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_14px_28px_rgba(42,41,103,0.07)]"
-                key={step.title}
-              >
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-ash text-gold font-manrope italic text-[20px] transition-colors group-hover:bg-navy">
-                  0{index + 1}
-                </span>
-                <div className="mt-6">
-                  <h3 className="m-0 mb-2 text-navy font-manrope font-normal text-[20px] leading-[1.3]">
-                    {step.title}
-                  </h3>
-                  <p className="m-0 text-cool text-[13px] leading-[1.7]">
-                    {step.text}
+                  <div
+                    className={`flex flex-col items-center px-2 text-center ${
+                      mediaOnLeft ? "lg:order-2" : "lg:order-1"
+                    }`}
+                  >
+                    <h3 className="font-manrope text-[28px] font-normal leading-[1.2] text-navy sm:text-[34px] lg:text-[40px]">
+                      {step.title}
+                    </h3>
+                    <p className="mt-4 max-w-[620px] text-[15px] leading-[1.75] text-cool sm:text-[17px] lg:text-[18px]">
+                      {step.text}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Our Approach */}
+        <section className="mb-[70px] w-full md:mb-[110px]">
+          {/* Same ratio as the actual image (1352 x 506) so nothing is cropped */}
+          <div className="relative aspect-[1352/560] w-full overflow-hidden">
+            <img
+              src="/approach.png"
+              alt="Hospitality, commercial and residential flooring environments"
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+
+            {/* Content on the empty right side (desktop) */}
+            <div className="absolute inset-y-0 right-0 hidden w-[40%] items-center justify-end pr-[4%] lg:flex">
+              {" "}
+              <div className="flex max-w-[530px] flex-col items-start">
+                <h2 className="font-manrope text-[clamp(26px,2.8vw,48px)] font-semibold leading-[1.08] tracking-[-0.03em] text-navy">
+                  Our <em className="not-italic text-gold">Approach</em>
+                </h2>
+
+                <div className="mt-3 space-y-2.5 font-manrope text-[13px] font-normal leading-[1.6] text-navy xl:mt-4 xl:space-y-3 xl:text-[15px] xl:leading-[1.7] 2xl:text-base">
+                  <p>
+                    From luxury hospitality destinations and signature
+                    commercial developments to bespoke residential environments,
+                    Loomstone delivers flooring solutions that seamlessly unite
+                    design excellence, craftsmanship, technical precision, and
+                    enduring value.
+                  </p>
+                  <p>
+                    We work with design teams, developers, and project owners
+                    across international markets, adapting every collection to
+                    local design sensibilities, regional specification
+                    standards, and the performance demands of each environment.
+                  </p>
+                  <p className="hidden xl:block">
+                    From the first concept sketch to final installation, one
+                    dedicated team manages design, sampling, production, and
+                    logistics, so projects stay aligned to vision, budget, and
+                    schedule, wherever they are in the world.
                   </p>
                 </div>
-                {/* <small className="mt-5 flex items-center justify-between border-t border-[#dbe1e5] pt-4 text-gold text-[9px] font-bold tracking-[.12em]">
-                  ATELIER PHASE {index + 1} <Check size={12} />
-                </small> */}
+
+                <p className="mt-4 hidden border-t border-gold/60 pt-3 text-[11px] font-semibold uppercase tracking-[.12em] text-navy/70 2xl:block">
+                  Hospitality &bull; Commercial &bull; Residential &bull; Global
+                  Projects
+                </p>
               </div>
-            ))}
+            </div>
           </div>
 
-          {/* CTA */}
-          <div className="relative mt-[65px] flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-[35px] overflow-hidden rounded-2xl bg-navy p-7 md:p-10 text-white">
-            <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
-            <div className="relative">
-              <span className="inline-flex items-center gap-2 text-gold text-[10px] font-bold tracking-[.13em] uppercase">
-                <i className="w-2 h-2 inline-block rounded-full bg-gold not-italic" />
-                YOUR SPACE IS THE STARTING POINT
-              </span>
-              <h2 className="my-2.5 text-white font-manrope font-normal text-[30px] md:text-[37px]">
-                Bring us your room plan.
-              </h2>
-              <p className="max-w-[620px] m-0 text-[#e4e9ec] text-[14px] leading-[1.7]">
-                Our design team will recommend a rug size, fiber story, and
-                weave approach within 24 hours.
+          {/* Content below the image (mobile / tablet) */}
+          <div className="px-6 pt-8 md:px-[5%] lg:hidden">
+            <h2 className="font-manrope text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[40px]">
+              Our <em className="not-italic text-gold">Approach</em>
+            </h2>
+            <div className="mt-4 space-y-4 font-manrope text-base leading-[1.75] text-navy">
+              <p>
+                From luxury hospitality destinations and signature commercial
+                developments to bespoke residential environments, Loomstone
+                delivers flooring solutions that seamlessly unite design
+                excellence, craftsmanship, technical precision, and enduring
+                value.
+              </p>
+              <p>
+                We work with design teams, developers, and project owners across
+                international markets, adapting every collection to local design
+                sensibilities, regional specification standards, and the
+                performance demands of each environment.
+              </p>
+              <p>
+                From the first concept sketch to final installation, one
+                dedicated team manages design, sampling, production, and
+                logistics, so projects stay aligned to vision, budget, and
+                schedule, wherever they are in the world.
               </p>
             </div>
-            <a
-              className="relative inline-flex shrink-0 items-center justify-center gap-2 min-h-[50px] rounded-lg bg-gold px-6 text-navy text-[10px] font-bold tracking-[.13em] uppercase no-underline transition-all duration-200 hover:bg-white"
-              href="/contact"
-            >
-              Start a Project <ArrowUpRight size={16} />
-            </a>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </PageFrame>
   );
 }

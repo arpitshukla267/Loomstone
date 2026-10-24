@@ -6,7 +6,6 @@ import { Reveal } from "@/components/ui/reveal";
 import FounderSection from "@/components/about/FounderSection";
 import VisionMissionSection from "@/components/about/Visionmissionsection";
 import OurStorySection from "@/components/about/Ourstorysection";
-import ProcessSection from "@/components/about/process-section";
 import CoreValuesSection from "@/components/about/Corevaluessection";
 
 const heroImage = "/about.png";
@@ -46,13 +45,23 @@ export default function AboutPage() {
           {/* ================= Founder ================= */}
           <FounderSection />
 
-          <VisionMissionSection />
-
           {/* ================= Core Values ================= */}
           <CoreValuesSection />
 
-          {/* ================= Process ================= */}
-          <ProcessSection />
+          {/* ================= Quality & Responsibility ================= */}
+          <section className="bg-[#F6F1EB] w-full py-12">
+            <div className="relative w-full h-[90vh] my-12">
+              <Image
+                src="/quality.png"
+                alt="Quality & Responsibility"
+                fill
+                sizes="100vw"
+                className="object-fill"
+              />
+            </div>
+          </section>
+          {/* ================= Vision & Mission ================= */}
+          <VisionMissionSection />
         </main>
       </div>
     </PageFrame>

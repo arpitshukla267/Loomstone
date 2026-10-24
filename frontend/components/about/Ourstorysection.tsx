@@ -4,106 +4,82 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
-const COMPANY = "Loomstone";
-const carpetImage = "/carpet.jpeg";
-const YEARS = "03";
-
-/* shared look of the big number */
-const digitBase: React.CSSProperties = {
-  fontSize: "clamp(150px, 18vw, 450px)",
-  lineHeight: 1,
-  letterSpacing: "-0.04em",
-};
 
 export default function OurStorySection() {
   return (
-    <section 
-      className="mx-auto grid max-w-[85vw] items-center gap-10 pb-20 lg:grid-cols-[1.05fr_1fr] lg:gap-20 pt-10"
+    <section
       id="our-story"
+      className="mx-auto grid max-w-full items-center gap-10 pb-20 pt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-20"
     >
-      {/* ================= Big "03" filled with carpet image ================= */}
+      {/* ================= Left: story illustration ================= */}
       <Reveal>
-        <div className="flex min-h-[440px] flex-col items-center justify-center py-12 lg:min-h-[640px]">
-          <div
-            className="relative"
-            style={{ filter: "drop-shadow(0 10px 22px rgba(42,42,107,0.18))" }}
-          >
-            {/* white outline layer (behind) */}
-            <span
-              aria-hidden
-              className="font-manrope absolute left-0 top-0 select-none font-extrabold"
-              style={{
-                ...digitBase,
-                color: "#ffffff",
-                WebkitTextStroke: "12px #ffffff",
-                strokeLinejoin: "round",
-              }}
-            >
-              {YEARS}
-            </span>
-
-            {/* carpet image visible only through the digits */}
-            <span
-              className="font-manrope relative block select-none font-extrabold"
-              style={{
-                ...digitBase,
-                color: "transparent",
-                backgroundImage: `url(${carpetImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-              }}
-              role="img"
-              aria-label={`${YEARS} years of experience`}
-            >
-              {YEARS}
-            </span>
-          </div>
-
-          <p className="relative z-10 mt-10 text-[11px] font-semibold tracking-[0.28em] text-[#2a2a6b] sm:text-xs">
-            YEARS OF EXPERIENCE
-          </p>
+        <div className="flex items-center justify-center">
+          <img
+            src="/story.png"
+            alt="A child imagining spaces as stories, surrounded by rug sketches and textures"
+            loading="lazy"
+            className="h-auto w-full max-w-full object-contain mix-blend-multiply"
+          />
         </div>
       </Reveal>
 
-      {/* ================= Story ================= */}
-      <div>
-        <Reveal>
-          <h2
-            className="font-manrope mb-5 mt-4 text-[32px] font-semibold leading-[1.15] text-[#2a2a6b] md:text-[44px]"
-          >
-            Carpets Designed as the{" "}
-            <span className="text-[#e8a21c]">Foundation of Every Room</span>
+      {/* ================= Right: content ================= */}
+      <div className="pr-6 md:pr-[5%]">
+        <Reveal delay={100}>
+          <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[48px]">
+            Every exceptional space
+            <br />
+            <span className="text-[#e8a21c]">begins with a vision.</span>
           </h2>
         </Reveal>
 
-        <Reveal delay={100}>
-          <div className="space-y-4 text-[15px] leading-[1.8] text-slate-600">
+        <Reveal delay={150}>
+          <div className="max-w-[640px] space-y-4 text-xs leading-[1.8] text-slate-600 md:text-base">
             <p>
-              {COMPANY} began with a clear purpose: every home, hotel and
-              commercial space deserves a carpet that is luxurious, durable and
-              made with care. Inspired by the Axminster tradition of woven
-              craftsmanship, we bring together timeless carpet-weaving technique
-              and modern innovation.
+              At Loomstone, we believe exceptional flooring begins with a clear
+              vision and is realised through meticulous execution. Combining
+              design intelligence, technical expertise, and project management
+              excellence, we guide each project through a seamless journey,
+              transforming concepts into distinctive flooring experiences that
+              elevate the character, performance, and identity of a space.
             </p>
             <p>
-              Each carpet is crafted by weaving individual tufts of a wool and
-              nylon blend through a backing, giving you rich textures, intricate
-              patterns that stay beautiful and a finish that lasts for decades
-              &mdash; whether you choose a traditional design, a contemporary
-              style or a fully bespoke pattern.
+              Rooted in the heritage of handcrafted weaving and refined by
+              modern manufacturing, we partner with architects, interior
+              designers, developers, and hospitality groups across international
+              markets. From luxury hotels and signature commercial developments
+              to private residences, every collection is created to meet
+              exacting design intent, specification standards, and long-term
+              performance expectations.
             </p>
           </div>
         </Reveal>
 
-        <Reveal delay={200}>
+        <Reveal delay={250}>
           <Link
-            href="/contact"
-            className="mt-8 inline-flex items-center gap-2.5 rounded-[8px] bg-[#2a2a6b] px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#e8a21c] hover:text-[#2a2a6b]"
+            href="/products"
+            className="mt-9 inline-flex items-center gap-2.5 rounded-[8px] bg-[#2a2a6b] px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#e8a21c] hover:text-[#2a2a6b]"
           >
-            Get in touch <ArrowUpRight size={16} />
+            Explore Our Collections <ArrowUpRight size={16} />
           </Link>
+        </Reveal>
+
+        <Reveal delay={300}>
+          <div className="mt-10 max-w-[640px] border-t border-slate-200 pt-6">
+            <div className="flex items-start gap-4">
+              <span
+                aria-hidden
+                className="font-serif text-[40px] leading-none text-slate-300"
+              >
+                &ldquo;
+              </span>
+              <p className="text-[15px] leading-[1.6] text-slate-600">
+                Designed with intent.
+                <br />
+                Built to endure.
+              </p>
+            </div>
+          </div>
         </Reveal>
       </div>
     </section>

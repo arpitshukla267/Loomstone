@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Check, Eye, Flag } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 
-const carpetImage = "/inventory.png";
+const carpetImage = "/vission-mission.png";
 
 const visionPoints = [
   "Pairing the richness of wool with the resilience of modern fibers",
@@ -69,7 +69,7 @@ function Badge({
 
 export default function VisionMissionSection() {
   return (
-    <section className="bg-[#f4f9fc] pt-16 px-4 md:px-0">
+    <section className="bg-[#f4f9fc] pb-16 px-4 md:px-0">
       <div className="mx-auto max-w-full">
         {/* ================= Desktop ================= */}
         <Reveal>
@@ -94,7 +94,7 @@ export default function VisionMissionSection() {
                 alt="Loomstone carpet in an elegant interior"
                 fill
                 sizes="(min-width: 1024px) 55vw, 90vw"
-                className="object-cover"
+                className="object-contain object-right"
               />
             </div>
 

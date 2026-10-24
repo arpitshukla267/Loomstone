@@ -3,101 +3,65 @@
 import { useRef } from "react";
 import { motion, MotionConfig, useInView, type Variants } from "framer-motion";
 import {
+  ClipboardCheck,
   Compass,
-  Droplets,
-  Grid3x3,
-  Scissors,
-  Truck,
-  Wind,
+  Layers,
+  PenTool,
+  Ruler,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 
 export interface ProcessStep {
+  /** Main heading (client's point), e.g. "Design Consultation" */
   title: string;
   description: string;
-  phase: string;
-  highlights?: string[];
-  /** GIF / video-like image URL (e.g. "/process/spinning.gif") */
+  /** Optional image URL. Falls back to an icon panel when omitted */
   media?: string;
   mediaAlt?: string;
 }
 
 export const defaultProcessSteps: ProcessStep[] = [
   {
-    title: "Design & Color Choice",
+    title: "Design Consultation",
     description:
-      "Tell us your size, shape, and the colors you love. We match every shade to your space and send yarn samples, so you can see and feel the colors before a single knot is tied.",
-    phase: "PHASE 1 · DESIGN",
-    highlights: ["Size & Shape", "Color Matching", "Yarn Samples"],
-    media: "/process/rug_design_colour_selection.gif",
-    mediaAlt: "Choosing rug design and colors",
+      "Every project begins with a deep understanding of the design narrative. Working closely with architects, interior designers, developers, and stakeholders, we align creative intent, operational requirements, technical specifications, and project objectives to establish a foundation for exceptional outcomes.",
   },
   {
-    title: "Spinning",
+    title: "Bespoke Design Development",
     description:
-      "Pure natural wool is cleaned, carded, and hand-spun into strong, even yarn. Spinning by hand keeps the fibre soft and gives your rug its rich, natural texture and long life.",
-    phase: "PHASE 2 · SPINNING",
-    highlights: ["Hand-Spun Wool", "Natural Fibre", "Soft Texture"],
-    media: "/process/spinning.png",
-    mediaAlt: "Wool being hand-spun into yarn",
+      "Drawing inspiration from the project’s vision, we develop custom flooring concepts tailored in pattern, texture, colour, material, and scale. Every design is thoughtfully curated to complement the architectural language and enhance the overall spatial experience.",
   },
   {
-    title: "Dyeing",
+    title: "Sampling & Prototyping",
     description:
-      "The spun yarn is dyed in small batches using natural, colorfast dyes. Each batch is checked against your approved color, so the final shades stay deep, true, and fade-resistant.",
-    phase: "PHASE 3 · DYEING",
-    highlights: ["Natural Dyes", "Small Batches", "Colorfast"],
-    media: "/process/dyeing.png",
-    mediaAlt: "Wool yarn being dyed",
+      "Through detailed samples and bespoke prototypes, concepts are translated into tangible experiences. This process allows every element to be reviewed, refined, and perfected, ensuring complete confidence before production begins.",
   },
   {
-    title: "Loom Weaving",
+    title: "Technical & Value Engineering",
     description:
-      "Our master weavers knot your rug by hand on upright wooden looms, one row at a time. This slow craft takes weeks, but it gives the rug its sharp pattern and lasting strength.",
-    phase: "PHASE 4 · WEAVING",
-    highlights: ["Wooden Looms", "Knot by Knot", "Master Weavers"],
-    media: "/process/loom-weaving.png",
-    mediaAlt: "Artisan weaving a rug on a loom",
+      "Our expertise ensures that aesthetic aspirations are seamlessly balanced with durability, functionality, specification requirements, and commercial considerations. The result is a flooring solution that delivers both visual impact and long-term performance without compromise.",
   },
   {
-    title: "Finishing",
+    title: "Production & Project Coordination",
     description:
-      "Once woven, the rug is washed, stretched, and hand-trimmed for an even pile and clean edges. Every inch is then inspected carefully so only a perfect piece moves ahead.",
-    phase: "PHASE 5 · FINISHING",
-    highlights: ["Hand-Trimmed", "Washed & Stretched", "Quality Inspection"],
-    media: "/process/finishing.png",
-    mediaAlt: "Finishing and trimming the rug",
+      "We oversee every stage of production, quality assurance, logistics, and project coordination. Our disciplined approach ensures exceptional craftsmanship, consistency, and reliable delivery at every stage.",
   },
   {
-    title: "Delivery",
+    title: "Installation & Continued Support",
     description:
-      "Your finished rug is carefully wrapped and packed to stay safe in transit. We ship worldwide and keep you updated, so it reaches your doorstep ready to be unrolled and enjoyed.",
-    phase: "PHASE 6 · GLOBAL DELIVERY",
-    highlights: ["Safe Packing", "Global Shipping", "Doorstep Delivery"],
-    media: "/process/delivery.png",
-    mediaAlt: "Rug packed and ready for delivery",
+      "Our commitment extends beyond delivery. From installation guidance and site coordination to ongoing support, we remain an engaged partner throughout the lifecycle of the project, ensuring enduring quality, performance, and client satisfaction.",
   },
 ];
 
 const STEP_ICONS: LucideIcon[] = [
   Compass,
-  Wind,
-  Droplets,
-  Grid3x3,
-  Scissors,
-  Truck,
+  PenTool,
+  Layers,
+  Ruler,
+  ClipboardCheck,
+  Wrench,
 ];
-
-function getIconForStep(title: string, index: number): LucideIcon {
-  const lower = title.toLowerCase();
-  if (lower.includes("design")) return Compass;
-  if (lower.includes("spin")) return Wind;
-  if (lower.includes("dye")) return Droplets;
-  if (lower.includes("loom") || lower.includes("weav")) return Grid3x3;
-  if (lower.includes("finish")) return Scissors;
-  if (lower.includes("deliver")) return Truck;
-  return STEP_ICONS[index % STEP_ICONS.length];
-}
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -108,25 +72,18 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 interface ProcessRowProps {
   step: ProcessStep;
   index: number;
-  /** true → GIF on the left column, content on the right (desktop) */
   mediaOnLeft: boolean;
 }
 
 function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
   const ref = useRef<HTMLDivElement>(null);
-  // Each row triggers on its own when it scrolls into view
   const inView = useInView(ref, { once: true, amount: 0.35 });
-  const Icon = getIconForStep(step.title, index);
-  // Slide in from the outer edge of its own column
+  const Icon = STEP_ICONS[index % STEP_ICONS.length];
   const dir = mediaOnLeft ? -1 : 1;
 
   const mediaVariants: Variants = {
     hidden: { opacity: 0, x: 60 * dir },
-    show: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.9, ease: EASE },
-    },
+    show: { opacity: 1, x: 0, transition: { duration: 0.9, ease: EASE } },
   };
 
   const imageVariants: Variants = {
@@ -146,7 +103,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
 
   return (
     <div ref={ref} className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
-      {/* ---------- MEDIA ---------- */}
+      {/* MEDIA */}
       <motion.div
         variants={mediaVariants}
         initial="hidden"
@@ -173,7 +130,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
         )}
       </motion.div>
 
-      {/* ---------- CONTENT ---------- */}
+      {/* CONTENT: heading + description only */}
       <motion.div
         variants={textContainer}
         initial="hidden"
@@ -191,7 +148,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
 
         <motion.p
           variants={textItem}
-          className="mt-4 max-w-[620px] text-[16px] leading-[1.7] text-cool sm:text-[18px] lg:text-[20px]"
+          className="mt-4 max-w-[620px] text-[15px] leading-[1.75] text-cool sm:text-[17px] lg:text-[18px]"
         >
           {step.description}
         </motion.p>
@@ -206,27 +163,33 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
 
 export interface ProcessSectionProps {
   steps?: ProcessStep[];
-  /**
-   * Which side the GIF sits on for the FIRST row (desktop).
-   * "right" → row 1: content left / GIF right, row 2: GIF left / content right…
-   * "left"  → row 1: GIF left / content right (exactly like the reference image)
-   */
+  heading?: string;
+  intro?: string;
+  closingTitle?: string;
+  closingText?: string;
+  /** Which side the media sits on for the FIRST row (desktop). */
   firstMediaSide?: "left" | "right";
-  onOpenInquiry?: () => void;
 }
 
 export function ProcessSection({
   steps = defaultProcessSteps,
+  heading = "From Vision to Exceptional Spaces",
+  intro = "At Loomstone, we believe exceptional flooring begins with a clear vision and is realised through meticulous execution. Combining design intelligence, technical expertise, and project management excellence, we guide each project through a seamless journey, transforming concepts into distinctive flooring experiences that elevate the character, performance, and identity of a space.",
+  closingTitle = "Our Approach",
+  closingText = "From luxury hospitality destinations and signature commercial developments to bespoke residential environments, Loomstone delivers flooring solutions that seamlessly unite design excellence, craftsmanship, technical precision, and enduring value.",
   firstMediaSide = "right",
 }: ProcessSectionProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const headerInView = useInView(headerRef, { once: true, amount: 0.4 });
 
+  const closingRef = useRef<HTMLDivElement>(null);
+  const closingInView = useInView(closingRef, { once: true, amount: 0.5 });
+
   return (
     <MotionConfig reducedMotion="user">
       <section className="overflow-hidden bg-[#FFFCF4] ash" id="products">
         <div className="mx-auto max-w-[85vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px]">
-          {/* ================= HEADER ================= */}
+          {/* HEADER */}
           <motion.div
             ref={headerRef}
             initial={{ opacity: 0, y: 20 }}
@@ -235,14 +198,14 @@ export function ProcessSection({
             className="mx-auto mb-10 flex w-full flex-col items-center text-center md:mb-14"
           >
             <h2 className="mx-auto max-w-[900px] font-manrope text-[36px] font-normal leading-[1.15] text-navy sm:text-[46px] md:text-[clamp(42px,4.5vw,64px)]">
-              How we make your custom rug
+              {heading}
             </h2>
-            <p className="mx-auto mt-4 max-w-[600px] text-[14px] leading-[1.8] text-cool sm:text-[16px]">
-              From your first idea to the finished rug delivered to your space.
+            <p className="mx-auto mt-4 max-w-[760px] text-[14px] leading-[1.8] text-cool sm:text-[16px]">
+              {intro}
             </p>
           </motion.div>
 
-          {/* ================= ZIG-ZAG ROWS ================= */}
+          {/* ZIG-ZAG ROWS */}
           <div className="flex flex-col gap-8 md:gap-10 lg:gap-12">
             {steps.map((step, index) => {
               const firstOnLeft = firstMediaSide === "left";
@@ -257,6 +220,22 @@ export function ProcessSection({
               );
             })}
           </div>
+
+          {/* CLOSING: heading + description */}
+          <motion.div
+            ref={closingRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={closingInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.7, ease: EASE }}
+            className="mx-auto mt-16 flex max-w-[760px] flex-col items-center text-center md:mt-24"
+          >
+            <h2 className="font-manrope text-[32px] font-normal leading-[1.15] text-navy sm:text-[40px] md:text-[48px]">
+              {closingTitle}
+            </h2>
+            <p className="mt-4 font-manrope text-[18px] font-normal leading-[1.7] text-navy sm:text-[22px]">
+              {closingText}
+            </p>
+          </motion.div>
         </div>
       </section>
     </MotionConfig>
