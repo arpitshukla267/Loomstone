@@ -6,12 +6,9 @@ const COMPANY = "Loomstone";
 const OWNER = "Pawan Yadav";
 const founderImage = "/founder.jpeg";
 
-const QUOTE = `Loomstone began with a clear purpose: every home, hotel and
-                  commercial space deserves a carpet that is luxurious, durable
-                  and made with care. Inspired by the Axminster tradition of
-                  woven craftsmanship, we combine high-quality wool with
-                  resilient fibers, offer bespoke designs, and build every
-                  carpet with sustainability in mind.`;
+const QUOTE = `I believe that exceptional spaces are created through thoughtful design and an uncompromising attention to detail. Flooring is far more than a surface beneath our feet; it shapes the atmosphere, influences how people experience a space, and contributes to its lasting identity.
+
+At Loomstone, our vision is to bring together design excellence, skilled craftsmanship, and enduring quality to create flooring solutions that inspire, perform, and stand the test of time. Every project is an opportunity to transform a space with purpose, precision, and a lasting sense of distinction.`;
 
 const dots =
   "bg-[radial-gradient(#e8a21c_1.4px,transparent_1.4px)] [background-size:14px_14px]";
@@ -33,7 +30,7 @@ export default function FounderSection() {
       {/* navy slanted panel behind the quote (desktop) */}
       <div
         aria-hidden
-        className="absolute inset-y-10 left-[34%] right-0 hidden bg-[#2a2a6b] lg:block [clip-path:polygon(0_12%,100%_0,100%_100%,0_88%)]"
+        className="absolute inset-y-10 left-[33.5%] right-0 hidden bg-[#2a2a6b] lg:block [clip-path:polygon(0_12%,100%_0,100%_100%,0_88%)]"
       />
       {/* small navy strip peeking on the left (desktop) */}
       <div
@@ -45,7 +42,7 @@ export default function FounderSection() {
         {/* Founder photo card */}
         <Reveal
           y={32}
-          className="relative z-10 mx-auto w-full max-w-[380px] lg:mx-0 lg:max-w-none lg:-ml-[106px]"
+          className="relative z-10 mx-auto w-full max-w-[380px] lg:mx-0 lg:max-w-none lg:-ml-[107px]"
         >
           <div className="relative h-[460px] w-full overflow-hidden rounded-[36px] border-[6px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] md:h-[560px]">
             <FadeImage
@@ -61,7 +58,7 @@ export default function FounderSection() {
         {/* Quote */}
         <Reveal
           delay={150}
-          className="-mt-10 rounded-2xl bg-[#2a2a6b] px-7 pb-10 pt-16 text-white lg:mt-0 lg:rounded-none lg:bg-transparent lg:px-10 lg:py-20"
+          className="-mt-10 rounded-2xl bg-[#2a2a6b] px-7 pb-10 pt-16 text-white lg:mt-0 lg:-mr-[min(180px,7vw)] lg:rounded-none lg:bg-transparent lg:pl-10 lg:pr-6 lg:py-20"
         >
           <span
             aria-hidden
@@ -70,17 +67,13 @@ export default function FounderSection() {
             &ldquo;
           </span>
 
-          <p
-            className="font-manrope mt-6 max-w-[780px] text-[15px] font-medium leading-[1.6] md:text-[19px]"
-          >
+          <p className="font-manrope mt-6 max-w-none whitespace-pre-line text-[15px] font-medium leading-[1.6] md:text-[19px]">
             {QUOTE}
           </p>
 
           <div className="my-8 h-[2px] w-24 bg-[#e8a21c]" />
 
-          <h3
-            className="font-manrope text-[22px] font-bold leading-tight"
-          >
+          <h3 className="font-manrope text-[22px] font-bold leading-tight">
             Mr. {OWNER}
           </h3>
           <p className="mt-1 text-sm font-medium uppercase tracking-wide text-[#e8a21c]">
