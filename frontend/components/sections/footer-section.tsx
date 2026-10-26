@@ -1,22 +1,13 @@
 "use client";
 
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useContactInfo, telHref } from "@/lib/contact-info";
-
-const quickLinks = [
-  { label: "Home", href: "/" },
-  { label: "Flooring Solutions", href: "/products" },
-  { label: "About Loomstone", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Inspiration", href: "/inspiration" },
-  { label: "Blogs", href: "/blogs" },
-  { label: "Contact Us", href: "/contact" },
-];
+import { useEffect, useRef, useState } from "react";
+import { useContactInfo } from "@/lib/contact-info";
 
 const iconClass =
-  "flex items-center justify-center w-9 h-9 rounded-full border border-white/25 text-white hover:text-gold hover:border-gold transition-colors";
+  "flex items-center justify-center w-[54px] h-[54px] rounded-full border border-white/20 text-white/70 hover:text-gold hover:border-gold transition-colors";
 
 function InstagramIcon() {
   return (
@@ -76,6 +67,46 @@ interface FooterSectionProps {
 
 export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
   const info = useContactInfo();
+  const [showTop, setShowTop] = useState(false);
+  const [inView, setInView] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
+
+  // Arrow sirf tab dikhta hai jab footer viewport me ho (permanent nahi)
+  useEffect(() => {
+    const el = footerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowTop(entry.isIntersecting),
+      { threshold: 0.15 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Footer viewport me aate hi sab elements neeche se smoothly aate hain
+  useEffect(() => {
+    const el = footerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Har element ke liye staggered slide-up + fade
+  const reveal = (order: number) => ({
+    className: `transition-all duration-700 ease-out ${
+      inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+    }`,
+    style: { transitionDelay: `${order * 120}ms` },
+  });
 
   // Khali link wale icons nahi dikhte
   const socials = [
@@ -95,110 +126,65 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
   ].filter((s) => s.href);
 
   return (
-    <footer className="pt-[55px] md:pt-[70px] pb-6 px-6 md:px-[5%] text-line bg-[#272763]">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-[30px] md:gap-[45px] max-w-[1310px] mx-auto">
-        {/* Column 1: Logo + description + social icons */}
-        <div>
-          <Link className="inline-flex items-center mb-[18px]" href="/">
-            <Image
-              src="/logo-vertical.png"
-              alt="Loomstone"
-              width={140}
-              height={45}
-              className="h-20 w-auto object-cover rounded"
-            />
+    <footer
+      ref={footerRef}
+      className="relative bg-[#272763] text-line px-6 md:px-[5%] pt-[55px] md:pt-[70px] pb-8 overflow-hidden"
+    >
+      <div className="max-w-[1310px] mx-auto flex flex-col items-center text-center">
+        {/* Social icons (centered circles) */}
+        {socials.length > 0 && (
+          <div className="flex items-center justify-center gap-[5px]">
+            {socials.map((s, i) => {
+              const r = reveal(i);
+              return (
+                <div key={s.key} className={r.className} style={r.style}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className={iconClass}
+                  >
+                    {s.icon}
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Copyright + legal links */}
+        <p
+          className={`mt-8 mb-0 text-[14px] md:text-[15px] text-white leading-[1.8] ${
+            reveal(socials.length + 1).className
+          }`}
+          style={reveal(socials.length + 1).style}
+        >
+          © {new Date().getFullYear()} Loomstone - All Rights Reserved -{" "}
+          <Link
+            href="/terms"
+            className="text-white no-underline hover:text-gold transition-colors"
+          >
+            Terms of Service
+          </Link>{" "}
+          /{" "}
+          <Link
+            href="/privacy"
+            className="text-white no-underline hover:text-gold transition-colors"
+          >
+            Privacy Policy
           </Link>
-          <p className="text-[12px] leading-[1.8] text-line max-w-[360px]">
-            Bespoke textile architecture and premium hand-knotted &amp;
-            Axminster floorcoverings engineered for luxury residences, hotels,
-            and commercial spaces.
-          </p>
-          {socials.length > 0 && (
-            <div className="flex items-center gap-3 mt-5">
-              {socials.map((s) => (
-                <a
-                  key={s.key}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className={iconClass}
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
+        </p>
 
-        {/* Column 2: Quick links */}
-        <div>
-          <h4 className="m-0 mb-[18px] text-white text-sm font-semibold tracking-[.03em]">
-            Quick Links
-          </h4>
-          <ul className="list-none m-0 p-0 space-y-1">
-            {quickLinks.map((link) => (
-              <li key={link.label}>
-                <Link
-                  href={link.href}
-                  className="text-xs text-line no-underline hover:text-gold transition-colors"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Column 3: Contact */}
-        <div>
-          <h4 className="m-0 mb-[18px] text-white text-sm font-semibold tracking-[.03em]">
-            Contact
-          </h4>
-          <ul className="list-none m-0 p-0 space-y-3 text-[12px] leading-[1.8]">
-            {info.address && (
-              <li className="flex items-start gap-2">
-                <MapPin size={14} className="mt-[5px] shrink-0 text-gold" />
-                <span>{info.address}</span>
-              </li>
-            )}
-            {info.phone && (
-              <li className="flex items-center gap-2">
-                <Phone size={14} className="shrink-0 text-gold" />
-                <a
-                  href={telHref(info.phone)}
-                  className="text-line no-underline hover:text-gold transition-colors"
-                >
-                  {info.phone}
-                </a>
-              </li>
-            )}
-            {info.email && (
-              <li className="flex items-center gap-2">
-                <Mail size={14} className="shrink-0 text-gold" />
-                <a
-                  href={`mailto:${info.email}`}
-                  className="text-line no-underline hover:text-gold transition-colors"
-                >
-                  {info.email}
-                </a>
-              </li>
-            )}
-          </ul>
-        </div>
-      </div>
-
-      {/* Bottom bar: copyright + created by */}
-      <div className="max-w-[1310px] mx-auto mt-[45px] pt-5 border-t border-white/[0.11] text-[10px] flex flex-col md:flex-row items-center justify-between gap-3">
-        <span>
-          © {new Date().getFullYear()} Loomstone. All rights reserved.
-        </span>
-
+        {/* Created by */}
         <a
           href="https://visitinglink.com/"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 hover:text-gold transition-colors"
+          className={`mt-4 inline-flex items-center gap-2 text-[10px] text-line hover:text-gold ${
+            reveal(socials.length + 2).className
+          }`}
+          style={reveal(socials.length + 2).style}
         >
           <span>Designed & Developed by VisitingLink</span>
           <Image
@@ -210,6 +196,20 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
           />
         </a>
       </div>
+
+      {/* Scroll to top button */}
+      <button
+        type="button"
+        aria-label="Scroll to top"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed left-6 bottom-6 md:left-[50px] md:bottom-[50px] z-40 flex items-center justify-center w-[56px] h-[56px] rounded-[3px] bg-white text-[#272763] shadow-md hover:bg-gold hover:text-white transition-all duration-300 ${
+          showTop
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-3 pointer-events-none"
+        }`}
+      >
+        <ChevronUp size={22} strokeWidth={3} />
+      </button>
     </footer>
   );
 }

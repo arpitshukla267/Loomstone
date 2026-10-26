@@ -70,7 +70,7 @@ export default function Home() {
 
       <ClientsSection images={clientLogos} imageFit="contain" />
       <RecentBlogsSection />
-      <FaqSection />
+      {/* <FaqSection /> */}
       <FooterSection onShowToast={showToast} />
       <QuickActions />
 

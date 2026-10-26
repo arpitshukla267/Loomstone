@@ -100,19 +100,19 @@ async function fetchHeroSlides(signal: AbortSignal): Promise<HeroSlide[]> {
 /* ---------- Fallback (hardcoded) slides ---------- */
 
 const defaultSlides = (heroImage: string): HeroSlide[] => [
-  {
-    image: "hero/carpet-tiles.png",
-    heading: (
-      <>
-        Designed for <em className="text-gold not-italic">Spaces</em> That Move
-        You.
-      </>
-    ),
-    description:
-      "Redefine modern interiors with precision-crafted carpet tiles that bring together distinctive textures, contemporary patterns, and lasting performance.",
-    primaryText: "Discover Our Rugs",
-    secondaryText: "Create Your Custom Rug",
-  },
+  // {
+  //   image: "hero/carpet-tiles.png",
+  //   heading: (
+  //     <>
+  //       Designed for <em className="text-gold not-italic">Spaces</em> That Move
+  //       You.
+  //     </>
+  //   ),
+  //   description:
+  //     "Redefine modern interiors with precision-crafted carpet tiles that bring together distinctive textures, contemporary patterns, and lasting performance.",
+  //   primaryText: "Discover Our Rugs",
+  //   secondaryText: "Create Your Custom Rug",
+  // },
   {
     image: "hero/axminster.png",
     heading: (
@@ -138,32 +138,32 @@ const defaultSlides = (heroImage: string): HeroSlide[] => [
     primaryText: "View Collections",
     secondaryText: "Design Your Own Rug",
   },
-  {
-    image: "hero/hero-1.png",
-    heading: (
-      <>
-        Handmade rugs for <em className="text-gold not-italic">beautiful</em>{" "}
-        spaces.
-      </>
-    ),
-    description:
-      "Carefully woven by hand using natural wool and silk. Designed to fit your home, hotel, or office perfectly.",
-    primaryText: "Explore Collections",
-    secondaryText: "Inquire About a Custom Rug",
-  },
-  {
-    image: "hero/handloom-rugs.png",
-    heading: (
-      <>
-        Handwoven Heritage, <br />
-        <em className="text-gold not-italic">Naturally Refined</em>
-      </>
-    ),
-    description:
-      "Discover handloom rugs crafted with traditional weaving techniques, natural textures, and timeless patterns—bringing warmth, character, and understated elegance to every space.",
-    primaryText: "View Collections",
-    secondaryText: "Design Your Own Rug",
-  },
+  // {
+  //   image: "hero/hero-1.png",
+  //   heading: (
+  //     <>
+  //       Handmade rugs for <em className="text-gold not-italic">beautiful</em>{" "}
+  //       spaces.
+  //     </>
+  //   ),
+  //   description:
+  //     "Carefully woven by hand using natural wool and silk. Designed to fit your home, hotel, or office perfectly.",
+  //   primaryText: "Explore Collections",
+  //   secondaryText: "Inquire About a Custom Rug",
+  // },
+  // {
+  //   image: "hero/handloom-rugs.png",
+  //   heading: (
+  //     <>
+  //       Handwoven Heritage, <br />
+  //       <em className="text-gold not-italic">Naturally Refined</em>
+  //     </>
+  //   ),
+  //   description:
+  //     "Discover handloom rugs crafted with traditional weaving techniques, natural textures, and timeless patterns—bringing warmth, character, and understated elegance to every space.",
+  //   primaryText: "View Collections",
+  //   secondaryText: "Design Your Own Rug",
+  // },
 ];
 
 const arrowClassName =
