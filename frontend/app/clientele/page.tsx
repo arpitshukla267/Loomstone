@@ -8,9 +8,9 @@ const clients = [
     { name: "ITC Hotels", logo: "/clients/itc.svg" },
     { name: "Hilton Hotels & Resorts", logo: "/clients/hilton.webp" },
     { name: "Hyatt Regancy", logo: "/clients/hyatt.png" },
+    { name: "DLF Hospitality", logo: "/clients/dlf.webp" },
     { name: "FCML India", logo: "/clients/fcml.png" },
     { name: "Airtel", logo: "/clients/airtel.webp"}
-//   { name: "DLF Hospitality", logo: "/clients/dlf.webp" },
 //   { name: "The Executive Centre", logo: "/clients/tec.jpeg" },
 ];
 

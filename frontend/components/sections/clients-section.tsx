@@ -312,17 +312,16 @@
 import { motion, MotionConfig } from "framer-motion";
 
 /* ------------------------------------------------------------------ */
-/* Collage layout (7 clients)                                          */
+/* Collage layout (8 clients)                                          */
 /* Everything is positioned in `cqw` (1% of the collage width), so the */
 /* whole composition scales perfectly at any screen size.              */
-/* One card per column, 7 columns, arranged in a soft arc with the     */
-/* middle (4th) client featured.                                       */
+/* One card per column, 8 columns, arranged in a soft symmetrical arc. */
 /* ------------------------------------------------------------------ */
 
-const CARD_W = 11.5; // cqw
-const CARD_H = 14.2; // cqw
-const COL_START = 1.65; // cqw, left edge of first column
-const COL_PITCH = 14.2; // cqw, distance between column left edges
+const CARD_W = 10.5; // cqw
+const CARD_H = 13; // cqw
+const COL_START = 1.35; // cqw, left edge of first column
+const COL_PITCH = 12.4; // cqw, distance between column left edges
 const COLLAGE_ASPECT = "100 / 40"; // collage width / height
 
 type Card = {
@@ -333,15 +332,17 @@ type Column = {
   cards: Card[];
 };
 
-// 7 columns x 1 card = 7 clients. Centre is highest, edges sit lower.
+// 8 columns x 1 card = 8 clients. The two middle cards are highest,
+// edges sit lower (symmetrical arc).
 const COLUMNS: Column[] = [
-  { cards: [{ y: 20 }] },
-  { cards: [{ y: 13.5 }] },
-  { cards: [{ y: 8 }] },
-  { cards: [{ y: 5 }] },
-  { cards: [{ y: 8 }] },
-  { cards: [{ y: 13.5 }] },
-  { cards: [{ y: 20 }] },
+  { cards: [{ y: 22 }] },
+  { cards: [{ y: 16 }] },
+  { cards: [{ y: 10.5 }] },
+  { cards: [{ y: 7 }] },
+  { cards: [{ y: 7 }] },
+  { cards: [{ y: 10.5 }] },
+  { cards: [{ y: 16 }] },
+  { cards: [{ y: 22 }] },
 ];
 
 // Placeholder tints, built from the navy / gold theme.
@@ -438,7 +439,7 @@ export interface TestimonialsSectionProps {
   ctaLabel?: string;
   ctaHref?: string;
   /**
-   * Optional photos / logos for the 7 clients. They fill the cards in
+   * Optional photos / logos for the 8 clients. They fill the cards in
    * reading order (left to right). Leave empty to show placeholders.
    */
   images?: string[];
