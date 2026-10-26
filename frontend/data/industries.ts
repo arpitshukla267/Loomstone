@@ -1,3 +1,10 @@
+export interface Industry {
+  slug:string,
+  name:string,
+  image:string,
+  description:string
+}
+
 export const INDUSTRIES: Industry[] = [
   {
     slug: "hospitality",
