@@ -6,8 +6,6 @@ import Image from "next/image";
 import {
   HeaderSection,
   HeroSection,
-  FindByRoomSection,
-  FeaturedDesignsSection,
   FaqSection,
   RecentBlogsSection,
   FooterSection,
@@ -16,7 +14,7 @@ import {
   ClientsSection,
 } from "@/components/sections";
 import GlobalReachSection from "@/components/sections/global-reach-section";
-import Link from "next/link";
+import IndustriesServedSection from "@/components/sections/industries-we-serve";
 
 const clientLogos = [
   "airtel.webp",
@@ -52,7 +50,7 @@ export default function Home() {
       <HeaderSection onShowToast={showToast} activePage="Home" />
       <HeroSection onOpenInquiry={openInquiry} />
 
-      {/* Banner - Categories ke neeche */}
+      {/* Banner */}
       <section className="bg-[#F7F3ED] w-full py-12">
         <div className="relative w-full h-[90vh] my-12">
           <Image
@@ -65,11 +63,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* <FindByRoomSection /> */}
+      {/* Industries We Serve: arrow click par inquiry modal khulega */}
+      <IndustriesServedSection onOpenInquiry={openInquiry} />
 
       <GlobalReachSection />
 
-      <FeaturedDesignsSection onOpenInquiry={openInquiry} />
       <ClientsSection images={clientLogos} imageFit="contain" />
       <RecentBlogsSection />
       <FaqSection />

@@ -49,7 +49,7 @@ export default function AboutPage() {
           <CoreValuesSection />
 
           {/* ================= Quality & Responsibility ================= */}
-          <section className="bg-[#F6F1EB] w-full py-12">
+          <section className=" w-full py-12">
             <div className="relative w-full h-[90vh] my-12">
               <Image
                 src="/quality.png"

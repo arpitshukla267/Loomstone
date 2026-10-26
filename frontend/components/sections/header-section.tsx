@@ -99,8 +99,9 @@ export function HeaderSection({
     ["Home", "/"],
     ["About", "/about"],
     ["Products", "/products"],
-    ["Clientele & Inspiration", "/inspiration"],
-    ["Designs & Projects", "/projects"]
+    ["Clientele", "/clientele"]
+    ["Inspiration", "/inspiration"],
+    // ["Designs & Projects", "/projects"]
     // ["Blogs", "/blogs"],
     // ["Contact Us", "/contact"],
   ];
