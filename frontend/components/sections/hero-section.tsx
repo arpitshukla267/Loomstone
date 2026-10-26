@@ -101,19 +101,6 @@ async function fetchHeroSlides(signal: AbortSignal): Promise<HeroSlide[]> {
 
 const defaultSlides = (heroImage: string): HeroSlide[] => [
   {
-    image: "hero/hero-1.png",
-    heading: (
-      <>
-        Handmade rugs for <em className="text-gold not-italic">beautiful</em>{" "}
-        spaces.
-      </>
-    ),
-    description:
-      "Carefully woven by hand using natural wool and silk. Designed to fit your home, hotel, or office perfectly.",
-    primaryText: "Explore Collections",
-    secondaryText: "Inquire About a Custom Rug",
-  },
-  {
     image: "hero/carpet-tiles.png",
     heading: (
       <>
@@ -150,6 +137,19 @@ const defaultSlides = (heroImage: string): HeroSlide[] => [
       "From carefully chosen materials to refined finishes, find a rug that feels uniquely yours.",
     primaryText: "View Collections",
     secondaryText: "Design Your Own Rug",
+  },
+  {
+    image: "hero/hero-1.png",
+    heading: (
+      <>
+        Handmade rugs for <em className="text-gold not-italic">beautiful</em>{" "}
+        spaces.
+      </>
+    ),
+    description:
+      "Carefully woven by hand using natural wool and silk. Designed to fit your home, hotel, or office perfectly.",
+    primaryText: "Explore Collections",
+    secondaryText: "Inquire About a Custom Rug",
   },
   {
     image: "hero/handloom-rugs.png",

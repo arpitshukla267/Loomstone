@@ -2,7 +2,7 @@ export * from "./section-intro";
 export * from "./hero-section";
 export * from "./find-by-room-section";
 export * from "./industries-we-serve";
-export * from "../design/process-section";
+export * from "../about/process-section";
 export * from "./projects-section";
 export * from "./faq-section";
 export * from "./header-section";

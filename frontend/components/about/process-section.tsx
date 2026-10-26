@@ -188,7 +188,7 @@ export function ProcessSection({
   return (
     <MotionConfig reducedMotion="user">
       <section className="overflow-hidden bg-[#FFFCF4] ash" id="products">
-        <div className="mx-auto max-w-[85vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px]">
+        <div className="mx-auto max-w-[90vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px]">
           {/* HEADER */}
           <motion.div
             ref={headerRef}
@@ -222,7 +222,7 @@ export function ProcessSection({
           </div>
 
           {/* CLOSING: heading + description */}
-          <motion.div
+          {/* <motion.div
             ref={closingRef}
             initial={{ opacity: 0, y: 20 }}
             animate={closingInView ? { opacity: 1, y: 0 } : {}}
@@ -235,7 +235,7 @@ export function ProcessSection({
             <p className="mt-4 font-manrope text-[18px] font-normal leading-[1.7] text-navy sm:text-[22px]">
               {closingText}
             </p>
-          </motion.div>
+          </motion.div> */}
         </div>
       </section>
     </MotionConfig>

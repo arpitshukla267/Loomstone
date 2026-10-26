@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export interface HeaderSectionProps {
   onShowToast?: (message: string) => void;
@@ -89,6 +89,7 @@ export function HeaderSection({
 }: HeaderSectionProps) {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const router = useRouter();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -107,7 +108,7 @@ export function HeaderSection({
   ];
 
   const handleDownloadBrochure = () => {
-    onShowToast?.("The Loomstone brochure is ready for your consultation.");
+    router.push("/brochure")
   };
 
   const isLinkActive = (link: string, href: string, index: number) => {

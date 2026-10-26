@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { PageFrame } from "@/components/site/site-chrome";
 import { Reveal } from "@/components/ui/reveal";
 import { InquiryModal } from "@/components/sections/inquiry-modal";
@@ -15,7 +15,6 @@ const heroImage = "/inventory.png";
 function ProductsContent() {
   const [productsList, setProductsList] = useState<Product[]>([]);
 
-  // Load products (using the new flooring solutions data)
   useEffect(() => {
     setProductsList(getAllProducts());
 
@@ -64,7 +63,6 @@ function ProductsContent() {
       {/* ================= PRODUCT CATALOG ================= */}
       <section className="bg-ash px-4 pb-28 pt-12 sm:px-6 md:px-[5%] md:py-16">
         <div className="mx-auto max-w-[1310px]">
-          {/* Products Grid: 4 columns as shown in the reference image */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {productsList.map((product, index) => (
               <Reveal
@@ -73,18 +71,17 @@ function ProductsContent() {
                 y={20}
                 className="h-full"
               >
-                <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_16px_36px_rgba(42,41,103,0.09)]">
+                <article className="group flex h-full flex-col overflow-hidden rounded-[4px] border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_16px_36px_rgba(42,41,103,0.09)]">
                   {/* Image Showcase */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e9e8]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={product.image}
+                      src={product.images[0]}
                       alt={product.name}
                       loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
 
-                    {/* Quick details link on image hover */}
                     <Link
                       href={`/products/${product.slug}`}
                       aria-label={`View ${product.name}`}
@@ -94,36 +91,22 @@ function ProductsContent() {
 
                   {/* Card Info */}
                   <div className="flex flex-1 flex-col p-4 sm:p-5">
-                    {/* Title */}
                     <Link href={`/products/${product.slug}`}>
                       <h3 className="font-manrope text-[18px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[20px]">
                         {product.name}
                       </h3>
                     </Link>
 
-                    {/* Description */}
-                    {product.description ? (
-                      <p className="mt-2 line-clamp-3 text-[12px] leading-relaxed text-cool">
-                        {product.description}
-                      </p>
-                    ) : (
-                      <div className="mt-2" />
-                    )}
+                    <p className="mt-2 line-clamp-4 text-[12px] leading-relaxed text-cool">
+                      {product.description}
+                    </p>
 
-                    {/* Action Buttons */}
-                    <div className="mt-auto grid grid-cols-2 gap-2 pt-4">
-                      <Link
-                        href={`/products/${product.slug}`}
-                        className="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-[8px] border border-navy bg-white px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-navy transition-colors hover:bg-ash"
-                      >
-                        Details
-                        <ArrowRight size={13} />
-                      </Link>
-
+                    {/* Enquire Button */}
+                    <div className="mt-auto pt-4">
                       <button
                         type="button"
                         onClick={() => openInquiryForProduct(product)}
-                        className="inline-flex min-h-[38px] items-center justify-center gap-1 rounded-[8px] border border-navy bg-navy px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-gold hover:border-gold hover:text-navy"
+                        className="inline-flex min-h-[38px] w-full items-center justify-center gap-1 rounded-[2px] border border-navy bg-navy px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:border-gold hover:bg-gold hover:text-navy"
                       >
                         <MessageSquare size={13} />
                         Enquire
@@ -145,11 +128,6 @@ function ProductsContent() {
           setEnquiryProduct(null);
         }}
         productName={enquiryProduct?.name}
-        productDetails={
-          enquiryProduct
-            ? `${enquiryProduct.category} • ${enquiryProduct.priceDisplay}`
-            : undefined
-        }
       />
     </PageFrame>
   );
