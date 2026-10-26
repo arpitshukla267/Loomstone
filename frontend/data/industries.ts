@@ -1,44 +1,37 @@
-export interface Industry {
-  slug: string;
-  name: string;
-  image: string;
-  description: string;
-}
-
 export const INDUSTRIES: Industry[] = [
   {
     slug: "hospitality",
     name: "Hospitality",
     image: "/industries/hospitality.png",
     description:
-      "Custom Axminster carpets and bespoke rugs for hotels, resorts and restaurants, crafted to match your brand and withstand constant footfall.",
+      "Elevate hotels, resorts and dining spaces with bespoke carpets and rugs that express your brand identity, enrich guest experiences and deliver lasting performance.",
   },
   {
     slug: "corporate-commercial",
     name: "Corporate & Commercial",
     image: "/industries/corporate-commercial.png",
     description:
-      "Modular carpet tiles and LVT for offices and retail spaces, combining design flexibility, acoustic comfort and easy maintenance.",
+      "Create inspiring workplaces and distinctive commercial environments with versatile flooring solutions that balance contemporary design, acoustic comfort and everyday practicality.",
   },
   {
     slug: "public-institutional",
     name: "Public & Institutional",
     image: "/industries/public-institutional.png",
     description:
-      "Durable, low-maintenance flooring for airports, healthcare, education and government projects, built for performance and long service life.",
+      "Equip airports, healthcare facilities, educational institutions and public spaces with resilient flooring solutions designed for demanding environments, easy maintenance and long-term performance.",
   },
   {
     slug: "leisure-entertainment",
     name: "Leisure & Entertainment",
     image: "/industries/leisure-entertainment.png",
     description:
-      "Statement carpets and bespoke patterns for casinos, cinemas, theatres and venues, engineered to look striking and perform in high-traffic areas.",
+      "Bring distinctive character to casinos, cinemas, theatres and entertainment venues with expressive carpet designs that enhance the atmosphere and perform under heavy foot traffic.",
   },
   {
     slug: "luxury-residential",
     name: "Luxury Residential",
     image: "/industries/luxury-residential.png",
     description:
-      "Handcrafted rugs, fine broadloom and premium LVT for private residences, made to your design with exceptional quality and finish.",
+      "Transform private residences with beautifully crafted rugs, premium carpets and refined flooring solutions tailored to individual tastes, architectural details and contemporary living.",
   },
 ];

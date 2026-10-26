@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Check } from "lucide-react";
-import Image from "next/image";
 import {
   HeaderSection,
   HeroSection,
@@ -15,21 +14,23 @@ import {
 } from "@/components/sections";
 import GlobalReachSection from "@/components/sections/global-reach-section";
 import IndustriesServedSection from "@/components/sections/industries-we-serve";
+import WhyLoomstoneSection from "@/components/sections/why-loomstone-section";
 
 const clientLogos = [
-  "airtel.webp",
-  "hyatt.png",
-  "vodafone.webp",
   "leela.webp",
-  "aster.jpeg",
-  "moxy.avif",
-  "dlf-ultima.webp",
-  "dlf.webp",
   "marriott.webp",
-  "courtyard.avif",
-  "Fortune-Hotel-logo.webp",
+  "itc.svg",
+  "hilton.webp",
+  "hyatt.png",
   "fcml.png",
-  "tec.jpeg",
+  "airtel.webp",
+  // "vodafone.webp",
+  // "aster.jpeg",
+  // "moxy.avif",
+  // "dlf-ultima.webp",
+  // "dlf.webp",
+  // "courtyard.avif",
+  // "tec.jpeg",
 ].map((name) => `/clients/${name}`);
 
 export default function Home() {
@@ -50,18 +51,8 @@ export default function Home() {
       <HeaderSection onShowToast={showToast} activePage="Home" />
       <HeroSection onOpenInquiry={openInquiry} />
 
-      {/* Banner */}
-      <section className="bg-[#F7F3ED] w-full py-12">
-        <div className="relative w-full h-[90vh] my-12">
-          <Image
-            src="/why_loomstone.png"
-            alt="Why Loomstone"
-            fill
-            sizes="100vw"
-            className="object-fill"
-          />
-        </div>
-      </section>
+      {/* Why Loomstone: image + content + 6 features */}
+      <WhyLoomstoneSection image="/why-loomstone.jpg" />
 
       {/* Industries We Serve: arrow click par inquiry modal khulega */}
       <IndustriesServedSection onOpenInquiry={openInquiry} />

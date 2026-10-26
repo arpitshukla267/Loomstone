@@ -104,7 +104,7 @@ export function HeaderSection({
     ["Inspiration", "/inspiration"],
     // ["Designs & Projects", "/projects"]
     // ["Blogs", "/blogs"],
-    // ["Contact Us", "/contact"],
+    ["Contact Us", "/contact"],
   ];
 
   const handleDownloadBrochure = () => {

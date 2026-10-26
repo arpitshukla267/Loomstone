@@ -3,14 +3,15 @@
 import { PageFrame } from "@/components/site/site-chrome";
 
 const clients = [
-  { name: "DLF Hospitality", logo: "/clients/dlf.webp" },
-  { name: "Hilton Hotels & Resorts", logo: "/clients/hilton.webp" },
-  { name: "Leela", logo: "/clients/leela.webp" },
-  { name: "ITC Hotels", logo: "/clients/itc.svg" },
-  { name: "Marriott Hotels", logo: "/clients/marriott.webp" },
-  { name: "FCML India", logo: "/clients/fcml.png" },
-  { name: "Hyatt Regancy", logo: "/clients/hyatt.png" },
-  { name: "The Executive Centre", logo: "/clients/tec.jpeg" },
+    { name: "Leela", logo: "/clients/leela.webp" },
+    { name: "Marriott Hotels", logo: "/clients/marriott.webp" },
+    { name: "ITC Hotels", logo: "/clients/itc.svg" },
+    { name: "Hilton Hotels & Resorts", logo: "/clients/hilton.webp" },
+    { name: "Hyatt Regancy", logo: "/clients/hyatt.png" },
+    { name: "FCML India", logo: "/clients/fcml.png" },
+    { name: "Airtel", logo: "/clients/airtel.webp"}
+//   { name: "DLF Hospitality", logo: "/clients/dlf.webp" },
+//   { name: "The Executive Centre", logo: "/clients/tec.jpeg" },
 ];
 
 export default function ClientelePage() {
