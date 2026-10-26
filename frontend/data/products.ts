@@ -13,7 +13,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: "Bespoke Axminster Carpets & Rugs",
     description:
       "High-performance flooring crafted for luxury hospitality and commercial environments, seamlessly blending enduring beauty, exceptional durability, and world-class craftsmanship.",
-    images: ["/hero/axminster.png"],
+    images: ["/final-website/Ax.jpg"],
   },
   {
     id: "prod-02",
@@ -21,7 +21,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: "Bespoke Hand-crafted Carpets & Rugs",
     description:
       "Created by skilled artisans and tailored to the most demanding design visions, our bespoke carpets and rugs combine exquisite craftsmanship, unparalleled customization, and timeless luxury.",
-    images: ["/products/hand-knotted.webp"],
+    images: ["/final-website/hk.jpg", "/final-website/hand-tuffted.jpg"],
   },
   {
     id: "prod-03",
@@ -29,7 +29,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: "Textile Flooring",
     description:
       "Architectural flooring solutions crafted for modern workplaces, hospitality spaces, and commercial interiors, combining sophisticated design, exceptional performance, and limitless creative possibilities.",
-    images: ["/products/carpet-tiles.webp"],
+    images: ["/final-website/tile.jpg"],
   },
   {
     id: "prod-04",
@@ -37,7 +37,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: "Resilient Flooring",
     description:
       "Engineered for demanding commercial and hospitality interiors, our resilient flooring pairs lasting durability with comfort underfoot and refined architectural finishes. A low-maintenance surface that performs beautifully in high-traffic spaces without compromising on design.",
-    images: ["/products/flatweave.webp"],
+    images: ["/final-website/lvt.jpg"],
   },
   {
     id: "prod-05",

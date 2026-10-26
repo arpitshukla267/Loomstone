@@ -6,6 +6,7 @@ import Image from "next/image";
 import { MessageSquare } from "lucide-react";
 import { PageFrame } from "@/components/site/site-chrome";
 import { Reveal } from "@/components/ui/reveal";
+import { ProductImageCarousel } from "@/components/ui/product-image-carousel";
 import { InquiryModal } from "@/components/sections/inquiry-modal";
 import { getAllProducts, type Product } from "@/data/products";
 
@@ -72,30 +73,17 @@ function ProductsContent() {
                 className="h-full"
               >
                 <article className="group flex h-full flex-col overflow-hidden rounded-[4px] border border-[#dbe1e5] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gold hover:shadow-[0_16px_36px_rgba(42,41,103,0.09)]">
-                  {/* Image Showcase */}
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e9e8]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
-
-                    <Link
-                      href={`/products/${product.slug}`}
-                      aria-label={`View ${product.name}`}
-                      className="absolute inset-0"
-                    />
-                  </div>
+                  {/* Image Showcase (swipeable carousel) */}
+                  <ProductImageCarousel
+                    images={product.images}
+                    alt={product.name}
+                  />
 
                   {/* Card Info */}
                   <div className="flex flex-1 flex-col p-4 sm:p-5">
-                    <Link href={`/products/${product.slug}`}>
                       <h3 className="font-manrope text-[18px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[20px]">
                         {product.name}
                       </h3>
-                    </Link>
 
                     <p className="mt-2 line-clamp-4 text-[12px] leading-relaxed text-cool">
                       {product.description}
