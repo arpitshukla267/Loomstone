@@ -2,12 +2,12 @@
 
 import { motion, MotionConfig } from "framer-motion";
 import {
-  Clock,
+  ClipboardCheck,
+  Gem,
   Globe,
+  Handshake,
   Layers,
-  PencilRuler,
-  SquarePen,
-  Users,
+  Palette,
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -15,8 +15,8 @@ import Image from "next/image";
 /* ------------------------------------------------------------------ */
 /* Theme colours (from your design)                                    */
 /* ------------------------------------------------------------------ */
-const HEADING = "#151f28"; // "Why Loomstone."
-const ACCENT = "#ab7b4d"; // "Design-Led. Bespoke. Crafted with Purpose"
+const HEADING = "#151f28"; // "What Sets Loomstone Apart"
+const ACCENT = "#ab7b4d"; // "Thoughtful Design. Tailored Solutions. Reliable Delivery."
 const ICON = "#5b2a1d"; // icon stroke (deep brown)
 const ICON_RING = "#d9c3b0"; // circle border around icons
 
@@ -32,33 +32,33 @@ type Feature = {
 const FEATURES: Feature[] = [
   {
     icon: Layers,
-    title: "Expertise Across Flooring Categories",
-    text: "Informed guidance across diverse flooring solutions.",
+    title: "Flooring Expertise",
+    text: "Handcrafted rugs, Axminster carpets, machine-made carpets and carpet tiles.",
   },
   {
-    icon: SquarePen,
-    title: "Design-Driven Collaboration",
-    text: "Working with design teams to bring creative visions to life.",
+    icon: Palette,
+    title: "Design Collaboration",
+    text: "Working with architects and designers to realise their creative vision.",
+  },
+  {
+    icon: Gem,
+    title: "Bespoke Solutions",
+    text: "Custom patterns, colours and specifications for every project.",
   },
   {
     icon: Globe,
-    title: "Trusted Global Partnerships",
-    text: "Quality materials sourced through trusted industry partners.",
+    title: "Global Partnerships",
+    text: "Specialist manufacturing and material sourcing through trusted partners.",
   },
   {
-    icon: PencilRuler,
-    title: "Bespoke Project Solutions",
-    text: "Customised flooring tailored to every project's needs.",
+    icon: ClipboardCheck,
+    title: "Technical Precision",
+    text: "Attention to specifications, budgets and project requirements.",
   },
   {
-    icon: Clock,
-    title: "Reliable Project Execution",
-    text: "Professional coordination and dependable delivery.",
-  },
-  {
-    icon: Users,
-    title: "Comprehensive Project Support",
-    text: "End-to-end assistance from consultation to installation.",
+    icon: Handshake,
+    title: "Project Support",
+    text: "Coordinated support from design development to supply and installation.",
   },
 ];
 
@@ -162,7 +162,7 @@ export function WhyLoomstoneSection({
               viewport={VIEWPORT}
               transition={{ duration: 0.8, ease: EASE }}
             >
-              Why Loomstone.
+              What Sets Loomstone Apart
             </motion.h2>
 
             <motion.p
@@ -173,21 +173,7 @@ export function WhyLoomstoneSection({
               viewport={VIEWPORT}
               transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
             >
-              Design-Led. Bespoke. Crafted with Purpose
-            </motion.p>
-
-            <motion.p
-              className="m-0 mt-5 max-w-[680px] text-[14px] font-medium leading-[1.65] text-[#808486] sm:text-[15px]"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VIEWPORT}
-              transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-            >
-              At Loomstone, we bring together global design perspective,
-              time-honoured craftsmanship and technical precision to create
-              flooring solutions that transform spaces. Every project is a
-              collaboration – tailored to reflect your vision, meet functional
-              needs and deliver lasting value.
+              Thoughtful Design. Bespoke Solutions. Seemless Execution.
             </motion.p>
 
             {/* Feature grid: 3 columns x 2 rows */}

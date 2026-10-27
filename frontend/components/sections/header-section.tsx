@@ -1,14 +1,352 @@
+// "use client";
+
+// import { useEffect, useState, type ReactNode } from "react";
+// import {
+//   ChevronLeft,
+//   ChevronRight,
+//   Download,
+//   Menu,
+//   MessageSquare,
+//   X,
+// } from "lucide-react";
+// import Image from "next/image";
+// import Link from "next/link";
+// import { usePathname, useRouter } from "next/navigation";
+
+// export interface HeaderSectionProps {
+//   onShowToast?: (message: string) => void;
+//   onOpenInquiry?: () => void;
+//   activePage?: string;
+// }
+
+// // ---- Top bar ke contact details: yahan apne asli details bharo ----
+// // Khaali chhodoge to option /contact page par le jayega.
+// const CONTACT = {
+//   email: "", // jaise "hello@yourdomain.com"
+//   whatsapp: "", // country code ke saath, jaise "919876543210"
+//   phone: "", // jaise "+919876543210"
+// };
+
+// const TOP_MESSAGE_INTERVAL = 5000;
+
+// const topMessages: { label: string; href: string; external: boolean }[] = [
+//   {
+//     label: "Send an Email",
+//     href: CONTACT.email ? `mailto:${CONTACT.email}` : "/contact",
+//     external: Boolean(CONTACT.email),
+//   },
+//   {
+//     label: "Chat on WhatsApp",
+//     href: CONTACT.whatsapp
+//       ? `https://wa.me/${CONTACT.whatsapp.replace(/\D/g, "")}`
+//       : "/contact",
+//     external: Boolean(CONTACT.whatsapp),
+//   },
+//   {
+//     label: "Inquiry Call",
+//     href: CONTACT.phone ? `tel:${CONTACT.phone}` : "/contact",
+//     external: Boolean(CONTACT.phone),
+//   },
+// ];
+
+// function TopLink({
+//   href,
+//   external,
+//   className,
+//   tabIndex,
+//   children,
+// }: {
+//   href: string;
+//   external: boolean;
+//   className: string;
+//   tabIndex?: number;
+//   children: ReactNode;
+// }) {
+//   if (external) {
+//     const isWeb = href.startsWith("http");
+//     return (
+//       <a
+//         href={href}
+//         className={className}
+//         tabIndex={tabIndex}
+//         {...(isWeb ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+//       >
+//         {children}
+//       </a>
+//     );
+//   }
+//   return (
+//     <Link href={href} className={className} tabIndex={tabIndex}>
+//       {children}
+//     </Link>
+//   );
+// }
+
+// export function HeaderSection({
+//   onShowToast,
+//   onOpenInquiry,
+//   activePage,
+// }: HeaderSectionProps) {
+//   const pathname = usePathname();
+//   const isHome = pathname === "/";
+//   const router = useRouter();
+
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [scrolled, setScrolled] = useState(false);
+//   // active = abhi dikhne wala option, prev = jo abhi slide hokar bahar gaya
+//   const [slide, setSlide] = useState({ active: 0, prev: -1 });
+
+//   const navLinks = [
+//     ["Home", "/"],
+//     ["About", "/about"],
+//     ["Products", "/products"],
+//     ["Clientele", "/clientele"],
+//     ["Inspiration", "/inspiration"],
+//     // ["Designs & Projects", "/projects"]
+//     // ["Blogs", "/blogs"],
+//     ["Contact Us", "/contact"],
+//   ];
+
+//   const handleDownloadBrochure = () => {
+//     router.push("/brochure")
+//   };
+
+//   const isLinkActive = (link: string, href: string, index: number) => {
+//     if (activePage) {
+//       return (
+//         activePage.toLowerCase() === link.toLowerCase() ||
+//         activePage === href ||
+//         (activePage === "/" && href === "/")
+//       );
+//     }
+//     return index === 0;
+//   };
+
+//   const goMessage = (dir: 1 | -1) =>
+//     setSlide((s) => ({
+//       active: (s.active + dir + topMessages.length) % topMessages.length,
+//       prev: s.active,
+//     }));
+
+//   // Top bar ka option 5 second mein khud badalta hai (arrows se bhi badal sakte hain)
+//   useEffect(() => {
+//     const timer = window.setInterval(() => goMessage(1), TOP_MESSAGE_INTERVAL);
+//     return () => window.clearInterval(timer);
+//   }, [slide.active]);
+
+//   // Scroll par header ka background aata hai, top par transparent rehta hai
+//   useEffect(() => {
+//     const onScroll = () => setScrolled(window.scrollY > 10);
+//     onScroll();
+//     window.addEventListener("scroll", onScroll, { passive: true });
+//     return () => window.removeEventListener("scroll", onScroll);
+//   }, []);
+
+//   // Menu khula ho to background scroll band, Esc se band, desktop size par auto close
+//   useEffect(() => {
+//     if (!menuOpen) return;
+
+//     const previousOverflow = document.body.style.overflow;
+//     document.body.style.overflow = "hidden";
+
+//     const onKeyDown = (e: KeyboardEvent) => {
+//       if (e.key === "Escape") setMenuOpen(false);
+//     };
+//     const onResize = () => {
+//       if (window.innerWidth >= 768) setMenuOpen(false);
+//     };
+
+//     window.addEventListener("keydown", onKeyDown);
+//     window.addEventListener("resize", onResize);
+//     return () => {
+//       document.body.style.overflow = previousOverflow;
+//       window.removeEventListener("keydown", onKeyDown);
+//       window.removeEventListener("resize", onResize);
+//     };
+//   }, [menuOpen]);
+
+//   // solid = background wala header.
+//   // Home ("/") par: top par transparent, scroll ke baad ya mobile menu khulne par solid.
+//   // Baaki sab pages par: hamesha solid.
+//   const solid = !isHome || scrolled || menuOpen;
+
+//   const messageClassName =
+//     "text-[12px] md:text-[13px] text-white underline decoration-gold underline-offset-4 transition-colors duration-200 hover:text-gold";
+
+//   const inquiryClassName =
+//     "inline-flex cursor-pointer items-center gap-1.5 rounded-full border-0 bg-gold px-3.5 py-0 text-sm font-medium text-navy no-underline transition-colors duration-200 hover:bg-white md:gap-2 md:px-4 md:py-1.5 md:text-[12px]";
+
+//   return (
+//     <header
+//       className={`fixed z-50 top-0 w-full border-b transition-all py-2 duration-300 motion-reduce:transition-none ${
+//         solid
+//           ? "bg-[#FFFCF4] border-[#e4e9ec] backdrop-blur-[14px]"
+//           : "bg-[#FFFCF4] border-[#e4e9ec] backdrop-blur-[14px]"
+//       }`}
+//     >
+//       {/* Main row: scroll par height (padding) kam ho jaati hai */}
+//       <div
+//         className={`mx-auto flex max-w-[100vw] items-center justify-between gap-[30px] px-2 transition-[height] duration-300 motion-reduce:transition-none lg:px-10 ${
+//           scrolled ? "h-[68px] md:h-20" : "h-[68px] md:h-20"
+//         }`}
+//       >
+//         <Link
+//           href="/"
+//           className="flex items-center gap-3 no-underline"
+//           onClick={() => setMenuOpen(false)}
+//         >
+//           <Image
+//             src="/logo-vertical.png"
+//             alt="Loomstone Logo"
+//             width={160}
+//             height={50}
+//             className={`-mx-6 w-auto rounded object-contain transition-[height] duration-300 motion-reduce:transition-none ${
+//               scrolled ? "h-20 md:h-24" : "h-20 md:h-24"
+//             }`}
+//             priority
+//           />
+//         </Link>
+
+//         {/* Desktop nav: pehle jaisa hi */}
+//         <nav className="hidden md:flex md:flex-row md:items-center md:gap-4 lg:gap-5 xl:gap-7">
+//           {navLinks.map(([link, href], index) => {
+//             const active = isLinkActive(link, href, index);
+//             return (
+//               <Link
+//                 key={link}
+//                 href={href}
+//                 className={`text-[10px] xl:text-sm font-medium xl:tracking-[.03em] uppercase no-underline transition-colors duration-200 md:py-[7px] border-b-2 ${
+//                   active
+//                     ? "text-navy border-gold"
+//                     : "text-navy border-transparent hover:text-navy"
+//                 }`}
+//               >
+//                 {link}
+//               </Link>
+//             );
+//           })}
+
+//           <button
+//             className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all -mt-0.5 duration-200 ease-out text-navy text-[10px] xl:text-sm font-bold cursor-pointer"
+//             onClick={handleDownloadBrochure}
+//           >
+//             {/* <Download size={15} /> */}Brochure
+//           </button>
+//         </nav>
+
+//         {/* Mobile toggle: icon rotate + fade se badalta hai */}
+//         <button
+//           className={`relative block h-6 w-6 md:hidden border-0 bg-transparent p-0 cursor-pointer transition-colors duration-300 ${
+//             solid ? "text-navy" : "text-white"
+//           }`}
+//           aria-label="Toggle menu"
+//           aria-expanded={menuOpen}
+//           aria-controls="mobile-menu"
+//           onClick={() => setMenuOpen((open) => !open)}
+//         >
+//           <Menu
+//             size={22}
+//             className={`absolute inset-0 m-auto transition-all duration-300 motion-reduce:transition-none ${
+//               menuOpen
+//                 ? "rotate-90 scale-50 opacity-0"
+//                 : "rotate-0 scale-100 opacity-100"
+//             }`}
+//           />
+//           <X
+//             size={22}
+//             className={`absolute inset-0 m-auto transition-all duration-300 motion-reduce:transition-none ${
+//               menuOpen
+//                 ? "rotate-0 scale-100 opacity-100"
+//                 : "-rotate-90 scale-50 opacity-0"
+//             }`}
+//           />
+//         </button>
+//       </div>
+
+//       {/* Mobile overlay: header ke neeche halka black, tap karne par menu band */}
+//       <div
+//         aria-hidden="true"
+//         onClick={() => setMenuOpen(false)}
+//         className={`md:hidden absolute left-0 top-full h-[100dvh] w-full bg-black/40 transition-opacity duration-300 motion-reduce:transition-none ${
+//           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+//         }`}
+//       />
+
+//       {/* Mobile panel: height 0 se khulta hai (slide down), band hone par wapas slide up */}
+//       <div
+//         id="mobile-menu"
+//         className={`md:hidden absolute left-0 top-full grid w-full bg-white shadow-lg transition-[grid-template-rows,visibility] duration-300 ease-out motion-reduce:transition-none ${
+//           menuOpen ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]"
+//         }`}
+//       >
+//         <nav className="min-h-0 overflow-hidden" aria-label="Mobile navigation">
+//           <div className="flex flex-col gap-1 px-6 pb-6 pt-3">
+//             {navLinks.map(([link, href], index) => {
+//               const active = isLinkActive(link, href, index);
+//               return (
+//                 <Link
+//                   key={link}
+//                   href={href}
+//                   onClick={() => setMenuOpen(false)}
+//                   aria-current={active ? "page" : undefined}
+//                   style={{
+//                     transitionDelay: menuOpen ? `${90 + index * 50}ms` : "0ms",
+//                   }}
+//                   className={`relative flex items-center rounded-lg py-[13px] pl-5 pr-4 text-sm tracking-[.13em] uppercase no-underline transition-all duration-300 motion-reduce:transition-none ${
+//                     menuOpen
+//                       ? "translate-x-0 opacity-100"
+//                       : "-translate-x-5 opacity-0"
+//                   } ${
+//                     active
+//                       ? "bg-gold/10 font-semibold text-navy"
+//                       : "font-medium text-cool active:bg-[#f3f5f7]"
+//                   }`}
+//                 >
+//                   {/* Active: underline ki jagah left gold bar + halka gold background */}
+//                   <span
+//                     aria-hidden="true"
+//                     className={`absolute left-0 top-1/2 w-1 -translate-y-1/2 rounded-full bg-gold transition-all duration-300 motion-reduce:transition-none ${
+//                       active ? "h-6 opacity-100" : "h-0 opacity-0"
+//                     }`}
+//                   />
+//                   {link}
+//                 </Link>
+//               );
+//             })}
+
+//             <button
+//               type="button"
+//               onClick={() => {
+//                 handleDownloadBrochure();
+//                 setMenuOpen(false);
+//               }}
+//               style={{
+//                 transitionDelay: menuOpen
+//                   ? `${90 + navLinks.length * 50}ms`
+//                   : "0ms",
+//               }}
+//               className={`mt-4 inline-flex w-full items-center justify-center gap-[9px] rounded-full border-0 bg-navy px-[17px] py-[14px] text-sm font-medium uppercase tracking-[.03em] text-white transition-all duration-300 active:bg-navy/90 motion-reduce:transition-none ${
+//                 menuOpen
+//                   ? "translate-y-0 opacity-100"
+//                   : "translate-y-3 opacity-0"
+//               }`}
+//             >
+//               <Download size={15} /> Download Brochure
+//             </button>
+//           </div>
+//         </nav>
+//       </div>
+//     </header>
+//   );
+// }
+
+// export default HeaderSection;
+
+
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  Menu,
-  MessageSquare,
-  X,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Download, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -19,68 +357,22 @@ export interface HeaderSectionProps {
   activePage?: string;
 }
 
-// ---- Top bar ke contact details: yahan apne asli details bharo ----
-// Khaali chhodoge to option /contact page par le jayega.
-const CONTACT = {
-  email: "", // jaise "hello@yourdomain.com"
-  whatsapp: "", // country code ke saath, jaise "919876543210"
-  phone: "", // jaise "+919876543210"
-};
-
-const TOP_MESSAGE_INTERVAL = 5000;
-
-const topMessages: { label: string; href: string; external: boolean }[] = [
-  {
-    label: "Send an Email",
-    href: CONTACT.email ? `mailto:${CONTACT.email}` : "/contact",
-    external: Boolean(CONTACT.email),
-  },
-  {
-    label: "Chat on WhatsApp",
-    href: CONTACT.whatsapp
-      ? `https://wa.me/${CONTACT.whatsapp.replace(/\D/g, "")}`
-      : "/contact",
-    external: Boolean(CONTACT.whatsapp),
-  },
-  {
-    label: "Inquiry Call",
-    href: CONTACT.phone ? `tel:${CONTACT.phone}` : "/contact",
-    external: Boolean(CONTACT.phone),
-  },
+// Layout: left = pehle 4 links, center = logo, right = baaki links + Brochure
+const leftLinks: [string, string][] = [
+  ["Home", "/"],
+  ["About", "/about"],
+  ["Products", "/products"],
+  ["Clientele", "/clientele"],
 ];
 
-function TopLink({
-  href,
-  external,
-  className,
-  tabIndex,
-  children,
-}: {
-  href: string;
-  external: boolean;
-  className: string;
-  tabIndex?: number;
-  children: ReactNode;
-}) {
-  if (external) {
-    const isWeb = href.startsWith("http");
-    return (
-      <a
-        href={href}
-        className={className}
-        tabIndex={tabIndex}
-        {...(isWeb ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      >
-        {children}
-      </a>
-    );
-  }
-  return (
-    <Link href={href} className={className} tabIndex={tabIndex}>
-      {children}
-    </Link>
-  );
-}
+const rightLinks: [string, string][] = [
+  ["Inspiration", "/inspiration"],
+  // ["Designs & Projects", "/projects"]
+  ["Blogs", "/blogs"],
+  ["Contact Us", "/contact"],
+];
+
+const mobileLinks = [...leftLinks, ...rightLinks];
 
 export function HeaderSection({
   onShowToast,
@@ -93,48 +385,21 @@ export function HeaderSection({
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  // active = abhi dikhne wala option, prev = jo abhi slide hokar bahar gaya
-  const [slide, setSlide] = useState({ active: 0, prev: -1 });
-
-  const navLinks = [
-    ["Home", "/"],
-    ["About", "/about"],
-    ["Products", "/products"],
-    ["Clientele", "/clientele"],
-    ["Inspiration", "/inspiration"],
-    // ["Designs & Projects", "/projects"]
-    // ["Blogs", "/blogs"],
-    ["Contact Us", "/contact"],
-  ];
 
   const handleDownloadBrochure = () => {
-    router.push("/brochure")
+    router.push("/brochure");
   };
 
-  const isLinkActive = (link: string, href: string, index: number) => {
+  const isLinkActive = (link: string, href: string) => {
     if (activePage) {
       return (
-        activePage.toLowerCase() === link.toLowerCase() ||
-        activePage === href ||
-        (activePage === "/" && href === "/")
+        activePage.toLowerCase() === link.toLowerCase() || activePage === href
       );
     }
-    return index === 0;
+    return href === "/" ? pathname === "/" : pathname.startsWith(href);
   };
 
-  const goMessage = (dir: 1 | -1) =>
-    setSlide((s) => ({
-      active: (s.active + dir + topMessages.length) % topMessages.length,
-      prev: s.active,
-    }));
-
-  // Top bar ka option 5 second mein khud badalta hai (arrows se bhi badal sakte hain)
-  useEffect(() => {
-    const timer = window.setInterval(() => goMessage(1), TOP_MESSAGE_INTERVAL);
-    return () => window.clearInterval(timer);
-  }, [slide.active]);
-
-  // Scroll par header ka background aata hai, top par transparent rehta hai
+  // Scroll par header solid hota hai, top par transparent
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     onScroll();
@@ -165,124 +430,134 @@ export function HeaderSection({
     };
   }, [menuOpen]);
 
-  // solid = background wala header.
-  // Home ("/") par: top par transparent, scroll ke baad ya mobile menu khulne par solid.
-  // Baaki sab pages par: hamesha solid.
+  // solid = white bg + dark text + chhota logo.
+  // Home par: top par transparent/white text/bada logo, scroll ke baad solid.
+  // Baaki pages par: hamesha solid.
   const solid = !isHome || scrolled || menuOpen;
 
-  const messageClassName =
-    "text-[12px] md:text-[13px] text-white underline decoration-gold underline-offset-4 transition-colors duration-200 hover:text-gold";
-
-  const inquiryClassName =
-    "inline-flex cursor-pointer items-center gap-1.5 rounded-full border-0 bg-gold px-3.5 py-0 text-sm font-medium text-navy no-underline transition-colors duration-200 hover:bg-white md:gap-2 md:px-4 md:py-1.5 md:text-[12px]";
+  const desktopLinkClass = (active: boolean) =>
+    `text-[11px] xl:text-sm font-medium xl:tracking-[.03em] uppercase no-underline transition-colors duration-300 border-b-2 ${
+      solid ? "text-navy" : "text-black "
+    } ${active ? "border-gold" : "border-transparent"}`;
 
   return (
     <header
-      className={`fixed z-50 top-0 w-full border-b transition-all py-2 duration-300 motion-reduce:transition-none ${
+      className={`fixed top-0 z-50 w-full border-b transition-all duration-300 motion-reduce:transition-none ${
         solid
-          ? "bg-[#FFFCF4] border-[#e4e9ec] backdrop-blur-[14px]"
-          : "bg-[#FFFCF4] border-[#e4e9ec] backdrop-blur-[14px]"
+          ? "border-[#e4e9ec] bg-[#FFFCF4] shadow-sm py-[6px]"
+          : "border-transparent bg-transparent py-[10px]"
       }`}
     >
-      {/* Main row: scroll par height (padding) kam ho jaati hai */}
-      <div
-        className={`mx-auto flex max-w-[100vw] items-center justify-between gap-[30px] px-2 transition-[height] duration-300 motion-reduce:transition-none lg:px-10 ${
-          scrolled ? "h-[68px] md:h-20" : "h-[68px] md:h-20"
-        }`}
-      >
+      {/* Main row: 3 columns -> left links | logo | right links */}
+      <div className="mx-auto grid h-[72px] max-w-[100vw] grid-cols-[1fr_auto_1fr] items-center px-4 md:h-20 lg:px-10">
+        {/* LEFT */}
+        <nav className="hidden items-center justify-start md:flex md:gap-4 lg:gap-6 xl:gap-8">
+          {leftLinks.map(([link, href]) => (
+            <Link
+              key={link}
+              href={href}
+              className={desktopLinkClass(isLinkActive(link, href))}
+            >
+              {link}
+            </Link>
+          ))}
+        </nav>
+        <div className="md:hidden" />
+
+        {/* CENTER: logo. Absolute hai, isliye bada hokar header ke bahar nikalta hai */}
         <Link
           href="/"
-          className="flex items-center gap-3 no-underline"
           onClick={() => setMenuOpen(false)}
+          className="relative block h-full w-24 md:w-44"
+          aria-label="Loomstone home"
         >
           <Image
             src="/logo-vertical.png"
             alt="Loomstone Logo"
             width={160}
             height={50}
-            className={`-mx-6 w-auto rounded object-contain transition-[height] duration-300 motion-reduce:transition-none ${
-              scrolled ? "h-20 md:h-24" : "h-20 md:h-24"
-            }`}
             priority
+            className={`absolute left-1/2 top-1 -translate-x-1/2 w-auto max-w-none object-contain transition-all duration-500 ease-out motion-reduce:transition-none ${
+              solid
+                ? "h-[60px] md:h-[84px]"
+                : "h-28 md:h-48 drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)]"
+            }`}
           />
         </Link>
 
-        {/* Desktop nav: pehle jaisa hi */}
-        <nav className="hidden md:flex md:flex-row md:items-center md:gap-4 lg:gap-5 xl:gap-7">
-          {navLinks.map(([link, href], index) => {
-            const active = isLinkActive(link, href, index);
-            return (
+        {/* RIGHT */}
+        <div className="flex items-center justify-end">
+          <nav className="hidden items-center md:flex md:gap-4 lg:gap-6 xl:gap-8">
+            {rightLinks.map(([link, href]) => (
               <Link
                 key={link}
                 href={href}
-                className={`text-[10px] xl:text-sm font-medium xl:tracking-[.03em] uppercase no-underline transition-colors duration-200 md:py-[7px] border-b-2 ${
-                  active
-                    ? "text-navy border-gold"
-                    : "text-navy border-transparent hover:text-navy"
-                }`}
+                className={desktopLinkClass(isLinkActive(link, href))}
               >
                 {link}
               </Link>
-            );
-          })}
+            ))}
+            <button
+              type="button"
+              onClick={handleDownloadBrochure}
+              className={`cursor-pointer border-0 bg-transparent text-[11px] font-bold uppercase transition-colors duration-300 xl:text-sm ${
+                solid ? "text-navy" : "text-black"
+              }`}
+            >
+              Brochure
+            </button>
+          </nav>
 
+          {/* Mobile toggle */}
           <button
-            className="hidden md:inline-flex items-center justify-center gap-[9px] border-0 no-underline transition-all -mt-0.5 duration-200 ease-out text-navy text-[10px] xl:text-sm font-bold cursor-pointer"
-            onClick={handleDownloadBrochure}
+            className={`relative block h-6 w-6 cursor-pointer border-0 bg-transparent p-0 transition-colors duration-300 md:hidden ${
+              solid ? "text-navy" : "text-white"
+            }`}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen((open) => !open)}
           >
-            {/* <Download size={15} /> */}Brochure
+            <Menu
+              size={22}
+              className={`absolute inset-0 m-auto transition-all duration-300 motion-reduce:transition-none ${
+                menuOpen
+                  ? "rotate-90 scale-50 opacity-0"
+                  : "rotate-0 scale-100 opacity-100"
+              }`}
+            />
+            <X
+              size={22}
+              className={`absolute inset-0 m-auto transition-all duration-300 motion-reduce:transition-none ${
+                menuOpen
+                  ? "rotate-0 scale-100 opacity-100"
+                  : "-rotate-90 scale-50 opacity-0"
+              }`}
+            />
           </button>
-        </nav>
-
-        {/* Mobile toggle: icon rotate + fade se badalta hai */}
-        <button
-          className={`relative block h-6 w-6 md:hidden border-0 bg-transparent p-0 cursor-pointer transition-colors duration-300 ${
-            solid ? "text-navy" : "text-white"
-          }`}
-          aria-label="Toggle menu"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          <Menu
-            size={22}
-            className={`absolute inset-0 m-auto transition-all duration-300 motion-reduce:transition-none ${
-              menuOpen
-                ? "rotate-90 scale-50 opacity-0"
-                : "rotate-0 scale-100 opacity-100"
-            }`}
-          />
-          <X
-            size={22}
-            className={`absolute inset-0 m-auto transition-all duration-300 motion-reduce:transition-none ${
-              menuOpen
-                ? "rotate-0 scale-100 opacity-100"
-                : "-rotate-90 scale-50 opacity-0"
-            }`}
-          />
-        </button>
+        </div>
       </div>
 
-      {/* Mobile overlay: header ke neeche halka black, tap karne par menu band */}
+      {/* Mobile overlay */}
       <div
         aria-hidden="true"
         onClick={() => setMenuOpen(false)}
-        className={`md:hidden absolute left-0 top-full h-[100dvh] w-full bg-black/40 transition-opacity duration-300 motion-reduce:transition-none ${
+        className={`absolute left-0 top-full h-[100dvh] w-full bg-black/40 transition-opacity duration-300 motion-reduce:transition-none md:hidden ${
           menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
 
-      {/* Mobile panel: height 0 se khulta hai (slide down), band hone par wapas slide up */}
+      {/* Mobile panel */}
       <div
         id="mobile-menu"
-        className={`md:hidden absolute left-0 top-full grid w-full bg-white shadow-lg transition-[grid-template-rows,visibility] duration-300 ease-out motion-reduce:transition-none ${
+        className={`absolute left-0 top-full grid w-full bg-white shadow-lg transition-[grid-template-rows,visibility] duration-300 ease-out motion-reduce:transition-none md:hidden ${
           menuOpen ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]"
         }`}
       >
         <nav className="min-h-0 overflow-hidden" aria-label="Mobile navigation">
           <div className="flex flex-col gap-1 px-6 pb-6 pt-3">
-            {navLinks.map(([link, href], index) => {
-              const active = isLinkActive(link, href, index);
+            {mobileLinks.map(([link, href], index) => {
+              const active = isLinkActive(link, href);
               return (
                 <Link
                   key={link}
@@ -292,7 +567,7 @@ export function HeaderSection({
                   style={{
                     transitionDelay: menuOpen ? `${90 + index * 50}ms` : "0ms",
                   }}
-                  className={`relative flex items-center rounded-lg py-[13px] pl-5 pr-4 text-sm tracking-[.13em] uppercase no-underline transition-all duration-300 motion-reduce:transition-none ${
+                  className={`relative flex items-center rounded-lg py-[13px] pl-5 pr-4 text-sm uppercase tracking-[.13em] no-underline transition-all duration-300 motion-reduce:transition-none ${
                     menuOpen
                       ? "translate-x-0 opacity-100"
                       : "-translate-x-5 opacity-0"
@@ -302,7 +577,6 @@ export function HeaderSection({
                       : "font-medium text-cool active:bg-[#f3f5f7]"
                   }`}
                 >
-                  {/* Active: underline ki jagah left gold bar + halka gold background */}
                   <span
                     aria-hidden="true"
                     className={`absolute left-0 top-1/2 w-1 -translate-y-1/2 rounded-full bg-gold transition-all duration-300 motion-reduce:transition-none ${
@@ -322,7 +596,7 @@ export function HeaderSection({
               }}
               style={{
                 transitionDelay: menuOpen
-                  ? `${90 + navLinks.length * 50}ms`
+                  ? `${90 + mobileLinks.length * 50}ms`
                   : "0ms",
               }}
               className={`mt-4 inline-flex w-full items-center justify-center gap-[9px] rounded-full border-0 bg-navy px-[17px] py-[14px] text-sm font-medium uppercase tracking-[.03em] text-white transition-all duration-300 active:bg-navy/90 motion-reduce:transition-none ${
@@ -341,3 +615,4 @@ export function HeaderSection({
 }
 
 export default HeaderSection;
+

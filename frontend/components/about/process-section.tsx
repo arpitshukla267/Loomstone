@@ -25,32 +25,32 @@ export const defaultProcessSteps: ProcessStep[] = [
   {
     title: "Design Consultation",
     description:
-      "Every project begins with a deep understanding of the design narrative. Working closely with architects, interior designers, developers, and stakeholders, we align creative intent, operational requirements, technical specifications, and project objectives to establish a foundation for exceptional outcomes.",
+      "We work with architects, designers and project teams to understand the vision, technical requirements and practical needs of every space.",
   },
   {
     title: "Bespoke Design Development",
     description:
-      "Drawing inspiration from the project’s vision, we develop custom flooring concepts tailored in pattern, texture, colour, material, and scale. Every design is thoughtfully curated to complement the architectural language and enhance the overall spatial experience.",
+      "From patterns and colours to textures and materials, we develop tailored flooring solutions that complement each project's architectural vision and functional requirements.",
   },
   {
     title: "Sampling & Prototyping",
     description:
-      "Through detailed samples and bespoke prototypes, concepts are translated into tangible experiences. This process allows every element to be reviewed, refined, and perfected, ensuring complete confidence before production begins.",
+      "Detailed samples bring concepts to life, allowing materials, colours and finishes to be reviewed and refined before production.",
   },
   {
-    title: "Technical & Value Engineering",
+    title: "Technical Planning & Specification",
     description:
-      "Our expertise ensures that aesthetic aspirations are seamlessly balanced with durability, functionality, specification requirements, and commercial considerations. The result is a flooring solution that delivers both visual impact and long-term performance without compromise.",
+      "We align design intent with material suitability, durability, performance requirements and project budgets to support informed decisions.",
   },
   {
-    title: "Production & Project Coordination",
+    title: "Production & Quality Assurance",
     description:
-      "We oversee every stage of production, quality assurance, logistics, and project coordination. Our disciplined approach ensures exceptional craftsmanship, consistency, and reliable delivery at every stage.",
+      "Through careful coordination and quality checks, we focus on consistency, craftsmanship and adherence to agreed project specifications.",
   },
   {
-    title: "Installation & Continued Support",
+    title: "Installation & Project Support",
     description:
-      "Our commitment extends beyond delivery. From installation guidance and site coordination to ongoing support, we remain an engaged partner throughout the lifecycle of the project, ensuring enduring quality, performance, and client satisfaction.",
+      "From delivery coordination to installation guidance, we provide project support to help achieve a seamless finish and lasting performance.",
   },
 ];
 

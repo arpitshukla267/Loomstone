@@ -27,30 +27,37 @@ export default function OurStorySection() {
       <div className="pr-6 md:pr-[5%]">
         <Reveal delay={100}>
           <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[48px]">
-            Every exceptional space
+            Flooring That Brings
             <br />
-            <span className="text-[#e8a21c]">begins with a vision.</span>
+            <span className="text-[#e8a21c]">Design Visions to Life.</span>
           </h2>
         </Reveal>
 
         <Reveal delay={150}>
           <div className="max-w-[640px] space-y-4 text-xs leading-[1.8] text-slate-600 md:text-base">
             <p>
-              At Loomstone, we believe exceptional flooring begins with a clear
-              vision and is realised through meticulous execution. Combining
-              design intelligence, technical expertise, and project management
-              excellence, we guide each project through a seamless journey,
-              transforming concepts into distinctive flooring experiences that
-              elevate the character, performance, and identity of a space.
+              At Loomstone, we believe exceptional spaces begin with thoughtful
+              design and are defined by the details beneath our feet. As a
+              provider of bespoke carpets, handcrafted rugs and premium flooring
+              solutions, we bring together design creativity, material expertise
+              and precision to help transform architectural visions into
+              remarkable interiors.
             </p>
             <p>
-              Rooted in the heritage of handcrafted weaving and refined by
-              modern manufacturing, we partner with architects, interior
-              designers, developers, and hospitality groups across international
-              markets. From luxury hotels and signature commercial developments
-              to private residences, every collection is created to meet
-              exacting design intent, specification standards, and long-term
-              performance expectations.
+              Rooted in the art of craftsmanship and guided by contemporary
+              design, we collaborate with architects, interior designers,
+              hospitality brands and commercial developers to create flooring
+              solutions tailored to each project's aesthetic, functional and
+              performance requirements. From luxury hotels and distinguished
+              commercial spaces to refined private residences, every solution is
+              developed with careful attention to detail, enduring quality and
+              the character of the space it serves.
+            </p>
+            <p>
+              <span className="font-semibold">
+                Thoughtfully designed. Expertly crafted. Made for lasting
+                impact.
+              </span>
             </p>
           </div>
         </Reveal>

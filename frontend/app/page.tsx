@@ -17,11 +17,11 @@ import IndustriesServedSection from "@/components/sections/industries-we-serve";
 import WhyLoomstoneSection from "@/components/sections/why-loomstone-section";
 
 const clientLogos = [
-  "leela.webp",
   "marriott.webp",
-  "itc.svg",
   "hilton.webp",
-  "hyatt.png",
+  "hyatt.webp",
+  "itc.png",
+  "leela.webp",
   "dlf.webp",
   "fcml.png",
   "airtel.webp",

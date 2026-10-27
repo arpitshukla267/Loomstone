@@ -37,14 +37,14 @@ export function IndustryCard({
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
 
       {/* Bottom row: left mein text, right mein arrow button */}
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5">
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-center gap-4 p-5">
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-2 font-manrope text-xl font-normal leading-[1.3] text-white">
+          <h3 className="line-clamp-2 font-manrope text-xl font-bold leading-[1.3] text-white">
             {industry.name}
           </h3>
-          <p className="mt-1.5 line-clamp-3 text-sm leading-[1.25] text-gray-200/70">
+          {/* <p className="mt-1.5 line-clamp-3 text-sm leading-[1.25] text-gray-200/70">
             {industry.description}
-          </p>
+          </p> */}
         </div>
 
         {onOpenInquiry ? (
