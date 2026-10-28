@@ -102,7 +102,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
   };
 
   return (
-    <div ref={ref} className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
+    <div ref={ref} className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 3xl:gap-20 4xl:gap-24">
       {/* MEDIA */}
       <motion.div
         variants={mediaVariants}
@@ -141,14 +141,14 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
       >
         <motion.h3
           variants={textItem}
-          className="font-manrope text-[28px] font-normal leading-[1.2] text-navy sm:text-[34px] lg:text-[40px]"
+          className="font-manrope text-[28px] font-normal leading-[1.2] text-navy sm:text-[34px] lg:text-[40px] 3xl:text-[48px] 4xl:text-[56px]"
         >
           {step.title}
         </motion.h3>
 
         <motion.p
           variants={textItem}
-          className="mt-4 max-w-[620px] text-[15px] leading-[1.75] text-cool sm:text-[17px] lg:text-[18px]"
+          className="mt-4 max-w-[620px] 3xl:max-w-[720px] text-[15px] leading-[1.75] text-cool sm:text-[17px] lg:text-[18px] 3xl:text-[20px] 4xl:text-[22px]"
         >
           {step.description}
         </motion.p>
@@ -188,7 +188,7 @@ export function ProcessSection({
   return (
     <MotionConfig reducedMotion="user">
       <section className="overflow-hidden bg-[#FFFCF4] ash" id="products">
-        <div className="mx-auto max-w-[90vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px]">
+        <div className="mx-auto max-w-[90vw] 3xl:max-w-[1700px] 4xl:max-w-[2100px] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px] 3xl:py-[80px] 3xl:pb-[140px]">
           {/* HEADER */}
           <motion.div
             ref={headerRef}
@@ -197,16 +197,16 @@ export function ProcessSection({
             transition={{ duration: 0.6, ease: EASE }}
             className="mx-auto mb-10 flex w-full flex-col items-center text-center md:mb-14"
           >
-            <h2 className="mx-auto max-w-[900px] font-manrope text-[36px] font-normal leading-[1.15] text-navy sm:text-[46px] md:text-[clamp(42px,4.5vw,64px)]">
+            <h2 className="mx-auto max-w-[900px] 3xl:max-w-[1100px] font-manrope text-[36px] font-normal leading-[1.15] text-navy sm:text-[46px] md:text-[clamp(42px,4.5vw,64px)] 3xl:text-[70px] 4xl:text-[80px]">
               {heading}
             </h2>
-            <p className="mx-auto mt-4 max-w-[760px] text-[14px] leading-[1.8] text-cool sm:text-[16px]">
+            <p className="mx-auto mt-4 max-w-[760px] 3xl:max-w-[950px] text-[14px] leading-[1.8] text-cool sm:text-[16px] 3xl:text-[18px] 4xl:text-[20px]">
               {intro}
             </p>
           </motion.div>
 
           {/* ZIG-ZAG ROWS */}
-          <div className="flex flex-col gap-8 md:gap-10 lg:gap-12">
+          <div className="flex flex-col gap-8 md:gap-10 lg:gap-12 3xl:gap-16 4xl:gap-20">
             {steps.map((step, index) => {
               const firstOnLeft = firstMediaSide === "left";
               const mediaOnLeft = index % 2 === 0 ? firstOnLeft : !firstOnLeft;

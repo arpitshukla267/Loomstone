@@ -120,18 +120,18 @@ export default function ContactPage() {
   return (
     <PageFrame active="Contact">
       <div className="bg-ash">
-        <section className="mx-auto max-w-[1920px] px-6 pt-[130px] pb-12 md:pt-[170px] md:pb-16 lg:px-[7.4%] lg:pr-[1.5%]">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.9fr_1.3fr] lg:gap-[80px]">
+        <section className="mx-auto max-w-[1920px] 3xl:max-w-[2100px] 4xl:max-w-[2400px] px-6 pt-[130px] pb-12 md:pt-[170px] md:pb-16 lg:px-[7.4%] lg:pr-[1.5%] 3xl:py-24 4xl:py-32">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.9fr_1.3fr] lg:gap-[80px] 3xl:gap-[110px] 4xl:gap-[140px]">
             {/* ---------------- LEFT ---------------- */}
             <div className="flex flex-col justify-between">
               <div>
-                <h1 className="mt-8 font-manrope text-[44px] font-medium leading-[1.05] tracking-[-0.03em] text-navy md:text-[60px]">
+                <h1 className="mt-8 font-manrope text-[44px] font-medium leading-[1.05] tracking-[-0.03em] text-navy md:text-[60px] 3xl:text-[72px] 4xl:text-[82px]">
                   Get in touch /{" "}
                   <em className="text-gold not-italic">
                     start a custom order.
                   </em>
                 </h1>
-                <p className="mt-9 max-w-[570px] text-[17px] leading-[1.95] text-cool">
+                <p className="mt-9 max-w-[570px] 3xl:max-w-[680px] 4xl:max-w-[760px] text-[17px] 3xl:text-[20px] 4xl:text-[22px] leading-[1.95] text-cool">
                   Connect with our design team. From choosing your rug size and
                   color to handweaving and delivery, we work closely with
                   homeowners, interior designers, and architects.
@@ -177,7 +177,7 @@ export default function ContactPage() {
             </div>
 
             {/* ---------------- RIGHT: FORM ---------------- */}
-            <div className="border border-line px-6 py-10 md:px-[50px] md:py-[52px]">
+            <div className="border border-line px-6 py-10 md:px-[50px] md:py-[52px] 3xl:px-[64px] 3xl:py-[64px] 4xl:px-[76px] 4xl:py-[76px]">
               {sent ? (
                 <div className="py-20 text-center">
                   <div className="mx-auto mb-6 grid h-14 w-14 place-items-center rounded-full border border-gold text-gold">

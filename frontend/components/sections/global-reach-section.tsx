@@ -41,7 +41,7 @@ export function GlobalReachSection({
             <SectionIntro
               eyebrow="Artisanal Categories"
               title="Delivered across the world"
-              text="From our looms in India, every rug travels to homes, hotels, and studios across continents, handled with the same care from first knot to final doorstep."
+              text="Crafted in India, delivered worldwide — bespoke rugs and carpets for distinguished spaces across the globe."
             />
           </motion.div>
 

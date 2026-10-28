@@ -18,7 +18,7 @@ export default function AboutPage() {
       <div className="font-poppins min-h-screen overflow-x-hidden bg-[#FFFCF4] text-[15px] leading-relaxed text-slate-600 pt-20">
         <main>
           {/* 1. About Hero */}
-          <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px]">
+          <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px] 3xl:min-h-[640px] 4xl:min-h-[720px]">
             <Image
               src={heroImage}
               alt="Loomstone flooring solutions and craftsmanship"
@@ -32,7 +32,7 @@ export default function AboutPage() {
 
             <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 text-center">
               <Reveal delay={100}>
-                <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl">
+                <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl 3xl:text-7xl 4xl:text-8xl">
                   The Art of{" "}
                   <span className="block font-semibold text-[#E8A21C]">
                     Flooring Solutions
@@ -59,7 +59,7 @@ export default function AboutPage() {
 
           {/* 7. Quality & Responsibility */}
           <section className="w-full py-12">
-            <div className="relative my-12 h-[65vh] min-h-[420px] w-full md:h-[90vh]">
+            <div className="relative my-12 h-[65vh] min-h-[420px] w-full md:h-[90vh] 3xl:min-h-[700px] 4xl:min-h-[800px]">
               <Image
                 src="/quality.png"
                 alt="Loomstone's commitment to quality and responsibility"

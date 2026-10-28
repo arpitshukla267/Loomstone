@@ -1,13 +1,13 @@
 "use client";
 
-import { ChevronUp } from "lucide-react";
+import { ChevronUp,Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useContactInfo } from "@/lib/contact-info";
 
 const iconClass =
-  "flex items-center justify-center w-[54px] h-[54px] rounded-full border border-white/20 text-white/70 hover:text-gold hover:border-gold transition-colors";
+  "flex items-center justify-center w-[54px] h-[54px] 3xl:w-[64px] 3xl:h-[64px] rounded-full border border-white/20 text-white/70 hover:text-gold hover:border-gold transition-colors";
 
 function InstagramIcon() {
   return (
@@ -28,7 +28,7 @@ function InstagramIcon() {
     </svg>
   );
 }
-
+//linked in
 function FacebookIcon() {
   return (
     <svg
@@ -117,7 +117,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
       icon: <InstagramIcon />,
     },
     {
-      key: "facebook",
+      key: "linkedin",
       label: "Facebook",
       href: info.facebook,
       icon: <FacebookIcon />,
@@ -128,12 +128,12 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
   return (
     <footer
       ref={footerRef}
-      className="relative bg-[#272763] text-line px-6 md:px-[5%] pt-[55px] md:pt-[70px] pb-8 overflow-hidden"
+      className="relative bg-[#272763] text-line px-6 md:px-[5%] 3xl:px-[7%] pt-[55px] md:pt-[70px] 3xl:pt-[100px] pb-8 3xl:pb-12 overflow-hidden"
     >
-      <div className="max-w-[1310px] mx-auto flex flex-col items-center text-center">
+      <div className="max-w-[1310px] 3xl:max-w-[1700px] 4xl:max-w-[2100px] mx-auto flex flex-col items-center text-center">
         {/* Social icons (centered circles) */}
         {socials.length > 0 && (
-          <div className="flex items-center justify-center gap-[5px]">
+          <div className="flex items-center justify-center gap-[5px] 3xl:gap-3">
             {socials.map((s, i) => {
               const r = reveal(i);
               return (
@@ -155,7 +155,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
 
         {/* Copyright + legal links */}
         <p
-          className={`mt-8 mb-0 text-[14px] md:text-[15px] text-white leading-[1.8] ${
+          className={`mt-8 mb-0 text-[14px] md:text-[15px] 3xl:text-[17px] 4xl:text-[19px] text-white leading-[1.8] ${
             reveal(socials.length + 1).className
           }`}
           style={reveal(socials.length + 1).style}

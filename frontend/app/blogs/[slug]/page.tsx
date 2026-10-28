@@ -34,7 +34,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
   return (
     <PageFrame active="Blogs">
       <article className="bg-white px-6 pb-24 pt-[130px] md:px-[5%] md:pb-32 md:pt-[150px]">
-        <div className="mx-auto max-w-[820px]">
+        <div className="mx-auto max-w-[820px] 3xl:max-w-[1000px] 4xl:max-w-[1150px]">
           {/* Simple Back Link */}
           <div>
             <Link
@@ -51,7 +51,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           </div>
 
           {/* Title - No eyebrow, no icons, no decoratives */}
-          <h1 className="mt-3 font-manrope text-[32px] font-normal leading-[1.2] tracking-[-0.025em] text-navy sm:text-[42px] md:text-[48px]">
+          <h1 className="mt-3 font-manrope text-[32px] font-normal leading-[1.2] tracking-[-0.025em] text-navy sm:text-[42px] md:text-[48px] 3xl:text-[56px] 4xl:text-[64px]">
             {post.title}
           </h1>
 
@@ -66,7 +66,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           </div>
 
           {/* Simple Story Content */}
-          <div className="mt-10 space-y-6 text-[15px] leading-[1.85] text-cool sm:text-[16px] md:text-[17px]">
+          <div className="mt-10 space-y-6 text-[15px] leading-[1.85] text-cool sm:text-[16px] md:text-[17px] 3xl:text-[19px] 4xl:text-[21px]">
             {post.content.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}

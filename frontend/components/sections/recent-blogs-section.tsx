@@ -37,17 +37,17 @@ export function RecentBlogsSection() {
   };
 
   return (
-    <section className="bg-white px-6 py-16 md:px-[5%] md:py-24">
-      <div className="mx-auto max-w-[1310px]">
+    <section className="bg-white px-6 py-16 md:px-[5%] md:py-24 3xl:px-[7%] 3xl:py-32 4xl:py-40">
+      <div className="mx-auto max-w-[1310px] 3xl:max-w-[1700px] 4xl:max-w-[2100px]">
         {/* Simple heading - No eyebrow, no decoratives */}
         <div className="text-center">
-          <h2 className="font-manrope text-[30px] font-normal tracking-[-0.02em] text-navy md:text-[40px]">
+          <h2 className="font-manrope text-[30px] font-normal tracking-[-0.02em] text-navy md:text-[40px] 3xl:text-[50px] 4xl:text-[60px]">
             Stories & Journal
           </h2>
         </div>
 
         {/* Carousel / Grid container */}
-        <div className="relative mt-12">
+        <div className="relative mt-12 3xl:mt-16">
           {/* Mobile Arrows (Visible only on mobile/tablet) */}
           <button
             type="button"
@@ -76,7 +76,7 @@ export function RecentBlogsSection() {
           {/* Cards: Horizontal snap scroll on mobile, 4-col grid on desktop */}
           <div
             ref={scrollerRef}
-            className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-7 md:overflow-visible md:px-0 lg:grid-cols-4"
+            className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-7 md:overflow-visible md:px-0 lg:grid-cols-4 3xl:gap-10 4xl:gap-12"
           >
             {BLOG_POSTS.slice(0, 4).map((post) => (
               <article
@@ -100,18 +100,18 @@ export function RecentBlogsSection() {
 
                   {/* Clean Content */}
                   <div className="mt-4 flex flex-1 flex-col">
-                    <span className="text-[12px] text-cool/70">
+                    <span className="text-[12px] 3xl:text-sm text-cool/70">
                       {post.date} &middot; {post.readTime}
                     </span>
 
-                    <h3 className="mt-2 font-manrope text-[18px] font-normal leading-snug text-navy transition-colors hover:text-gold sm:text-[20px]">
+                    <h3 className="mt-2 font-manrope text-[18px] font-normal leading-snug text-navy transition-colors hover:text-gold sm:text-[20px] 3xl:text-[23px] 4xl:text-[25px]">
                       {post.title}
                     </h3>
 
-                    <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-cool">
+                    <p className="mt-2 line-clamp-2 text-[13px] 3xl:text-[15px] leading-relaxed text-cool">
                       {post.summary}
                     </p>
-                    <button className="text-sm text-left mt-4 text-gold hover:underline">
+                    <button className="text-sm 3xl:text-base text-left mt-4 text-gold hover:underline">
                       Read More
                     </button>
                   </div>

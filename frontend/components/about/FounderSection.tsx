@@ -15,7 +15,7 @@ const dots =
 
 export default function FounderSection() {
   return (
-    <section className="relative overflow-hidden bg-[#f4f9fc] py-16 lg:py-24">
+    <section className="relative overflow-hidden bg-[#f4f9fc] py-16 lg:py-24 3xl:py-32 4xl:py-40">
       {/* dotted decoration – top left */}
       <div
         aria-hidden
@@ -38,13 +38,13 @@ export default function FounderSection() {
         className="absolute bottom-[22%] left-0 top-[20%] hidden w-24 bg-[#2a2a6b] lg:block"
       />
 
-      <div className="relative mx-auto grid max-w-[85vw] items-center gap-0 lg:max-w-[1100px] lg:grid-cols-[400px_1fr] lg:gap-10">
+      <div className="relative mx-auto grid max-w-[85vw] items-center gap-0 lg:max-w-[1100px] 3xl:max-w-[1450px] 4xl:max-w-[1700px] lg:grid-cols-[400px_1fr] 3xl:grid-cols-[480px_1fr] 4xl:grid-cols-[540px_1fr] lg:gap-10 3xl:gap-16">
         {/* Founder photo card */}
         <Reveal
           y={32}
           className="relative z-10 mx-auto w-full max-w-[380px] lg:mx-0 lg:max-w-none lg:-ml-[107px]"
         >
-          <div className="relative h-[460px] w-full overflow-hidden rounded-[36px] border-[6px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] md:h-[560px]">
+          <div className="relative h-[460px] w-full overflow-hidden rounded-[36px] border-[6px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] md:h-[560px] 3xl:h-[660px] 4xl:h-[760px]">
             <FadeImage
               src={founderImage}
               alt={`${OWNER}, founder of ${COMPANY}`}
@@ -67,13 +67,13 @@ export default function FounderSection() {
             &ldquo;
           </span>
 
-          <p className="font-manrope mt-6 max-w-none whitespace-pre-line text-[15px] font-medium leading-[1.6] md:text-[19px]">
+          <p className="font-manrope mt-6 max-w-none whitespace-pre-line text-[15px] font-medium leading-[1.6] md:text-[19px] 3xl:text-[22px] 4xl:text-[25px]">
             {QUOTE}
           </p>
 
           <div className="my-8 h-[2px] w-24 bg-[#e8a21c]" />
 
-          <h3 className="font-manrope text-[22px] font-bold leading-tight">
+          <h3 className="font-manrope text-[22px] 3xl:text-[26px] 4xl:text-[30px] font-bold leading-tight">
             Mr. {OWNER}
           </h3>
           <p className="mt-1 text-sm font-medium uppercase tracking-wide text-[#e8a21c]">

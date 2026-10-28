@@ -15,14 +15,14 @@ export const INDUSTRIES: Industry[] = [
   },
   {
     slug: "corporate-commercial",
-    name: "Corporate & Commercial",
+    name: "Corp & Commercial spaces",
     image: "/industries/corporate-commercial.png",
     description:
       "Create inspiring workplaces and distinctive commercial environments with versatile flooring solutions that balance contemporary design, acoustic comfort and everyday practicality.",
   },
   {
     slug: "public-institutional",
-    name: "Public & Institutional",
+    name: "Public Spaces",
     image: "/industries/public-institutional.png",
     description:
       "Equip airports, healthcare facilities, educational institutions and public spaces with resilient flooring solutions designed for demanding environments, easy maintenance and long-term performance.",
@@ -35,9 +35,16 @@ export const INDUSTRIES: Industry[] = [
       "Bring distinctive character to casinos, cinemas, theatres and entertainment venues with expressive carpet designs that enhance the atmosphere and perform under heavy foot traffic.",
   },
   {
+    slug: "gaming",
+    name: "Gaming",
+    image: "/industries/Gaming.png",
+    description:
+      "Enhance gaming arenas, esports venues and gaming lounges with high-performance flooring solutions that combine modern aesthetics, acoustic comfort and durability for high-traffic environments.",
+  },
+  {
     slug: "luxury-residential",
     name: "Luxury Residential",
-    image: "/new-folder/Industries-we-serve/luxury-residentials.png",
+    image: "/industries/Residencieal.png",
     description:
       "Transform private residences with beautifully crafted rugs, premium carpets and refined flooring solutions tailored to individual tastes, architectural details and contemporary living.",
   },

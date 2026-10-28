@@ -77,8 +77,8 @@ export default function BrochurePage() {
   return (
     <PageFrame active="Brochure">
       <section className="bg-[#FFFCF4] px-6 pb-[70px] pt-[130px] md:px-[5%] md:pb-[100px] md:pt-[170px]">
-        <div className="mx-auto max-w-[1100px]">
-          <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div className="mx-auto max-w-[1100px] 3xl:max-w-[1500px] 4xl:max-w-[1800px]">
+          <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16 3xl:gap-24 4xl:gap-32">
             {/* Left: copy */}
             <div>
               <div className="relative h-[48px] w-[180px] md:h-[60px] md:w-[220px]">
@@ -91,11 +91,11 @@ export default function BrochurePage() {
                   className="object-cover object-left -ml-12"
                 />
               </div>
-              <h1 className="mt-4 font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,56px)]">
+              <h1 className="mt-4 font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,56px)] 3xl:text-[62px] 4xl:text-[72px]">
                 Request the{" "}
                 <em className="not-italic text-gold">Loomstone Brochure</em>
               </h1>
-              <p className="mt-5 max-w-[480px] text-[15px] leading-[1.8] text-cool md:text-[17px]">
+              <p className="mt-5 max-w-[480px] 3xl:max-w-[600px] 4xl:max-w-[700px] text-[15px] leading-[1.8] text-cool md:text-[17px] 3xl:text-[19px] 4xl:text-[21px]">
                 Explore our bespoke carpets, textile flooring and custom
                 flooring solutions for hospitality and commercial spaces. Share
                 your details and we will send the brochure to you shortly.
@@ -103,7 +103,7 @@ export default function BrochurePage() {
             </div>
 
             {/* Right: form */}
-            <div className="rounded-[4px] border border-line bg-white p-6 shadow-[0_16px_36px_rgba(42,41,103,0.06)] md:p-9">
+            <div className="rounded-[4px] border border-line bg-white p-6 shadow-[0_16px_36px_rgba(42,41,103,0.06)] md:p-9 3xl:p-14 4xl:p-16">
               {submitted ? (
                 <div className="flex flex-col items-center py-10 text-center">
                   <CheckCircle2 size={48} className="text-gold" />

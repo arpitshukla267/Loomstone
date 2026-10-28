@@ -436,7 +436,7 @@ export function HeaderSection({
   const solid = !isHome || scrolled || menuOpen;
 
   const desktopLinkClass = (active: boolean) =>
-    `text-[11px] xl:text-sm font-medium xl:tracking-[.03em] uppercase no-underline transition-colors duration-300 border-b-2 ${
+    `text-[11px] xl:text-sm 3xl:text-base 4xl:text-lg font-medium xl:tracking-[.03em] uppercase no-underline transition-colors duration-300 border-b-2 ${
       solid ? "text-navy" : "text-black "
     } ${active ? "border-gold" : "border-transparent"}`;
 
@@ -449,9 +449,9 @@ export function HeaderSection({
       }`}
     >
       {/* Main row: 3 columns -> left links | logo | right links */}
-      <div className="mx-auto grid h-[72px] max-w-[100vw] grid-cols-[1fr_auto_1fr] items-center px-4 md:h-20 lg:px-10">
+      <div className="mx-auto grid h-[72px] max-w-[100vw] grid-cols-[1fr_auto_1fr] items-center px-4 md:h-20 lg:px-10 3xl:px-20 4xl:px-32 3xl:h-24">
         {/* LEFT */}
-        <nav className="hidden items-center justify-start md:flex md:gap-4 lg:gap-6 xl:gap-8">
+        <nav className="hidden items-center justify-start md:flex md:gap-4 lg:gap-6 xl:gap-8 3xl:gap-12 4xl:gap-16">
           {leftLinks.map(([link, href]) => (
             <Link
               key={link}
@@ -468,7 +468,7 @@ export function HeaderSection({
         <Link
           href="/"
           onClick={() => setMenuOpen(false)}
-          className="relative block h-full w-24 md:w-44"
+          className="relative block h-full w-24 md:w-44 3xl:w-56"
           aria-label="Loomstone home"
         >
           <Image
@@ -479,15 +479,15 @@ export function HeaderSection({
             priority
             className={`absolute left-1/2 top-1 -translate-x-1/2 w-auto max-w-none object-contain transition-all duration-500 ease-out motion-reduce:transition-none ${
               solid
-                ? "h-[60px] md:h-[84px]"
-                : "h-28 md:h-48 drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)]"
+                ? "h-[60px] md:h-[84px] 3xl:h-[100px]"
+                : "h-28 md:h-48 3xl:h-56 drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)]"
             }`}
           />
         </Link>
 
         {/* RIGHT */}
         <div className="flex items-center justify-end">
-          <nav className="hidden items-center md:flex md:gap-4 lg:gap-6 xl:gap-8">
+          <nav className="hidden items-center md:flex md:gap-4 lg:gap-6 xl:gap-8 3xl:gap-12 4xl:gap-16">
             {rightLinks.map(([link, href]) => (
               <Link
                 key={link}
@@ -500,7 +500,7 @@ export function HeaderSection({
             <button
               type="button"
               onClick={handleDownloadBrochure}
-              className={`cursor-pointer border-0 bg-transparent text-[11px] font-bold uppercase transition-colors duration-300 xl:text-sm ${
+              className={`cursor-pointer border-0 bg-transparent text-[11px] font-bold uppercase transition-colors duration-300 xl:text-sm 3xl:text-base 4xl:text-lg ${
                 solid ? "text-navy" : "text-black"
               }`}
             >

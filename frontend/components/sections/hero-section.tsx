@@ -13,8 +13,8 @@ interface MetricProps {
 
 export function Metric({ number, title, detail }: MetricProps) {
   return (
-    <div className="flex items-center gap-3.5 py-1 md:py-[5px] px-0 md:px-[22px] border-b md:border-b-0 md:border-r last:border-b-0 md:last:border-r-0 border-line">
-      <span className="text-gold font-manrope italic font-semibold text-[26px]">
+    <div className="flex items-center gap-3.5 py-1 md:py-[5px] px-0 md:px-[22px] 3xl:px-8 border-b md:border-b-0 md:border-r last:border-b-0 md:last:border-r-0 border-line">
+      <span className="text-gold font-manrope italic font-semibold text-[26px] 3xl:text-[32px] 4xl:text-[36px]">
         {number}
       </span>
       <div>
@@ -167,7 +167,7 @@ const defaultSlides = (heroImage: string): HeroSlide[] => [
 ];
 
 const arrowClassName =
-  "absolute z-20 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-full border-0 bg-navy/25 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-navy/45 cursor-pointer bottom-3 md:bottom-auto md:top-1/2 md:-translate-y-1/2";
+  "absolute z-20 flex h-10 w-10 md:h-12 md:w-12 3xl:h-14 3xl:w-14 items-center justify-center rounded-full border-0 bg-navy/25 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-navy/45 cursor-pointer bottom-3 md:bottom-auto md:top-1/2 md:-translate-y-1/2";
 
 export function HeroSection({
   onOpenInquiry,
@@ -249,7 +249,7 @@ export function HeroSection({
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative min-h-screen flex items-center justify-start overflow-hidden pl-0 pr-6 md:pl-[max(5%,72px)] md:pr-[5%] pt-24 pb-28 md:pt-36 md:pb-28"
+      className="relative min-h-screen flex items-center justify-start overflow-hidden pl-0 pr-6 md:pl-[max(5%,72px)] md:pr-[5%] pt-24 pb-28 md:pt-36 md:pb-28 3xl:pl-[max(7%,120px)] 3xl:pr-[7%] 3xl:pt-44 3xl:pb-36 4xl:pl-[max(9%,160px)] 4xl:pr-[9%]"
     >
       {/* Smooth Background Image Slider */}
       <AnimatePresence initial={false}>
@@ -277,7 +277,7 @@ export function HeroSection({
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={activeSlide}
-          className="relative z-10 w-full max-w-[1400px] mx-auto pl-6 flex flex-col items-start text-left -mt-6"
+          className="relative z-10 w-full max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2200px] mx-auto pl-6 3xl:pl-10 flex flex-col items-start text-left -mt-6"
           initial="hidden"
           animate="visible"
           exit="exit"
@@ -305,7 +305,7 @@ export function HeroSection({
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[700px] my-4 md:my-5 text-navy font-manrope font-light text-4xl leading-[1.2] tracking-[-0.02em]"
+            className="max-w-[700px] 3xl:max-w-[900px] my-4 md:my-5 text-navy font-manrope font-light text-4xl 3xl:text-5xl 4xl:text-6xl leading-[1.2] tracking-[-0.02em]"
           >
             {currentSlide.heading}
           </motion.h1>
@@ -321,7 +321,7 @@ export function HeroSection({
               duration: 0.65,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[480px] m-0 text-navy/80 font-light text-sm leading-[1.7]"
+            className="max-w-[480px] 3xl:max-w-[580px] m-0 text-navy/80 font-light text-sm 3xl:text-base 4xl:text-lg leading-[1.7]"
           >
             {currentSlide.description}
           </motion.p>
@@ -337,11 +337,11 @@ export function HeroSection({
               duration: 0.6,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="flex flex-wrap justify-start items-center gap-3 mt-6 md:mt-[26px]"
+            className="flex flex-wrap justify-start items-center gap-3 mt-6 md:mt-[26px] 3xl:mt-9 3xl:gap-4"
           >
             <a
               href="#products"
-              className="inline-flex items-center justify-center min-h-[44px] px-5 text-white bg-navy text-[10px] font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:-translate-y-0.5 cursor-pointer rounded-[8px]"
+              className="inline-flex items-center justify-center min-h-[44px] 3xl:min-h-[52px] px-5 3xl:px-7 text-white bg-navy text-[10px] 3xl:text-xs 4xl:text-sm font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:-translate-y-0.5 cursor-pointer rounded-[8px]"
             >
               {currentSlide.primaryText}
             </a>
@@ -350,7 +350,7 @@ export function HeroSection({
               <button
                 type="button"
                 onClick={onOpenInquiry}
-                className="inline-flex items-center justify-center gap-2 min-h-[44px] px-5 text-navy bg-white/10 backdrop-blur-sm border border-navy/40 text-[10px] font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:border-gold hover:text-gold cursor-pointer rounded-[8px]"
+                className="inline-flex items-center justify-center gap-2 min-h-[44px] 3xl:min-h-[52px] px-5 3xl:px-7 text-navy bg-white/10 backdrop-blur-sm border border-navy/40 text-[10px] 3xl:text-xs 4xl:text-sm font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:border-gold hover:text-gold cursor-pointer rounded-[8px]"
               >
                 {currentSlide.secondaryText}
                 <ArrowUpRight size={20} />

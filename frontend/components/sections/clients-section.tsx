@@ -243,9 +243,9 @@
 //         </div>
 
 //         {/* ================= TEXT ================= */}
-//         <div className="relative z-10 -mt-[24vw] px-6 pb-[70px] md:-mt-[min(10vw,160px)] md:pb-[110px]">
+//         <div className="relative z-10 -mt-[24vw] px-6 pb-[70px] md:-mt-[min(10vw,160px)] 3xl:-mt-[180px] 4xl:-mt-[220px] md:pb-[110px] 3xl:pb-[150px] 4xl:pb-[180px]">
 //           <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center">
-//             <h2 className="font-manrope text-[34px] font-medium leading-[1.12] tracking-[-0.02em] text-navy sm:text-[44px] md:text-[clamp(40px,4.2vw,60px)]">
+//             <h2 className="font-manrope text-[34px] font-medium leading-[1.12] tracking-[-0.02em] text-navy sm:text-[44px] md:text-[clamp(40px,4.2vw,60px)] 3xl:text-[70px] 4xl:text-[80px]">
 //               <motion.span
 //                 className="block"
 //                 initial={{ opacity: 0, y: 28 }}
@@ -267,7 +267,7 @@
 //             </h2>
 
 //             <motion.p
-//               className="mt-6 max-w-[460px] text-[16px] leading-[1.7] text-navy/80 sm:text-[17px]"
+//               className="mt-6 max-w-[460px] 3xl:max-w-[580px] 4xl:max-w-[650px] text-[16px] leading-[1.7] text-navy/80 sm:text-[17px] 3xl:text-[20px] 4xl:text-[22px]"
 //               initial={{ opacity: 0, y: 24 }}
 //               whileInView={{ opacity: 1, y: 0 }}
 //               viewport={VIEWPORT}
@@ -278,7 +278,7 @@
 
 //             <motion.a
 //               href={ctaHref}
-//               className="group mt-9 inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3.5 text-[14px] font-medium text-white shadow-[0_10px_24px_-10px_rgba(42,41,103,0.7)] transition-colors duration-300 hover:bg-gold hover:text-navy"
+//               className="group mt-9 inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3.5 3xl:px-9 3xl:py-4 text-[14px] 3xl:text-[16px] 4xl:text-[18px] font-medium text-white shadow-[0_10px_24px_-10px_rgba(42,41,103,0.7)] transition-colors duration-300 hover:bg-gold hover:text-navy"
 //               initial={{ opacity: 0, y: 20 }}
 //               whileInView={{ opacity: 1, y: 0 }}
 //               viewport={VIEWPORT}
@@ -449,7 +449,7 @@ export interface TestimonialsSectionProps {
 
 export function ClientsSection({
   titleTop = "Trusted by leaders",
-  titleBottom = "from various industries",
+  titleBottom = "from various sectors",
   description = "Learn why professionals trust our solutions to complete their customer journeys.",
   ctaLabel = "Read Success Stories",
   ctaHref = "about#our-story",
@@ -541,9 +541,9 @@ export function ClientsSection({
         </div>
 
         {/* ================= TEXT ================= */}
-        <div className="relative z-10 -mt-[24vw] px-6 pb-[70px] md:-mt-[min(10vw,160px)] md:pb-[110px]">
+        <div className="relative z-10 -mt-[24vw] px-6 pb-[70px] md:-mt-[min(10vw,160px)] 3xl:-mt-[180px] 4xl:-mt-[220px] md:pb-[110px] 3xl:pb-[150px] 4xl:pb-[180px]">
           <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center">
-            <h2 className="font-manrope text-[34px] font-medium leading-[1.12] tracking-[-0.02em] text-navy sm:text-[44px] md:text-[clamp(40px,4.2vw,60px)]">
+            <h2 className="font-manrope text-[34px] font-medium leading-[1.12] tracking-[-0.02em] text-navy sm:text-[44px] md:text-[clamp(40px,4.2vw,60px)] 3xl:text-[70px] 4xl:text-[80px]">
               <motion.span
                 className="block"
                 initial={{ opacity: 0, y: 28 }}
@@ -565,7 +565,7 @@ export function ClientsSection({
             </h2>
 
             <motion.p
-              className="mt-6 max-w-[460px] text-[16px] leading-[1.7] text-navy/80 sm:text-[17px]"
+              className="mt-6 max-w-[460px] 3xl:max-w-[580px] 4xl:max-w-[650px] text-[16px] leading-[1.7] text-navy/80 sm:text-[17px] 3xl:text-[20px] 4xl:text-[22px]"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VIEWPORT}
@@ -576,7 +576,7 @@ export function ClientsSection({
 
             <motion.a
               href={ctaHref}
-              className="group mt-9 inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3.5 text-[14px] font-medium text-white shadow-[0_10px_24px_-10px_rgba(42,41,103,0.7)] transition-colors duration-300 hover:bg-gold hover:text-navy"
+              className="group mt-9 inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3.5 3xl:px-9 3xl:py-4 text-[14px] 3xl:text-[16px] 4xl:text-[18px] font-medium text-white shadow-[0_10px_24px_-10px_rgba(42,41,103,0.7)] transition-colors duration-300 hover:bg-gold hover:text-navy"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VIEWPORT}

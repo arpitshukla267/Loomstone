@@ -9,7 +9,7 @@ export default function OurStorySection() {
   return (
     <section
       id="our-story"
-      className="mx-auto grid max-w-full items-center gap-10 pb-20 pt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-20"
+      className="mx-auto grid max-w-full 3xl:max-w-[1800px] 4xl:max-w-[2200px] items-center gap-10 pb-20 pt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-20 3xl:gap-28 4xl:gap-36 3xl:px-8"
     >
       {/* ================= Left: story illustration ================= */}
       <Reveal>
@@ -24,9 +24,9 @@ export default function OurStorySection() {
       </Reveal>
 
       {/* ================= Right: content ================= */}
-      <div className="pr-6 md:pr-[5%]">
+      <div className="pr-6 md:pr-[5%] 3xl:pr-[7%]">
         <Reveal delay={100}>
-          <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[48px]">
+          <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[48px] 3xl:text-[58px] 4xl:text-[68px]">
             Flooring That Brings
             <br />
             <span className="text-[#e8a21c]">Design Visions to Life.</span>
@@ -34,7 +34,7 @@ export default function OurStorySection() {
         </Reveal>
 
         <Reveal delay={150}>
-          <div className="max-w-[640px] space-y-4 text-xs leading-[1.8] text-slate-600 md:text-base">
+          <div className="max-w-[640px] 3xl:max-w-[780px] space-y-4 text-xs leading-[1.8] text-slate-600 md:text-base 3xl:text-lg">
             <p>
               At Loomstone, we believe exceptional spaces begin with thoughtful
               design and are defined by the details beneath our feet. As a

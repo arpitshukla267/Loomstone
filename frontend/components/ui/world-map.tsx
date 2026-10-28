@@ -18,16 +18,18 @@ const GEO_URL =
   "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 /* ------------------------------------------------------------------ */
-/* Theme (matches GlobalReachSection: navy / gold / ash)               */
+/* Theme (matches GlobalReachSection: navy / gold / cream)             */
 /* ------------------------------------------------------------------ */
 const COLORS = {
   navy: "#2A2967",
   gold: "#C9A24B",
-  land: "#d6dde3",
-  landHover: "#c9d2d9",
-  landStroke: "#eef2f5",
-  labelText: "#2A2967",
-  halo: "#ffffff",
+  land: "#EBE2CB",
+  landHover: "#DDD0AF",
+  landStroke: "#C5BBAA",
+  route: "#A69A88",
+  pin: "#5B4636",
+  labelText: "#98765B",
+  halo: "#FFFCF4",
 };
 
 export type LabelSide = "left" | "right" | "top" | "bottom";
@@ -94,8 +96,8 @@ function PlaneMarker({
       <g transform={`scale(${scale})`}>
         <path
           d="M 10 0 L 2 -2 L -5 -7 L -7 -6 L -3 -1.5 L -11 -2.5 L -13 -1 L -4 0 L -13 1 L -11 2.5 L -3 1.5 L -7 6 L -5 7 L 2 2 Z"
-          fill={COLORS.navy}
-          stroke="#ffffff"
+          fill={COLORS.pin}
+          stroke={COLORS.halo}
           strokeWidth={0.8}
           strokeLinejoin="round"
         />
@@ -280,7 +282,7 @@ export function WorldMap({
                   fill={COLORS.land}
                   stroke={COLORS.landStroke}
                   strokeWidth={0.6}
-                  className={`outline-none ${interactive ? "transition-colors duration-150 hover:fill-[#c9d2d9] cursor-pointer" : "pointer-events-none"}`}
+                  className={`outline-none ${interactive ? "transition-colors duration-150 hover:fill-[#DDD0AF] cursor-pointer" : "pointer-events-none"}`}
                   style={{ outline: "none" }}
                 />
               ))
@@ -297,7 +299,7 @@ export function WorldMap({
                 key={`line-${route.name}`}
                 d={route.d}
                 fill="none"
-                stroke={isActive ? COLORS.gold : COLORS.navy}
+                stroke={isActive ? COLORS.gold : COLORS.route}
                 strokeWidth={(isActive ? 1.8 : 1.3) * uiScale}
                 strokeDasharray={`${4 * uiScale} ${3 * uiScale}`}
                 strokeLinecap="round"
@@ -353,8 +355,8 @@ export function WorldMap({
               <Marker coordinates={[dest.lon, dest.lat]}>
                 <circle
                   r={r}
-                  fill={isActive ? COLORS.gold : COLORS.navy}
-                  stroke="#ffffff"
+                  fill={isActive ? COLORS.gold : COLORS.pin}
+                  stroke={COLORS.halo}
                   strokeWidth={1.5 * uiScale}
                   style={{ transition: "fill 0.3s" }}
                 />
@@ -368,11 +370,11 @@ export function WorldMap({
         <Marker coordinates={[origin.lon, origin.lat]}>
           <circle
             r={6.5 * uiScale}
-            fill={COLORS.navy}
-            stroke="#ffffff"
+            fill={COLORS.pin}
+            stroke={COLORS.halo}
             strokeWidth={2 * uiScale}
           />
-          <circle r={2.2 * uiScale} />
+          <circle r={2.2 * uiScale} fill={COLORS.halo} />
         </Marker>
         {renderLabel(origin, originXY[0], originXY[1], 6.5 * uiScale)}
       </ComposableMap>

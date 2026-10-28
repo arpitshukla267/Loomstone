@@ -40,7 +40,7 @@ function ProductsContent() {
   return (
     <PageFrame active="Products">
       {/* ================= HERO ================= */}
-      <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px]">
+      <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px] 3xl:min-h-[640px] 4xl:min-h-[720px]">
         <Image
           src={heroImage}
           alt="Flooring Solutions"
@@ -54,7 +54,7 @@ function ProductsContent() {
 
         <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 translate-y-1/4 text-center">
           <Reveal delay={100}>
-            <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl">
+            <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl 3xl:text-7xl 4xl:text-8xl">
               Flooring Solutions
             </h1>
           </Reveal>
@@ -62,9 +62,9 @@ function ProductsContent() {
       </section>
 
       {/* ================= PRODUCT CATALOG ================= */}
-      <section className="bg-ash px-4 pb-28 pt-12 sm:px-6 md:px-[5%] md:py-16">
-        <div className="mx-auto max-w-[1310px]">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <section className="bg-ash px-4 pb-28 pt-12 sm:px-6 md:px-[5%] md:py-16 3xl:px-[7%] 3xl:py-24 4xl:py-32">
+        <div className="mx-auto max-w-[1310px] 3xl:max-w-[1700px] 4xl:max-w-[2100px]">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-4 4xl:grid-cols-5 3xl:gap-8 4xl:gap-10">
             {productsList.map((product, index) => (
               <Reveal
                 key={product.id}
@@ -81,11 +81,11 @@ function ProductsContent() {
 
                   {/* Card Info */}
                   <div className="flex flex-1 flex-col p-4 sm:p-5">
-                      <h3 className="font-manrope text-[18px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[20px]">
+                      <h3 className="font-manrope text-[18px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[20px] 3xl:text-[23px]">
                         {product.name}
                       </h3>
 
-                    <p className="mt-2 line-clamp-4 text-[12px] leading-relaxed text-cool">
+                    <p className="mt-2 line-clamp-4 text-[12px] 3xl:text-[14px] leading-relaxed text-cool">
                       {product.description}
                     </p>
 
@@ -94,7 +94,7 @@ function ProductsContent() {
                       <button
                         type="button"
                         onClick={() => openInquiryForProduct(product)}
-                        className="inline-flex min-h-[38px] w-full items-center justify-center gap-1 rounded-[2px] border border-navy bg-navy px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:border-gold hover:bg-gold hover:text-navy"
+                        className="inline-flex min-h-[38px] 3xl:min-h-[44px] w-full items-center justify-center gap-1 rounded-[2px] border border-navy bg-navy px-2 text-[10px] 3xl:text-xs font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:border-gold hover:bg-gold hover:text-navy"
                       >
                         <MessageSquare size={13} />
                         Enquire

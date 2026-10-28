@@ -97,7 +97,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
   return (
     <>
       {/* Masonry: every image keeps its own natural width/height ratio */}
-      <div className="columns-1 gap-2 sm:columns-2 lg:columns-3">
+      <div className="columns-1 gap-2 sm:columns-2 lg:columns-3 3xl:columns-4 3xl:gap-4 4xl:columns-4 4xl:gap-6">
         {items.map((item, index) => (
           <motion.button
             key={item.title}
@@ -107,7 +107,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
             transition={{ duration: 0.35, delay: index * 0.04 }}
             onClick={() => setActive(index)}
             aria-label={`Open ${item.title}`}
-            className="group mb-2 block w-full break-inside-avoid cursor-zoom-in overflow-hidden bg-[#eee]"
+            className="group mb-2 3xl:mb-4 block w-full break-inside-avoid cursor-zoom-in overflow-hidden bg-[#eee]"
           >
             <Image
               src={srcOf(item.image)}

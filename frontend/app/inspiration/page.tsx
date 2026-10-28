@@ -53,8 +53,8 @@ export default function InspirationPage() {
     <PageFrame active="Inspiration">
       {/* Inspiration Collage */}
       <section className="bg-[#FFFCF4] px-6 pb-[70px] pt-[130px] md:px-[5%] md:pb-[100px] md:pt-[170px]">
-        <div className="mx-auto max-w-[1310px]">
-          <h1 className="mb-16 font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,60px)]">
+        <div className="mx-auto max-w-[1310px] 3xl:max-w-[1700px] 4xl:max-w-[2100px]">
+          <h1 className="mb-16 3xl:mb-20 font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,60px)] 3xl:text-[66px] 4xl:text-[76px]">
             Our <em className="not-italic text-gold">Inspirations</em>
           </h1>
           <GalleryGrid items={inspiration} />

@@ -24,7 +24,7 @@ export function IndustryCard({
   onOpenInquiry?: () => void;
 }) {
   return (
-    <article className="group relative h-[350px] w-full overflow-hidden rounded-xl border border-[#dbe1e5] bg-[#dbe1e5] transition duration-300 hover:border-gold hover:shadow-[0_16px_30px_rgba(42,41,103,0.07)]">
+    <article className="group relative h-[350px] 3xl:h-[420px] 4xl:h-[500px] w-full overflow-hidden rounded-xl border border-[#dbe1e5] bg-[#dbe1e5] transition duration-300 hover:border-gold hover:shadow-[0_16px_30px_rgba(42,41,103,0.07)]">
       <FadeImage
         src={industry.image}
         alt={industry.name}
@@ -34,12 +34,12 @@ export function IndustryCard({
       />
 
       {/* Neeche se dark overlay, upar ki taraf fade */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-black/25 to-transparent" />
 
       {/* Bottom row: left mein text, right mein arrow button */}
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-center gap-4 p-5">
         <div className="min-w-0 flex-1">
-          <h3 className="line-clamp-2 font-manrope text-xl font-bold leading-[1.3] text-white">
+          <h3 className="line-clamp-2 font-manrope text-xl 3xl:text-2xl 4xl:text-3xl font-bold leading-[1.3] text-white">
             {industry.name}
           </h3>
           {/* <p className="mt-1.5 line-clamp-3 text-sm leading-[1.25] text-gray-200/70">
@@ -122,7 +122,7 @@ export function IndustriesServedSection({
   };
 
   return (
-    <section className="mx-auto max-w-[1500px] bg-[#FFFCF4] px-6 py-[70px] md:px-[5%] md:py-[50px]">
+    <section className="mx-auto max-w-[1500px] 3xl:max-w-[1900px] 4xl:max-w-[2400px] bg-[#FFFCF4] px-6 py-[70px] md:px-[5%] md:py-[50px] 3xl:py-[80px] 4xl:py-[100px]">
       <Reveal>
         <SectionIntro
           eyebrow="Global Flooring Solutions"
@@ -162,7 +162,7 @@ export function IndustriesServedSection({
             <Reveal
               key={industry.slug}
               delay={(index % 3) * 160}
-              className="h-full shrink-0 basis-full snap-center min-[721px]:basis-[calc((100%-3rem)/3)]"
+              className="h-full shrink-0 basis-full snap-center min-[721px]:basis-[calc((100%-3rem)/3)] 3xl:basis-[calc((100%-4rem)/4)]"
             >
               <IndustryCard industry={industry} onOpenInquiry={onOpenInquiry} />
             </Reveal>

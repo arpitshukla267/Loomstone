@@ -226,7 +226,7 @@ export default function CoreValuesSection() {
       {/* ---------- Desktop / tablet diagram ---------- */}
       <div className="hidden w-full md:block">
         <Reveal>
-          <div ref={diagramRef} className="mx-auto w-full max-w-[870px]">
+          <div ref={diagramRef} className="mx-auto w-full max-w-[870px] 3xl:max-w-[1050px] 4xl:max-w-[1250px]">
             <svg
               viewBox="-30 -30 960 790"
               className="mx-auto h-auto max-h-[calc(100vh)] w-full overflow-visible"

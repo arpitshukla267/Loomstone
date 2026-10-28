@@ -35,7 +35,7 @@ export function InquiryModal({ isOpen, onClose, productName, productDetails }: I
       onClick={handleClose}
     >
       <div
-        className="relative w-[min(680px,100%)] max-h-[90vh] overflow-y-auto p-[29px_22px] md:p-[38px] bg-white border-t-4 border-gold shadow-2xl"
+        className="relative w-[min(680px,100%)] 3xl:w-[780px] 4xl:w-[860px] max-h-[90vh] overflow-y-auto p-[29px_22px] md:p-[38px] 3xl:p-[48px] bg-white border-t-4 border-gold shadow-2xl"
         role="dialog"
         aria-modal="true"
         onClick={(event) => event.stopPropagation()}
@@ -77,7 +77,7 @@ export function InquiryModal({ isOpen, onClose, productName, productDetails }: I
               <i className="w-2 h-2 inline-block bg-gold not-italic" />
               DIRECT ARCHITECTURAL COMMISSION
             </span>
-            <h2 className="mt-3 mb-2.5 text-navy font-manrope font-normal text-[26px] md:text-[32px] capitalize">
+            <h2 className="mt-3 mb-2.5 text-navy font-manrope font-normal text-[26px] md:text-[32px] 3xl:text-[38px] capitalize">
               {productName ? `Inquire: ${productName}` : "Initiate project consultation"}
             </h2>
             {productName && (
