@@ -9,7 +9,7 @@ export const INDUSTRIES: Industry[] = [
   {
     slug: "hospitality",
     name: "Hospitality",
-    image: "/industries/hospitality.png",
+    image: "/new-folder/Industries-we-serve/Hospitality.png",
     description:
       "Elevate hotels, resorts and dining spaces with bespoke carpets and rugs that express your brand identity, enrich guest experiences and deliver lasting performance.",
   },
@@ -37,7 +37,7 @@ export const INDUSTRIES: Industry[] = [
   {
     slug: "luxury-residential",
     name: "Luxury Residential",
-    image: "/industries/luxury-residential.png",
+    image: "/new-folder/Industries-we-serve/luxury-residentials.png",
     description:
       "Transform private residences with beautifully crafted rugs, premium carpets and refined flooring solutions tailored to individual tastes, architectural details and contemporary living.",
   },

@@ -127,7 +127,7 @@ export function IndustriesServedSection({
         <SectionIntro
           eyebrow="Global Flooring Solutions"
           title="Industries We Serve"
-          text="From landmark hotels to private residences, we deliver custom rugs, carpets and flooring systems tailored to every sector and every market."
+          text="From iconic hospitality destinations to distinguished commercial spaces and exceptional residences, we create bespoke flooring solutions that bring architectural vision and design intent to life through thoughtful detailing, refined craftsmanship and enduring performance."
         />
       </Reveal>
 

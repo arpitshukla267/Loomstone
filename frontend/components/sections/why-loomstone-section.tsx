@@ -33,32 +33,32 @@ const FEATURES: Feature[] = [
   {
     icon: Layers,
     title: "Flooring Expertise",
-    text: "Handcrafted rugs, Axminster carpets, machine-made carpets and carpet tiles.",
+    text: "Axminster carpets & Rugs, Handcrafted carpets & Rugs, Textile flooring, Resilient Flooring",
   },
   {
     icon: Palette,
     title: "Design Collaboration",
-    text: "Working with architects and designers to realise their creative vision.",
+    text: "Working with architects and designers to translate their creative vision into distinctive flooring concepts.",
   },
   {
     icon: Gem,
-    title: "Bespoke Solutions",
-    text: "Custom patterns, colours and specifications for every project.",
+    title: "Bespoke Flooring Solutions",
+    text: "Custom patterns, colours textures and specifications crafted to bring each project's unique design vision to life.",
   },
   {
     icon: Globe,
-    title: "Global Partnerships",
-    text: "Specialist manufacturing and material sourcing through trusted partners.",
+    title: "Global Manufacturing Partnerships",
+    text: "Working with trusted manufacturing partners and specialist suppliers to deliver quality material, consistent standards & Bespoke flooring solutions.",
   },
   {
     icon: ClipboardCheck,
     title: "Technical Precision",
-    text: "Attention to specifications, budgets and project requirements.",
+    text: "Meticulous attention to specification, accurate measurements, budget considration and project requirements ensuring flooring solutions that balance design intent, performance and practicality.",
   },
   {
     icon: Handshake,
-    title: "Project Support",
-    text: "Coordinated support from design development to supply and installation.",
+    title: "End to End Project Support",
+    text: "Coordinated support from design development to supply and installation, ensuring a seemless product journey from concept to completion .",
   },
 ];
 
@@ -118,7 +118,7 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
       >
         {feature.title}
       </h3>
-      <p className="mb-0 mt-3 max-w-[200px] text-[12.5px] leading-[1.5] text-[#808486]">
+      <p className="mb-0 mt-3 max-w-[240px] text-[12.5px] leading-[1.5] text-[#808486]">
         {feature.text}
       </p>
     </motion.div>
@@ -132,17 +132,18 @@ export interface WhyLoomstoneSectionProps {
 }
 
 export function WhyLoomstoneSection({
-  image = "/why-loomstone.jpg",
+  image = "/new-folder/why.jpg",
   imageAlt = "Loomstone luxury interior with textured flooring",
 }: WhyLoomstoneSectionProps) {
   return (
     <MotionConfig reducedMotion="user">
       {/* 30 / 70 split. Image is full-bleed: touches the left edge of the screen. */}
-      <section className="grid w-full grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[30%_70%]">
+      <section className="relative left-1/2 grid w-screen -translate-x-1/2 grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[35%_65%]">
+        {" "}
         {/* ================= IMAGE ================= */}
         <div className="relative h-[280px] sm:h-[380px] lg:h-auto lg:min-h-[640px]">
           <Image
-            src={image}
+            src="/new-folder/why.jpg"
             alt={imageAlt}
             fill
             sizes="(min-width: 1024px) 30vw, 100vw"
@@ -150,7 +151,6 @@ export function WhyLoomstoneSection({
             priority={false}
           />
         </div>
-
         {/* ================= CONTENT ================= */}
         <div className="flex items-center px-6 py-12 sm:px-10 md:px-14 lg:px-[6%] lg:py-20 xl:px-[7%]">
           <div className="mx-auto w-full max-w-[900px]">
@@ -173,7 +173,7 @@ export function WhyLoomstoneSection({
               viewport={VIEWPORT}
               transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
             >
-              Thoughtful Design. Bespoke Solutions. Seemless Execution.
+              Thoughtful Design. Bespoke Craftmenship. Seemless Execution.
             </motion.p>
 
             {/* Feature grid: 3 columns x 2 rows */}
