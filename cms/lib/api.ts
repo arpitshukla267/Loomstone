@@ -64,67 +64,6 @@ export const heroApi = {
     req<{ message: string }>(`/api/hero-section/${id}`, { method: "DELETE" }),
 };
 
-// ─── Room Types & API ─────────────────────────────────────────────────────────
-
-export type Room = {
-  _id: string;
-  name: string;
-  heading?: string;
-  desc: string;
-  image: string;
-  imageId?: string;
-  href?: string;
-  order: number;
-  isActive: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-export const roomApi = {
-  list: () => req<Room[]>("/api/rooms?all=true"),
-  create: (data: FormData) =>
-    req<Room>("/api/rooms", { method: "POST", body: data }),
-  update: (id: string, data: FormData) =>
-    req<Room>(`/api/rooms/${id}`, { method: "PUT", body: data }),
-  toggle: (id: string) =>
-    req<Room>(`/api/rooms/${id}/toggle`, { method: "PATCH" }),
-  delete: (id: string) =>
-    req<{ message: string }>(`/api/rooms/${id}`, { method: "DELETE" }),
-};
-
-// ─── Category Types & API ───────────────────────────────────────────────────
-
-export type Category = {
-  _id: string;
-  name: string;
-  desc?: string;
-  text?: string;
-  image?: string;
-  imageId?: string;
-  order: number;
-  isActive: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-export const categoryApi = {
-  list: () => req<Category[]>("/api/categories?all=true"),
-  create: (data: FormData | Partial<Category>) =>
-    req<Category>("/api/categories", {
-      method: "POST",
-      body: data instanceof FormData ? data : JSON.stringify(data),
-    }),
-  update: (id: string, data: FormData | Partial<Category>) =>
-    req<Category>(`/api/categories/${id}`, {
-      method: "PUT",
-      body: data instanceof FormData ? data : JSON.stringify(data),
-    }),
-  toggle: (id: string) =>
-    req<Category>(`/api/categories/${id}/toggle`, { method: "PATCH" }),
-  delete: (id: string) =>
-    req<{ message: string }>(`/api/categories/${id}`, { method: "DELETE" }),
-};
-
 // ─── Product Types & API ────────────────────────────────────────────────────
 
 export type ProductImage = {
@@ -134,13 +73,11 @@ export type ProductImage = {
 
 export type Product = {
   _id: string;
+  id?: string;
   name: string;
   slug: string;
   desc: string;
-  category: string;
-  rooms: string[];
-  sizes: string[];
-  options: string[];
+  description?: string;
   images: ProductImage[];
   order: number;
   isActive: boolean;
@@ -161,6 +98,32 @@ export const productApi = {
     req<{ message: string }>(`/api/products/${id}`, { method: "DELETE" }),
 };
 
+// ─── Why Loomstone Types & API ──────────────────────────────────────────────
+
+export type WhyFeature = {
+  icon: string;
+  title: string;
+  text: string;
+  order: number;
+};
+
+export type WhyLoomstone = {
+  _id?: string;
+  heading: string;
+  subheading: string;
+  image: string;
+  imageId: string;
+  features: WhyFeature[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export const whyLoomstoneApi = {
+  get: () => req<WhyLoomstone>("/api/why-loomstone"),
+  update: (data: FormData) =>
+    req<WhyLoomstone>("/api/why-loomstone", { method: "PUT", body: data }),
+};
+
 // ─── Contact Info Types & API ───────────────────────────────────────────────
 
 export type ContactInfo = {
@@ -177,7 +140,6 @@ export type ContactInfo = {
 };
 
 export const contactApi = {
-  // record abhi nahi bana to backend {} bhejta hai (_id nahi hoti)
   get: () => req<Partial<ContactInfo> & { _id?: string }>("/api/contact-info"),
   update: (data: ContactInfo) =>
     req<ContactInfo>("/api/contact-info", {

@@ -4,13 +4,11 @@ import Link from "next/link";
 import {
   checkHealth,
   heroApi,
-  roomApi,
-  categoryApi,
   productApi,
+  whyLoomstoneApi,
   type HeroSlide,
-  type Room,
-  type Category,
   type Product,
+  type WhyLoomstone,
 } from "@/lib/api";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,11 +17,10 @@ import {
   ExternalLink,
   ArrowUpRight,
   Activity,
-  Layers,
   Image as ImageIcon,
-  Tag,
   Package,
   Phone,
+  Sparkles,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -153,9 +150,8 @@ function DonutChart({
 export default function DashboardPage() {
   const [health, setHealth] = useState<boolean | null>(null);
   const [slides, setSlides] = useState<HeroSlide[]>([]);
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [whyData, setWhyData] = useState<WhyLoomstone | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -163,15 +159,13 @@ export default function DashboardPage() {
 
     Promise.all([
       heroApi.list().catch(() => []),
-      roomApi.list().catch(() => []),
-      categoryApi.list().catch(() => []),
       productApi.list().catch(() => []),
+      whyLoomstoneApi.get().catch(() => null),
     ])
-      .then(([s, r, c, p]) => {
+      .then(([s, p, w]) => {
         setSlides(s);
-        setRooms(r);
-        setCategories(c);
         setProducts(p);
+        setWhyData(w);
       })
       .finally(() => setLoaded(true));
   }, []);
@@ -187,36 +181,17 @@ export default function DashboardPage() {
     };
   }, [slides]);
 
-  const roomStats = useMemo(() => {
-    const active = rooms.filter((r) => r.isActive).length;
-    const sorted = [...rooms].sort((a, b) => a.order - b.order);
-    return {
-      total: rooms.length,
-      active,
-      hidden: rooms.length - active,
-      sorted,
-    };
-  }, [rooms]);
-
-  const categoryStats = useMemo(() => {
-    const active = categories.filter((c) => c.isActive).length;
-    return {
-      total: categories.length,
-      active,
-      hidden: categories.length - active,
-    };
-  }, [categories]);
-
   const productStats = useMemo(() => {
     const active = products.filter((p) => p.isActive).length;
     return { total: products.length, active, hidden: products.length - active };
   }, [products]);
 
+  const whyFeatureCount = whyData?.features?.length ?? 0;
+
   const distributionData = [
     { name: "Live Slides", value: slideStats.active, color: "#00355F" },
-    { name: "Live Rooms", value: roomStats.active, color: "#4A90C4" },
-    { name: "Categories", value: categoryStats.active, color: "#F59E0B" },
     { name: "Live Products", value: productStats.active, color: "#10B981" },
+    { name: "Why Features", value: whyFeatureCount, color: "#F59E0B" },
   ];
 
   return (
@@ -229,8 +204,8 @@ export default function DashboardPage() {
             Loomstone CMS
           </h1>
           <p className="text-sm text-slate-500 max-w-xl">
-            Manage your homepage hero banners, room spaces, categories,
-            products, and contact details from one central workspace.
+            Manage your homepage hero banners, products, Why Loomstone section,
+            and contact details from one central workspace.
           </p>
         </div>
 
@@ -263,7 +238,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── KPI cards ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <KpiCard
           label="Hero Slides"
           value={loaded ? slideStats.total : "–"}
@@ -273,28 +248,20 @@ export default function DashboardPage() {
           tone="blue"
         />
         <KpiCard
-          label="Rooms"
-          value={loaded ? roomStats.total : "–"}
-          sub={`${roomStats.active} active spaces`}
-          icon={Layers}
-          href="/dashboard/rooms"
-          tone="blue"
-        />
-        <KpiCard
-          label="Categories"
-          value={loaded ? categoryStats.total : "–"}
-          sub={`${categoryStats.active} filter tags`}
-          icon={Tag}
-          href="/dashboard/categories"
-          tone="amber"
-        />
-        <KpiCard
           label="Products"
           value={loaded ? productStats.total : "–"}
           sub={`${productStats.active} designs live`}
           icon={Package}
           href="/dashboard/products"
           tone="green"
+        />
+        <KpiCard
+          label="Why Loomstone"
+          value={loaded ? whyFeatureCount : "–"}
+          sub="feature highlights"
+          icon={Sparkles}
+          href="/dashboard/why-loomstone"
+          tone="amber"
         />
       </div>
 
@@ -383,7 +350,7 @@ export default function DashboardPage() {
               Content Overview
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">
-              Live vs hidden content
+              Live content distribution
             </p>
           </CardHeader>
           <CardBody className="p-4">
@@ -391,71 +358,6 @@ export default function DashboardPage() {
           </CardBody>
         </Card>
       </div>
-
-      {/* ── Rooms Showcase Preview ── */}
-      <Card>
-        <CardHeader className="flex items-center justify-between">
-          <div>
-            <h2 className="font-bold text-slate-900 text-base">
-              Rooms &amp; Spaces
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Curated categories for living rooms, hallways, bedrooms
-            </p>
-          </div>
-          <Link
-            href="/dashboard/rooms"
-            className="text-xs font-semibold text-[#00355F] hover:underline"
-          >
-            Manage all rooms
-          </Link>
-        </CardHeader>
-        <CardBody className="p-0">
-          {roomStats.sorted.length === 0 ? (
-            <div className="py-12 text-center text-xs text-slate-400">
-              {loaded ? "No rooms configured yet." : "Loading…"}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-5">
-              {roomStats.sorted.slice(0, 6).map((r) => (
-                <Link
-                  key={r._id}
-                  href="/dashboard/rooms"
-                  className="group block rounded-xl border border-slate-200 overflow-hidden hover:border-[#B2CDFA] hover:shadow-md transition-all"
-                >
-                  <div className="relative w-full h-28 bg-slate-900 overflow-hidden">
-                    {r.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={r.image}
-                        alt={r.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-500">
-                        <ImageIcon className="w-6 h-6" />
-                      </div>
-                    )}
-                    <div className="absolute top-2 right-2">
-                      <Badge variant={r.isActive ? "success" : "warning"}>
-                        {r.isActive ? "Active" : "Hidden"}
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="p-3">
-                    <p className="text-xs font-bold text-slate-900 truncate group-hover:text-[#00355F]">
-                      {r.name}
-                    </p>
-                    <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
-                      {r.desc}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </CardBody>
-      </Card>
 
       {/* ── Quick Access ── */}
       <Card>
@@ -475,10 +377,16 @@ export default function DashboardPage() {
                 href: "/dashboard/hero",
               },
               {
-                label: "Rooms & Spaces",
-                desc: "Room rug categories and showcases",
-                icon: Layers,
-                href: "/dashboard/rooms",
+                label: "Products",
+                desc: "Manage product designs & imagery",
+                icon: Package,
+                href: "/dashboard/products",
+              },
+              {
+                label: "Why Loomstone",
+                desc: "Feature highlights & section content",
+                icon: Sparkles,
+                href: "/dashboard/why-loomstone",
               },
               {
                 label: "Contact Info",

@@ -143,7 +143,7 @@ export function WhyLoomstoneSection({
         {/* ================= IMAGE ================= */}
         <div className="relative h-[280px] sm:h-[380px] lg:h-auto lg:min-h-[640px] 3xl:min-h-[780px] 4xl:min-h-[900px]">
           <Image
-            src="/new-folder/why.jpg"
+            src="/"
             alt={imageAlt}
             fill
             sizes="(min-width: 1024px) 30vw, 100vw"

@@ -2,11 +2,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import {
   productApi,
-  categoryApi,
-  roomApi,
   type Product,
-  type Category,
-  type Room,
   type ProductImage,
 } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -26,12 +22,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  ArrowUpDown,
-  Tag,
-  Layers,
-  Sparkles,
   Eye,
-  Check,
   Hash,
 } from "lucide-react";
 import { ActiveToggle } from "@/components/ui/active-toggle";
@@ -45,10 +36,6 @@ type FormState = {
   _id?: string;
   name: string;
   desc: string;
-  category: string;
-  rooms: string[];
-  sizes: string[];
-  options: string[];
   order: number;
   isActive: boolean;
 };
@@ -56,35 +43,18 @@ type FormState = {
 const EMPTY_FORM: FormState = {
   name: "",
   desc: "",
-  category: "",
-  rooms: [],
-  sizes: ["5 x 8 ft", "6 x 9 ft", "8 x 10 ft", "9 x 12 ft", "Custom Size"],
-  options: [],
   order: 0,
   isActive: true,
 };
 
-const SIZE_PRESETS = [
-  "5 x 8 ft",
-  "6 x 9 ft",
-  "8 x 10 ft",
-  "9 x 12 ft",
-  "10 x 14 ft",
-  "Custom Size",
-];
-
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Modal State
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [imageList, setImageList] = useState<ModalImageItem[]>([]);
-  const [sizeInput, setSizeInput] = useState("");
-  const [optionInput, setOptionInput] = useState("");
   const [showDescPreview, setShowDescPreview] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -96,14 +66,8 @@ export default function ProductsPage() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [prods, cats, rms] = await Promise.all([
-        productApi.list().catch(() => []),
-        categoryApi.list().catch(() => []),
-        roomApi.list().catch(() => []),
-      ]);
+      const prods = await productApi.list().catch(() => []);
       setProducts(prods);
-      setCategories(cats);
-      setAvailableRooms(rms);
     } catch (e: any) {
       toast.error(e.message || "Failed to load data");
     } finally {
@@ -119,13 +83,9 @@ export default function ProductsPage() {
   function openNew() {
     setForm({
       ...EMPTY_FORM,
-      category: categories[0]?.name || "",
-      rooms: availableRooms.slice(0, 2).map((r) => r.name || r.heading || ""),
       order: products.length,
     });
     setImageList([]);
-    setSizeInput("");
-    setOptionInput("");
     setShowDescPreview(false);
     setModalOpen(true);
   }
@@ -136,10 +96,6 @@ export default function ProductsPage() {
       _id: p._id,
       name: p.name || "",
       desc: p.desc || "",
-      category: p.category || (categories[0]?.name ?? ""),
-      rooms: p.rooms || [],
-      sizes: p.sizes || [],
-      options: p.options || [],
       order: p.order ?? 0,
       isActive: p.isActive ?? true,
     });
@@ -150,8 +106,6 @@ export default function ProductsPage() {
         imageId: img.imageId,
       }))
     );
-    setSizeInput("");
-    setOptionInput("");
     setShowDescPreview(false);
     setModalOpen(true);
   }
@@ -168,7 +122,6 @@ export default function ProductsPage() {
     }));
 
     setImageList((prev) => [...prev, ...newItems]);
-    // Reset file input so same file can be selected again if desired
     e.target.value = "";
   }
 
@@ -192,53 +145,6 @@ export default function ProductsPage() {
     });
   }
 
-  // Chip helpers for sizes
-  function addSize(val: string) {
-    const clean = val.trim();
-    if (!clean) return;
-    if (!form.sizes.includes(clean)) {
-      setForm((prev) => ({ ...prev, sizes: [...prev.sizes, clean] }));
-    }
-    setSizeInput("");
-  }
-
-  function removeSize(idx: number) {
-    setForm((prev) => ({
-      ...prev,
-      sizes: prev.sizes.filter((_, i) => i !== idx),
-    }));
-  }
-
-  // Chip helpers for options
-  function addOption(val: string) {
-    const clean = val.trim();
-    if (!clean) return;
-    if (!form.options.includes(clean)) {
-      setForm((prev) => ({ ...prev, options: [...prev.options, clean] }));
-    }
-    setOptionInput("");
-  }
-
-  function removeOption(idx: number) {
-    setForm((prev) => ({
-      ...prev,
-      options: prev.options.filter((_, i) => i !== idx),
-    }));
-  }
-
-  // Room multi-select toggle
-  function toggleRoom(roomName: string) {
-    setForm((prev) => {
-      const exists = prev.rooms.includes(roomName);
-      return {
-        ...prev,
-        rooms: exists
-          ? prev.rooms.filter((r) => r !== roomName)
-          : [...prev.rooms, roomName],
-      };
-    });
-  }
-
   // Save product (FormData)
   async function saveProduct() {
     if (!form.name.trim()) {
@@ -255,12 +161,7 @@ export default function ProductsPage() {
     try {
       const fd = new FormData();
       fd.append("name", form.name.trim());
-      // Raw description preserved with exact newlines
       fd.append("desc", form.desc);
-      fd.append("category", form.category.trim());
-      fd.append("rooms", JSON.stringify(form.rooms));
-      fd.append("sizes", JSON.stringify(form.sizes));
-      fd.append("options", JSON.stringify(form.options));
       fd.append("order", String(form.order));
       fd.append("isActive", String(form.isActive));
 
@@ -322,7 +223,7 @@ export default function ProductsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Products"
-        description="Manage handmade rug designs, imagery, category placements, and sizes."
+        description="Manage product designs, imagery, and descriptions."
         action={
           <Button onClick={openNew}>
             <Plus className="w-4 h-4 mr-1.5" />
@@ -336,7 +237,7 @@ export default function ProductsPage() {
           {loading ? (
             <div className="flex items-center justify-center py-20 text-slate-400 gap-2">
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span className="text-sm">Loading products catalog...</span>
+              <span className="text-sm">Loading products...</span>
             </div>
           ) : products.length === 0 ? (
             <div className="text-center py-20 space-y-3">
@@ -345,7 +246,7 @@ export default function ProductsPage() {
               </div>
               <p className="text-slate-600 font-medium">No products created yet</p>
               <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                Add your first rug product with multiple high-resolution photos, placement tags, and dimensions.
+                Add your first product with images, name, and description.
               </p>
               <Button onClick={openNew} size="sm">
                 <Plus className="w-3.5 h-3.5 mr-1" />
@@ -359,9 +260,7 @@ export default function ProductsPage() {
                   <tr>
                     <th className="py-3.5 px-4 w-14">Order</th>
                     <th className="py-3.5 px-4">Product</th>
-                    <th className="py-3.5 px-4">Category</th>
-                    <th className="py-3.5 px-4">Placement Rooms</th>
-                    <th className="py-3.5 px-4">Sizes</th>
+                    <th className="py-3.5 px-4">Description</th>
                     <th className="py-3.5 px-4 w-28">Status</th>
                     <th className="py-3.5 px-4 w-28 text-right">Actions</th>
                   </tr>
@@ -399,61 +298,17 @@ export default function ProductsPage() {
                               <div className="font-semibold text-slate-900 leading-snug">
                                 {p.name}
                               </div>
-                              <div className="text-[11px] text-slate-400 font-mono mt-0.5">
-                                /{p.slug}
+                              <div className="flex flex-wrap items-center gap-x-2 text-[11px] text-slate-400 font-mono mt-0.5">
+                                <span>slug: <span className="text-slate-600 font-medium">/{p.slug}</span></span>
+                                <span>•</span>
+                                <span>id: <span className="text-slate-600 font-medium">{p.id || p._id}</span></span>
                               </div>
                             </div>
                           </div>
                         </td>
 
-                        <td className="py-4 px-4">
-                          {p.category ? (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200/60">
-                              <Tag className="w-3 h-3 text-[#4A90C4]" />
-                              {p.category}
-                            </span>
-                          ) : (
-                            <span className="text-xs text-slate-400">—</span>
-                          )}
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <div className="flex flex-wrap gap-1 max-w-xs">
-                            {p.rooms && p.rooms.length > 0 ? (
-                              p.rooms.map((room) => (
-                                <span
-                                  key={room}
-                                  className="inline-block text-[11px] px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200/60 font-medium"
-                                >
-                                  {room}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="text-xs text-slate-400">—</span>
-                            )}
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-4">
-                          <div className="flex flex-wrap gap-1 max-w-[220px]">
-                            {p.sizes && p.sizes.length > 0 ? (
-                              p.sizes.slice(0, 3).map((s) => (
-                                <span
-                                  key={s}
-                                  className="inline-block text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-mono"
-                                >
-                                  {s}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="text-xs text-slate-400">—</span>
-                            )}
-                            {p.sizes && p.sizes.length > 3 && (
-                              <span className="text-[10px] text-slate-400 self-center">
-                                +{p.sizes.length - 3} more
-                              </span>
-                            )}
-                          </div>
+                        <td className="py-4 px-4 text-xs text-slate-500 max-w-md line-clamp-2">
+                          {p.desc || "—"}
                         </td>
 
                         <td className="py-4 px-4">
@@ -498,7 +353,7 @@ export default function ProductsPage() {
         </CardBody>
       </Card>
 
-      {/* ───────────────── Polished Product Modal with Framer Motion ───────────────── */}
+      {/* ───────────────── Product Modal ───────────────── */}
       <AnimatePresence>
         {modalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -518,7 +373,7 @@ export default function ProductsPage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 16 }}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="relative w-full max-w-3xl rounded-2xl bg-white shadow-2xl border border-slate-200/80 my-8 overflow-hidden flex flex-col max-h-[92vh] z-10"
+              className="relative w-full max-w-2xl rounded-2xl bg-white shadow-2xl border border-slate-200/80 my-8 overflow-hidden flex flex-col max-h-[92vh] z-10"
             >
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/70 shrink-0">
@@ -528,12 +383,12 @@ export default function ProductsPage() {
                   </div>
                   <div>
                     <h2 className="text-base font-bold text-slate-900">
-                      {form._id ? "Edit Product Design" : "New Rug Product"}
+                      {form._id ? "Edit Product" : "New Product"}
                     </h2>
                     <p className="text-[11px] text-slate-400">
                       {form._id
-                        ? "Update details, reorder images, or adjust sizing"
-                        : "Upload high-res imagery and customize spatial tags"}
+                        ? "Update product details and images"
+                        : "Add a new product with images"}
                     </p>
                   </div>
                 </div>
@@ -548,51 +403,27 @@ export default function ProductsPage() {
 
               {/* Scrollable Form Body */}
               <div className="overflow-y-auto flex-1 p-6 space-y-6">
-                {/* 1. Name & Category */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                      Product Name *
-                    </label>
-                    <Input
-                      value={form.name}
-                      onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                      }
-                      placeholder="e.g. Modern Geometric Silk Blend Rug"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                      Category *
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={form.category}
-                        onChange={(e) =>
-                          setForm({ ...form, category: e.target.value })
-                        }
-                        className="w-full rounded-xl bg-slate-50 border border-slate-200 px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:border-[#4A90C4] focus:bg-white transition-colors cursor-pointer"
-                      >
-                        <option value="">Select a Category</option>
-                        {categories.map((c) => (
-                          <option key={c._id} value={c.name}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
+                {/* Product Name */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Product Name *
+                  </label>
+                  <Input
+                    value={form.name}
+                    onChange={(e) =>
+                      setForm({ ...form, name: e.target.value })
+                    }
+                    placeholder="e.g. Bespoke Axminster Carpets & Rugs"
+                  />
                 </div>
 
-                {/* 2. Multi-Image Upload, Previews, Reorder, Remove */}
+                {/* Multi-Image Upload */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <label className="block text-xs font-semibold text-slate-700">
                       Product Images *{" "}
                       <span className="text-[11px] font-normal text-slate-400">
-                        (First image is the cover thumbnail. Use arrows to reorder)
+                        (First image is the cover. Use arrows to reorder)
                       </span>
                     </label>
                     <button
@@ -620,7 +451,7 @@ export default function ProductsPage() {
                     >
                       <Upload className="w-8 h-8 text-slate-300 mx-auto mb-2" />
                       <p className="text-xs font-semibold text-slate-700">
-                        Click to upload multiple product images
+                        Click to upload product images
                       </p>
                       <p className="text-[11px] text-slate-400 mt-1">
                         PNG, JPG, WEBP up to 10MB each
@@ -709,152 +540,11 @@ export default function ProductsPage() {
                   )}
                 </div>
 
-                {/* 3. Rooms Multi-Select */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Spatial Placement
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {availableRooms.map((room) => {
-                      const roomName = room.name || room.heading || "";
-                      const isSelected = form.rooms.includes(roomName);
-                      return (
-                        <button
-                          key={room._id}
-                          type="button"
-                          onClick={() => toggleRoom(roomName)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
-                            isSelected
-                              ? "bg-[#00355F] border-[#00355F] text-white shadow-xs"
-                              : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
-                          }`}
-                        >
-                          {isSelected && <Check className="w-3.5 h-3.5" />}
-                          <span>{roomName}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* 4. Sizes List (Chip Input with Presets) */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Available Sizes
-                  </label>
-
-                  <div className="flex items-center gap-2 mb-2">
-                    <Input
-                      value={sizeInput}
-                      onChange={(e) => setSizeInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === ",") {
-                          e.preventDefault();
-                          addSize(sizeInput);
-                        }
-                      }}
-                      placeholder="e.g. 8 x 10 ft (hit Enter)"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => addSize(sizeInput)}
-                      disabled={!sizeInput.trim()}
-                    >
-                      Add Size
-                    </Button>
-                  </div>
-
-                  {/* Size chips */}
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    {form.sizes.map((s, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 text-xs font-medium border border-slate-200"
-                      >
-                        <span>{s}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeSize(idx)}
-                          className="hover:text-rose-600 text-slate-400 cursor-pointer"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Quick Presets */}
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[11px] text-slate-400">Presets:</span>
-                    {SIZE_PRESETS.map((preset) => (
-                      <button
-                        key={preset}
-                        type="button"
-                        onClick={() => addSize(preset)}
-                        className="text-[11px] px-2 py-0.5 rounded-md bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/80 cursor-pointer transition-colors"
-                      >
-                        + {preset}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 5. Options List (Chip Input) */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Custom Options / Variants
-                  </label>
-
-                  <div className="flex items-center gap-2 mb-2">
-                    <Input
-                      value={optionInput}
-                      onChange={(e) => setOptionInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === ",") {
-                          e.preventDefault();
-                          addOption(optionInput);
-                        }
-                      }}
-                      placeholder="e.g. Wool & Silk Blend (hit Enter)"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => addOption(optionInput)}
-                      disabled={!optionInput.trim()}
-                    >
-                      Add Option
-                    </Button>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5">
-                    {form.options.map((opt, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 text-xs font-medium border border-amber-200/60"
-                      >
-                        <span>{opt}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeOption(idx)}
-                          className="hover:text-rose-600 text-amber-500 cursor-pointer"
-                        >
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 6. Description (Raw text with whitespace-pre-line) */}
+                {/* Description */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className="block text-xs font-semibold text-slate-700">
                       Product Description
-                      {/* <span className="text-[11px] font-normal text-slate-400 ml-1.5">
-                        (Stored raw; only the line breaks you type will be preserved)
-                      </span> */}
                     </label>
                     <button
                       type="button"
@@ -886,7 +576,7 @@ export default function ProductsPage() {
                   )}
                 </div>
 
-                {/* 7. Order & Visibility */}
+                {/* Order & Visibility */}
                 <div className="grid grid-cols-2 gap-4 pt-2">
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1.5">
@@ -972,7 +662,7 @@ export default function ProductsPage() {
                 Delete Product
               </h3>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Are you sure you want to delete this product? All high-resolution images stored in Cloudinary for this product will be permanently purged.
+                Are you sure you want to delete this product? All images stored in Cloudinary for this product will be permanently purged.
               </p>
               <div className="flex items-center justify-end gap-2 pt-2">
                 <Button variant="outline" onClick={() => setDeleteId(null)}>

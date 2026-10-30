@@ -12,16 +12,24 @@ const productSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, trim: true, index: true },
-    desc: { type: String, default: "" }, // raw text with newlines
-    category: { type: String, trim: true, default: "" },
-    rooms: [{ type: String, trim: true }],
-    sizes: [{ type: String, trim: true }],
-    options: [{ type: String, trim: true }],
+    desc: { type: String, default: "" },
+    description: { type: String, default: "" },
     images: { type: [productImageSchema], default: [] },
     order: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        ret.description = ret.description || ret.desc || "";
+        ret.desc = ret.description;
+        return ret;
+      },
+    },
+  }
 );
 
 // Helper function to build a slug

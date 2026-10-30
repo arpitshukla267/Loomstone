@@ -4,10 +4,9 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import heroSectionRoutes from "./routes/heroSectionRoutes.js";
-import roomRoutes from "./routes/roomRoutes.js";
-import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import contactInfoRoutes from "./routes/contactInfoRoutes.js";
+import whyLoomstoneRoutes from "./routes/whyLoomstoneRoutes.js";
 
 import { ensureDefaultAdmin } from "./controllers/authController.js";
 
@@ -48,10 +47,9 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/hero-section", heroSectionRoutes);
-app.use("/api/rooms", roomRoutes);
-app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/contact-info", contactInfoRoutes);
+app.use("/api/why-loomstone", whyLoomstoneRoutes);
 
 // Health check
 app.get("/", (req, res) => {

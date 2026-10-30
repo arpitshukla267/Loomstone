@@ -16,23 +16,6 @@ const removeImages = async (imageIds) => {
   }
 };
 
-// Robust helper to parse array fields from FormData
-const parseList = (val) => {
-  if (!val) return [];
-  if (Array.isArray(val)) return val.map((v) => String(v).trim()).filter(Boolean);
-  if (typeof val === "string") {
-    const trimmed = val.trim();
-    if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        if (Array.isArray(parsed)) return parsed.map((v) => String(v).trim()).filter(Boolean);
-      } catch {}
-    }
-    return trimmed.split(",").map((v) => v.trim()).filter(Boolean);
-  }
-  return [];
-};
-
 // Helper to parse existingImages JSON
 const parseExistingImages = (val) => {
   if (!val) return [];
@@ -64,19 +47,9 @@ const makeUniqueSlug = async (name, excludeId = null) => {
 };
 
 // GET /api/products
-// Public: only active. Admin: ?all=true returns all. Supports ?category=... & ?room=...
 export const getProducts = async (req, res) => {
   try {
     const filter = req.query.all === "true" ? {} : { isActive: true };
-
-    if (req.query.category && req.query.category !== "All") {
-      filter.category = { $regex: new RegExp(`^${req.query.category}$`, "i") };
-    }
-
-    if (req.query.room && req.query.room !== "All") {
-      filter.rooms = { $elemMatch: { $regex: new RegExp(`^${req.query.room}$`, "i") } };
-    }
-
     const products = await Product.find(filter).sort({ order: 1, createdAt: -1 });
     res.json(products);
   } catch (err) {
@@ -101,7 +74,6 @@ export const getProductBySlugOrId = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // If request is not admin all=true and product is inactive
     if (req.query.all !== "true" && !product.isActive) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -118,7 +90,7 @@ export const createProduct = async (req, res) => {
   const uploadedImageIds = uploadedFiles.map((f) => f.filename);
 
   try {
-    const { name, desc, category, order, isActive } = req.body;
+    const { name, desc, description, order, isActive } = req.body;
 
     if (!name?.trim()) {
       await removeImages(uploadedImageIds);
@@ -126,23 +98,19 @@ export const createProduct = async (req, res) => {
     }
 
     const slug = await makeUniqueSlug(name.trim());
-    const rooms = parseList(req.body.rooms);
-    const sizes = parseList(req.body.sizes);
-    const options = parseList(req.body.options);
 
     const images = uploadedFiles.map((f) => ({
       url: f.path,
       imageId: f.filename,
     }));
 
+    const descText = description !== undefined ? description : (desc !== undefined ? desc : "");
+
     const product = await Product.create({
       name: name.trim(),
       slug,
-      desc: desc !== undefined ? desc : "", // store raw text
-      category: category?.trim() || "",
-      rooms,
-      sizes,
-      options,
+      desc: descText,
+      description: descText,
       images,
       order: order !== undefined ? Number(order) : 0,
       isActive: isActive !== undefined ? Boolean(isActive === "true" || isActive === true) : true,
@@ -167,7 +135,7 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    const { name, desc, category, order, isActive } = req.body;
+    const { name, desc, description, order, isActive } = req.body;
 
     if (name !== undefined) {
       if (!name.trim()) {
@@ -180,24 +148,12 @@ export const updateProduct = async (req, res) => {
       }
     }
 
-    if (desc !== undefined) {
-      product.desc = desc; // preserve raw string with newlines
-    }
-
-    if (category !== undefined) {
-      product.category = category.trim();
-    }
-
-    if (req.body.rooms !== undefined) {
-      product.rooms = parseList(req.body.rooms);
-    }
-
-    if (req.body.sizes !== undefined) {
-      product.sizes = parseList(req.body.sizes);
-    }
-
-    if (req.body.options !== undefined) {
-      product.options = parseList(req.body.options);
+    if (description !== undefined) {
+      product.description = description;
+      product.desc = description;
+    } else if (desc !== undefined) {
+      product.desc = desc;
+      product.description = desc;
     }
 
     if (order !== undefined) {
@@ -209,12 +165,10 @@ export const updateProduct = async (req, res) => {
     }
 
     // Handle Images: Retained + New Uploads
-    // req.body.existingImages contains JSON array of remaining images
     let retainedImages = [];
     if (req.body.existingImages !== undefined) {
       retainedImages = parseExistingImages(req.body.existingImages);
 
-      // Find any previously stored images that were removed by admin
       const retainedImageIds = new Set(retainedImages.map((img) => img.imageId));
       const removedImages = product.images.filter((img) => !retainedImageIds.has(img.imageId));
       if (removedImages.length > 0) {
@@ -262,7 +216,6 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // Delete all associated images from Cloudinary
     if (Array.isArray(product.images) && product.images.length > 0) {
       await removeImages(product.images.map((img) => img.imageId));
     }

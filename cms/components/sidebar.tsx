@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   Clapperboard,
-  Layers,
   ChevronRight,
   KeyRound,
   X,
@@ -18,9 +17,9 @@ import {
   LogOut,
   Mail,
   Terminal,
-  Tag,
   Package,
   Phone,
+  Sparkles,
 } from "lucide-react";
 import Image from "next/image";
 import { authFetch, setToken, clearToken } from "@/lib/auth";
@@ -28,9 +27,8 @@ import { authFetch, setToken, clearToken } from "@/lib/auth";
 const NAV = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Hero Slides", href: "/dashboard/hero", icon: Clapperboard },
-  { label: "Rooms", href: "/dashboard/rooms", icon: Layers },
-  { label: "Categories", href: "/dashboard/categories", icon: Tag },
   { label: "Products", href: "/dashboard/products", icon: Package },
+  { label: "Why Loomstone", href: "/dashboard/why-loomstone", icon: Sparkles },
   { label: "Contact Info", href: "/dashboard/contactinfo", icon: Phone },
 ];
 
