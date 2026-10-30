@@ -49,7 +49,7 @@ export default function AboutPage() {
           {/* <VisionMissionSection /> */}
 
           {/* 4. Our Craft & Manufacturing Process */}
-          <ProcessSection />
+          {/* <ProcessSection /> */}
 
           {/* 5. Founder's Message */}
           <FounderSection />

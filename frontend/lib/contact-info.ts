@@ -8,11 +8,10 @@ export interface ContactInfo {
   address: string;
   instagram: string;
   facebook: string;
+  linkedin: string;
   x: string;
   responseTime: string;
-  responseNote: string;
   workshopLocation: string;
-  workshopNote: string;
 }
 
 // Backend band ho ya CMS mein abhi kuch save na hua ho to yahi dikhega
@@ -22,11 +21,10 @@ export const DEFAULT_CONTACT: ContactInfo = {
   address: "Gurgaon, India",
   instagram: "https://instagram.com",
   facebook: "https://facebook.com",
+  linkedin: "https://linkedin.com",
   x: "https://x.com",
   responseTime: "Within 12 hours",
-  responseNote: "Showroom visits by appointment",
-  workshopLocation: "Jaipur, India",
-  workshopNote: "Amber Road Craft Enclave",
+  workshopLocation: "Gurgaon, India",
 };
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;

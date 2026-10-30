@@ -39,22 +39,6 @@ export const INITIAL_PRODUCTS: Product[] = [
       "Engineered for demanding commercial and hospitality interiors, our resilient flooring pairs lasting durability with comfort underfoot and refined architectural finishes. A low-maintenance surface that performs beautifully in high-traffic spaces without compromising on design.",
     images: ["/final-website/lvt.jpg"],
   },
-  {
-    id: "prod-05",
-    slug: "tailored-flooring-solutions",
-    name: "Tailored Flooring Solutions",
-    description:
-      "Designed and specified to meet precise architectural requirements, our tailored flooring is shaped around your brief. From material and colour to pattern and finish, every detail is considered so the floor fits the space and the vision exactly.",
-    images: ["/products/handloom-rug.webp"],
-  },
-  {
-    id: "prod-06",
-    slug: "custom-flooring-solutions",
-    name: "Custom Flooring Solutions",
-    description:
-      "Beyond our product portfolio, Loomstone collaborates closely with architects, interior designers, hotel operators, and developers to create custom flooring solutions aligned with each project's design vision, operational requirements, and brand identity.",
-    images: ["/Room_ Curated_Rug.png"],
-  },
 ];
 
 // Helper functions for CMS & Store integration

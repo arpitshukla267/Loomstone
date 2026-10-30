@@ -312,7 +312,7 @@
 import { motion, MotionConfig } from "framer-motion";
 
 /* ------------------------------------------------------------------ */
-/* Collage layout (8 clients)                                          */
+/* Collage layout (8 clients) - DESKTOP / TABLET (md and up)           */
 /* Everything is positioned in `cqw` (1% of the collage width), so the */
 /* whole composition scales perfectly at any screen size.              */
 /* One card per column, 8 columns, arranged in a soft symmetrical arc. */
@@ -354,17 +354,24 @@ const TINTS = [
   "from-[#f3eddc] to-[#e8dbb7]",
 ];
 
+const CLIENT_COUNT = 8;
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 // Scroll-reveal settings shared by every animated block.
 const VIEWPORT = { once: true, amount: 0.15 } as const;
 
 /* ------------------------------------------------------------------ */
-/* FLOATING CONTROLS: change these 3 numbers to tune the animation.    */
+/* FLOATING CONTROLS (desktop): change these 3 numbers to tune it.     */
 /* ------------------------------------------------------------------ */
 const FLOAT_DURATION = 3.2; // seconds for one up-and-down cycle (smaller = faster)
 const FLOAT_AMPLITUDE = 10; // px, how far cards drift up (bigger = more movement)
 const FLOAT_COLUMN_DELAY = 0.35; // seconds between columns (0 = all columns in sync)
+
+/* ------------------------------------------------------------------ */
+/* MOBILE MARQUEE CONTROLS (below md)                                  */
+/* ------------------------------------------------------------------ */
+const MARQUEE_DURATION = 38; // seconds for one full loop (bigger = slower)
 
 /* ------------------------------------------------------------------ */
 /* Placeholder / image card                                            */
@@ -429,6 +436,113 @@ function CardFace({
 }
 
 /* ------------------------------------------------------------------ */
+/* Mobile marquee: two rows of cards drifting in opposite directions.  */
+/* Cards keep a fixed, readable size instead of shrinking with the     */
+/* screen, and nothing is cropped awkwardly.                           */
+/* ------------------------------------------------------------------ */
+
+const FADE_MASK =
+  "linear-gradient(to right, transparent 0, #000 9%, #000 91%, transparent 100%)";
+
+function MarqueeRow({
+  order,
+  images,
+  fit,
+  reverse = false,
+  duration,
+}: {
+  order: number[];
+  images: string[];
+  fit: "cover" | "contain";
+  reverse?: boolean;
+  duration: number;
+}) {
+  // Two identical copies; sliding by -50% loops seamlessly.
+  const copies = [0, 1];
+
+  return (
+    <div
+      className="overflow-hidden"
+      style={{ maskImage: FADE_MASK, WebkitMaskImage: FADE_MASK }}
+    >
+      <motion.div
+        className="flex w-max will-change-transform"
+        animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
+        transition={{
+          duration,
+          ease: "linear",
+          repeat: Infinity,
+        }}
+      >
+        {copies.map((copy) => (
+          <div
+            key={"copy-" + copy}
+            className="flex gap-3 pr-3 sm:gap-4 sm:pr-4"
+            aria-hidden={copy === 1 ? true : undefined}
+          >
+            {[...order, ...order].map((idx, k) => {
+              const label = "Client " + (idx + 1);
+              return (
+                <div
+                  key={"m-" + copy + "-" + k}
+                  className="aspect-[10.5/13] w-[104px] shrink-0 overflow-hidden rounded-xl shadow-[0_8px_20px_-12px_rgba(42,41,103,0.35)] ring-1 ring-white/70 min-[420px]:w-[116px] sm:w-[132px]"
+                >
+                  <CardFace
+                    tint={TINTS[idx % TINTS.length]}
+                    image={images[idx]}
+                    label={label}
+                    fit={fit}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+function MobileMarquee({
+  images,
+  fit,
+}: {
+  images: string[];
+  fit: "cover" | "contain";
+}) {
+  const all = Array.from({ length: CLIENT_COUNT }, (_, i) => i);
+  // Row 1 = first 4 logos, row 2 = last 4 logos, so the same logo
+  // never shows in both rows at the same moment.
+  const half = CLIENT_COUNT / 2;
+  const forward = all.slice(0, half);
+  const shifted = all.slice(half);
+
+  return (
+    <motion.div
+      className="flex flex-col gap-3 px-0 pb-8 pt-10 sm:gap-4 sm:pb-10 sm:pt-12 md:hidden"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={VIEWPORT}
+      transition={{ duration: 0.8, ease: EASE }}
+    >
+      <MarqueeRow
+        order={forward}
+        images={images}
+        fit={fit}
+        duration={MARQUEE_DURATION}
+      />
+      <MarqueeRow
+        order={shifted}
+        images={images}
+        fit={fit}
+        reverse
+        duration={MARQUEE_DURATION + 6}
+      />
+    </motion.div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Section                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -464,12 +578,10 @@ export function ClientsSection({
         className="relative overflow-hidden bg-[#FFFCF4] ash"
         id="testimonials"
       >
-        {/* ================= COLLAGE ================= */}
-        {/* On mobile the collage is drawn 2.2x wider and centered, so the
-            cards stay a readable size and the edges are cropped. */}
-        <div className="overflow-x-clip">
+        {/* ================= COLLAGE (md and up, unchanged) ================= */}
+        <div className="hidden overflow-x-clip md:block">
           <div
-            className="relative left-1/2 z-0 w-[220%] -translate-x-1/2 md:left-0 md:w-full md:translate-x-0"
+            className="relative z-0 w-full"
             style={{
               containerType: "inline-size",
               aspectRatio: COLLAGE_ASPECT,
@@ -541,9 +653,11 @@ export function ClientsSection({
         </div>
 
         {/* ================= TEXT ================= */}
-        <div className="relative z-10 -mt-[24vw] px-6 pb-[70px] md:-mt-[min(10vw,160px)] 3xl:-mt-[180px] 4xl:-mt-[220px] md:pb-[110px] 3xl:pb-[150px] 4xl:pb-[180px]">
+        {/* Mobile: normal flow below the marquee (no overlap).
+            md and up: same negative-margin overlap as before. */}
+        <div className="relative z-10 px-5 pb-0 pt-12 sm:px-6 sm:pt-14 md:-mt-[min(10vw,160px)] md:pb-[110px] md:pt-0 3xl:-mt-[180px] 3xl:pb-[150px] 4xl:-mt-[220px] 4xl:pb-[180px]">
           <div className="relative mx-auto flex max-w-[760px] flex-col items-center text-center">
-            <h2 className="font-manrope text-[34px] font-medium leading-[1.12] tracking-[-0.02em] text-navy sm:text-[44px] md:text-[clamp(40px,4.2vw,60px)] 3xl:text-[70px] 4xl:text-[80px]">
+            <h2 className="font-manrope text-[30px] font-medium leading-[1.15] tracking-[-0.02em] text-navy min-[420px]:text-[34px] sm:text-[44px] md:text-[clamp(40px,4.2vw,60px)] 3xl:text-[70px] 4xl:text-[80px]">
               <motion.span
                 className="block"
                 initial={{ opacity: 0, y: 28 }}
@@ -565,7 +679,7 @@ export function ClientsSection({
             </h2>
 
             <motion.p
-              className="mt-6 max-w-[460px] 3xl:max-w-[580px] 4xl:max-w-[650px] text-[16px] leading-[1.7] text-navy/80 sm:text-[17px] 3xl:text-[20px] 4xl:text-[22px]"
+              className="mt-4 max-w-[340px] text-[15px] leading-[1.65] text-navy/80 sm:mt-6 sm:max-w-[460px] sm:text-[17px] sm:leading-[1.7] 3xl:max-w-[580px] 3xl:text-[20px] 4xl:max-w-[650px] 4xl:text-[22px]"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VIEWPORT}
@@ -574,29 +688,60 @@ export function ClientsSection({
               {description}
             </motion.p>
 
-            <motion.a
-              href={ctaHref}
-              className="group mt-9 inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3.5 3xl:px-9 3xl:py-4 text-[14px] 3xl:text-[16px] 4xl:text-[18px] font-medium text-white shadow-[0_10px_24px_-10px_rgba(42,41,103,0.7)] transition-colors duration-300 hover:bg-gold hover:text-navy"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VIEWPORT}
-              transition={{ duration: 0.8, delay: 0.38, ease: EASE }}
-            >
-              {ctaLabel}
-              <svg
-                viewBox="0 0 16 16"
-                className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
+            {/* CTA for md and up (unchanged). On mobile it is shown below the carousel. */}
+            <div className="hidden md:contents">
+              <motion.a
+                href={ctaHref}
+                className="group mt-9 inline-flex items-center gap-2 rounded-full bg-navy px-7 py-3.5 3xl:px-9 3xl:py-4 text-[14px] 3xl:text-[16px] 4xl:text-[18px] font-medium text-white shadow-[0_10px_24px_-10px_rgba(42,41,103,0.7)] transition-colors duration-300 hover:bg-gold hover:text-navy"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={VIEWPORT}
+                transition={{ duration: 0.8, delay: 0.38, ease: EASE }}
               >
-                <path d="M3 8h10M9 4l4 4-4 4" />
-              </svg>
-            </motion.a>
+                {ctaLabel}
+                <svg
+                  viewBox="0 0 16 16"
+                  className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 8h10M9 4l4 4-4 4" />
+                </svg>
+              </motion.a>
+            </div>
           </div>
+        </div>
+
+        {/* ================= MOBILE MARQUEE (below md, after text) ================= */}
+        <MobileMarquee images={images} fit={imageFit} />
+        {/* ================= MOBILE CTA (below md, after carousel) ================= */}
+        <div className="flex justify-center px-5 pb-14 sm:pb-16 md:hidden">
+          <motion.a
+            href={ctaHref}
+            className="group inline-flex w-full max-w-[300px] items-center justify-center gap-2 rounded-full bg-navy px-7 py-3.5 text-[14px] font-medium text-white shadow-[0_10px_24px_-10px_rgba(42,41,103,0.7)] transition-colors duration-300 hover:bg-gold hover:text-navy sm:w-auto sm:max-w-none"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={VIEWPORT}
+            transition={{ duration: 0.8, ease: EASE }}
+          >
+            {ctaLabel}
+            <svg
+              viewBox="0 0 16 16"
+              className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 8h10M9 4l4 4-4 4" />
+            </svg>
+          </motion.a>
         </div>
       </section>
     </MotionConfig>

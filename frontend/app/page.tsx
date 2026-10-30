@@ -60,7 +60,7 @@ export default function Home() {
       <GlobalReachSection />
 
       <ClientsSection images={clientLogos} imageFit="contain" />
-      <RecentBlogsSection />
+      {/* <RecentBlogsSection /> */}
       {/* <FaqSection /> */}
       <FooterSection onShowToast={showToast} />
       <QuickActions />

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronUp,Linkedin } from "lucide-react";
+import { ChevronUp, Linkedin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -25,24 +25,6 @@ function InstagramIcon() {
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-    </svg>
-  );
-}
-//linked in
-function FacebookIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
     </svg>
   );
 }
@@ -118,9 +100,9 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
     },
     {
       key: "linkedin",
-      label: "Facebook",
-      href: info.facebook,
-      icon: <FacebookIcon />,
+      label: "LinkedIn",
+      href: info.linkedin,
+      icon: <Linkedin size={16} strokeWidth={2} aria-hidden="true" />,
     },
     { key: "x", label: "X", href: info.x, icon: <XIcon /> },
   ].filter((s) => s.href);
@@ -155,7 +137,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
 
         {/* Copyright + legal links */}
         <p
-          className={`mt-8 mb-0 text-[14px] md:text-[15px] 3xl:text-[17px] 4xl:text-[19px] text-white leading-[1.8] ${
+          className={`mt-8 mb-0 text-[12px] md:text-[13px] 3xl:text-[15px] 4xl:text-[17px] text-white leading-[1.8] ${
             reveal(socials.length + 1).className
           }`}
           style={reveal(socials.length + 1).style}
@@ -165,9 +147,9 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
             href="/terms"
             className="text-white no-underline hover:text-gold transition-colors"
           >
-            Terms of Service
+            Terms & Conditions
           </Link>{" "}
-          /{" "}
+          |{" "}
           <Link
             href="/privacy"
             className="text-white no-underline hover:text-gold transition-colors"

@@ -64,40 +64,53 @@ const FEATURES: Feature[] = [
 
 function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
   const Icon = feature.icon;
-  const row = Math.floor(index / 3);
-  const col = index % 3;
+  const row = Math.floor(index / 3); // desktop row
+  const col = index % 3; // desktop col
+  const mobOdd = index % 2 === 1; // mobile: right column
+  const mobRow2Plus = index >= 2; // mobile: not first row
+
   return (
     <motion.div
       className={
         "relative flex flex-col " +
-        // Spacing only (the lines are separate absolutely-positioned bars
-        // below, so they never touch each other).
-        (index > 0 ? "pt-8 " : "") +
-        (row === 0 ? "sm:pt-0 sm:pb-8 " : "") +
-        (col > 0 ? "sm:pl-6 lg:pl-8" : "sm:pr-2")
+        // mobile spacing (2 columns)
+        (mobRow2Plus ? "pt-6 " : "") +
+        (mobRow2Plus ? "pb-0 " : "pb-6 ") +
+        (mobOdd ? "pl-4 " : "pr-4 ") +
+        // desktop spacing (original 3 columns)
+        "sm:pb-0 " +
+        (row === 0 ? "sm:pt-0 sm:pb-8 " : "sm:pt-8 ") +
+        (col > 0 ? "sm:pl-6 sm:pr-0 lg:pl-8" : "sm:pl-0 sm:pr-2")
       }
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={VIEWPORT}
       transition={{ duration: 0.7, delay: 0.1 + index * 0.08, ease: EASE }}
     >
-      {/* Horizontal line (3 separate lines on desktop: 1-4, 2-5, 3-6).
-          On mobile it separates the stacked points. */}
-      {index > 0 && (
+      {/* ---------- MOBILE lines (2 columns) ---------- */}
+      {mobRow2Plus && (
         <span
           aria-hidden="true"
-          className={
-            "absolute top-0 left-0 right-0 h-px bg-[#eeeae4] " +
-            (row === 0
-              ? "sm:hidden"
-              : col === 0
-                ? "sm:left-0 sm:right-10"
-                : "sm:left-10 sm:right-10")
-          }
+          className="absolute left-0 right-0 top-0 h-px bg-[#eeeae4] sm:hidden"
+        />
+      )}
+      {mobOdd && (
+        <span
+          aria-hidden="true"
+          className="absolute bottom-3 left-0 top-3 w-px bg-[#eeeae4] sm:hidden"
         />
       )}
 
-      {/* Vertical line (4 separate lines on desktop: 1|2, 2|3, 4|5, 5|6) */}
+      {/* ---------- DESKTOP lines (original) ---------- */}
+      {index > 0 && row > 0 && (
+        <span
+          aria-hidden="true"
+          className={
+            "absolute left-0 right-0 top-0 hidden h-px bg-[#eeeae4] sm:block " +
+            (col === 0 ? "sm:left-0 sm:right-10" : "sm:left-10 sm:right-10")
+          }
+        />
+      )}
       {col > 0 && (
         <span
           aria-hidden="true"
@@ -106,19 +119,19 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
       )}
 
       <span
-        className="flex h-[52px] w-[52px] items-center justify-center rounded-full border bg-white/40"
+        className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full border bg-white/40 sm:h-[52px] sm:w-[52px]"
         style={{ borderColor: ICON_RING }}
       >
-        <Icon size={22} strokeWidth={1.6} style={{ color: ICON }} />
+        <Icon size={20} strokeWidth={1.6} style={{ color: ICON }} />
       </span>
 
       <h3
-        className="mb-0 mt-4 max-w-[170px] 3xl:max-w-[220px] text-[15px] 3xl:text-[17px] 4xl:text-[19px] font-semibold leading-[1.25]"
+        className="mb-0 mt-3 text-[14px] font-semibold leading-[1.25] sm:mt-4 sm:max-w-[170px] sm:text-[15px] 3xl:max-w-[220px] 3xl:text-[17px] 4xl:text-[19px]"
         style={{ color: HEADING }}
       >
         {feature.title}
       </h3>
-      <p className="mb-0 mt-3 max-w-[240px] 3xl:max-w-[300px] text-[12.5px] 3xl:text-[14px] 4xl:text-[15px] leading-[1.5] text-[#808486]">
+      <p className="mb-0 mt-2 text-[12px] leading-[1.5] text-[#808486] sm:mt-3 sm:max-w-[240px] sm:text-[12.5px] 3xl:max-w-[300px] 3xl:text-[14px] 4xl:text-[15px]">
         {feature.text}
       </p>
     </motion.div>
@@ -138,12 +151,12 @@ export function WhyLoomstoneSection({
   return (
     <MotionConfig reducedMotion="user">
       {/* 30 / 70 split. Image is full-bleed: touches the left edge of the screen. */}
-      <section className="relative left-1/2 grid w-screen -translate-x-1/2 grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
+      <section className="relative left-1/2 grid w-screen max-w-[100vw] -translate-x-1/2 grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
         {" "}
         {/* ================= IMAGE ================= */}
         <div className="relative h-[280px] sm:h-[380px] lg:h-auto lg:min-h-[640px] 3xl:min-h-[780px] 4xl:min-h-[900px]">
           <Image
-            src="/"
+            src={image}
             alt={imageAlt}
             fill
             sizes="(min-width: 1024px) 30vw, 100vw"
@@ -152,10 +165,10 @@ export function WhyLoomstoneSection({
           />
         </div>
         {/* ================= CONTENT ================= */}
-        <div className="flex items-center px-6 py-12 sm:px-10 md:px-14 lg:px-[6%] lg:py-20 xl:px-[7%] 3xl:px-[8%] 3xl:py-28 4xl:px-[10%] 4xl:py-32">
-          <div className="mx-auto w-full max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
+        <div className="flex items-center px-4 py-12 sm:px-10 md:px-14 lg:px-[6%] lg:py-20 xl:px-[7%] 3xl:px-[8%] 3xl:py-28 4xl:px-[10%] 4xl:py-32">
+          <div className="mx-auto w-full max-w-[100vw] sm:max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
             <motion.h2
-              className="m-0 font-manrope text-[38px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-[46px] lg:text-[clamp(44px,3.9vw,58px)] 3xl:text-[64px] 4xl:text-[76px]"
+              className="m-0 text-center font-manrope text-[28px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-left sm:text-[46px] lg:text-[clamp(44px,3.9vw,58px)] 3xl:text-[64px] 4xl:text-[76px]"
               style={{ color: HEADING }}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -166,7 +179,7 @@ export function WhyLoomstoneSection({
             </motion.h2>
 
             <motion.p
-              className="m-0 mt-2 font-manrope text-[20px] font-medium leading-[1.25] tracking-[-0.005em] sm:text-[26px] lg:text-[clamp(24px,2.3vw,34px)] 3xl:text-[38px] 4xl:text-[44px]"
+              className="m-0 mt-2 text-center font-manrope text-[16px] font-medium leading-[1.25] tracking-[-0.005em] sm:text-left sm:text-[26px] lg:text-[clamp(24px,2.3vw,34px)] 3xl:text-[38px] 4xl:text-[44px]"
               style={{ color: ACCENT }}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -176,8 +189,8 @@ export function WhyLoomstoneSection({
               Thoughtful Design. Bespoke Craftmenship. Seemless Execution.
             </motion.p>
 
-            {/* Feature grid: 3 columns x 2 rows */}
-            <div className="mt-10 3xl:mt-14 4xl:mt-16 grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-0">
+            {/* Feature grid: 2 columns on mobile, 3 columns x 2 rows on sm+ */}
+            <div className="mt-10 grid grid-cols-2 gap-0 sm:grid-cols-3 3xl:mt-14 4xl:mt-16">
               {FEATURES.map((feature, i) => (
                 <FeatureItem key={feature.title} feature={feature} index={i} />
               ))}
