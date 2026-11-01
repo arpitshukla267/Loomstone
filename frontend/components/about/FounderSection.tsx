@@ -28,26 +28,26 @@ export default function FounderSection() {
       {/* navy slanted panel behind the quote (desktop) */}
       <div
         aria-hidden
-        className="absolute inset-y-10 left-[33.5%] right-0 hidden bg-[#2a2a6b] lg:block 3xl:inset-y-14 3xl:left-[calc(50%-520px)] 4xl:inset-y-16 4xl:left-[calc(50%-640px)] [clip-path:polygon(0_12%,100%_0,100%_100%,0_88%)]"
+        className="absolute inset-y-10 left-[30.5%] right-0 hidden bg-[#2a2a6b] lg:block 3xl:inset-y-14 3xl:left-[calc(50%-520px)] 4xl:inset-y-16 4xl:left-[calc(50%-640px)] [clip-path:polygon(0_12%,100%_0,100%_100%,0_88%)]"
       />
       {/* small navy strip peeking on the left (desktop) */}
       <div
         aria-hidden
-        className="absolute bottom-[20%] left-0 top-[22%] 2xl:bottom-[18%] 2xl:top-[18%] hidden w-24 bg-[#2a2a6b] lg:block 3xl:w-[max(6rem,calc(50%-640px))] 4xl:w-[max(6rem,calc(50%-780px))]"
+        className="absolute bottom-[20%] left-0 top-[20%] 2xl:bottom-[18%] 2xl:top-[18%] hidden w-44 bg-[#2a2a6b] lg:block 3xl:w-[max(8rem,calc(50%-640px))] 4xl:w-[max(8rem,calc(50%-780px))]"
       />
 
-      <div className="relative mx-auto grid max-w-[90vw] items-center gap-0 sm:max-w-[85vw] lg:max-w-[1100px] 3xl:max-w-[1450px] 4xl:max-w-[1700px] lg:grid-cols-[400px_1fr] 3xl:grid-cols-[480px_1fr] 4xl:grid-cols-[540px_1fr] lg:gap-10 3xl:gap-16">
+      <div className="relative mx-auto grid max-w-[90vw] items-center gap-0 sm:max-w-[85vw] lg:max-w-[1100px] 3xl:max-w-[1450px] 4xl:max-w-[1700px] lg:grid-cols-[360px_1fr] 3xl:grid-cols-[440px_1fr] 4xl:grid-cols-[500px_1fr] lg:gap-10 3xl:gap-16">
         {/* Founder photo card */}
         <Reveal
           y={32}
-          className="relative z-10 mx-auto w-full max-w-[320px] sm:max-w-[380px] lg:mx-0 lg:max-w-none lg:-ml-[20px] xl:-ml-[107px] 3xl:-ml-[140px] 4xl:-ml-[160px]"
+          className="relative z-10 mx-auto w-full max-w-[320px] sm:max-w-[380px] lg:mx-0 lg:max-w-none lg:-ml-[0px] min-[1500px]:-ml-[77px] 3xl:-ml-[140px] 4xl:-ml-[160px]"
         >
-          <div className="relative h-[320px] w-full overflow-hidden rounded-[28px] border-[5px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] sm:h-[380px] sm:rounded-[36px] sm:border-[6px] md:h-[460px] 3xl:h-[540px] 4xl:h-[620px]">
+          <div className="relative h-[320px] w-full overflow-hidden rounded-[28px] border-[5px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] sm:h-[380px] sm:rounded-[36px] sm:border-[6px] md:h-[360px] xl:h-[400px] 3xl:h-[540px] 4xl:h-[620px]">
             <FadeImage
               src={founderImage}
               alt={`${OWNER}, founder of ${COMPANY}`}
               fill
-              sizes="(min-width: 1024px) 400px, 380px"
+              sizes="(min-width: 1024px) 360px, 380px"
               className="object-cover object-top"
             />
           </div>

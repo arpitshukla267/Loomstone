@@ -107,8 +107,8 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/handmade.webp",
     heading: (
       <>
-        Woven Comfort. <em className="text-gold not-italic">Refined</em>{" "}
-        Interiors.
+        Elegance Underfoot.{""}{" "}
+        <em className="text-gold not-italic"> Comfort Within</em>
       </>
     ),
     description:
@@ -129,8 +129,8 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/resilient-flooring.png",
     heading: (
       <>
-        Built to Last. <em className="text-gold not-italic">Designed</em> to
-        Impress.
+        Unmatched Durability.{" "}
+        <em className="text-gold not-italic"> Unrivaled Beauty</em>
       </>
     ),
     description:

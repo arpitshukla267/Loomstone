@@ -10,7 +10,7 @@ import ProcessSection from "@/components/about/process-section";
 import FounderSection from "@/components/about/FounderSection";
 import CoreValuesSection from "@/components/about/Corevaluessection";
 
-const heroImage = "/about.png";
+const heroImage = "/about.jpeg";
 
 export default function AboutPage() {
   return (
