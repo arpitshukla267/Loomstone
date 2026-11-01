@@ -6,7 +6,7 @@ const COMPANY = "Loomstone";
 const OWNER = "Pawan Yadav";
 const founderImage = "/founder.jpeg";
 
-const QUOTE = `At Loomstone, our vision is to bring together design excellence, skilled craftsmanship, and enduring quality to create flooring solutions that inspire, perform, and stand the test of time. Every project is an opportunity to transform a space with purpose, precision, and a lasting sense of distinction.`;
+const QUOTE = `We believe exceptional hospitality is shaped by thoughtful details. Flooring is more than a surface; it is a defining design element that enhances environments, enriches guest experiences, and contributes to the enduring identity of a space.`;
 
 const dots =
   "bg-[radial-gradient(#e8a21c_1.4px,transparent_1.4px)] [background-size:14px_14px]";

@@ -35,22 +35,27 @@ export default function OurStorySection() {
         <Reveal delay={150}>
           <div className="max-w-full space-y-4 text-xs leading-[1.8] text-slate-600 md:text-base lg:max-w-[40vw] 3xl:text-lg 4xl:text-xl">
             <p>
-              At Loomstone, we believe exceptional spaces begin with thoughtful
-              design and are defined by the details beneath our feet. As a
-              provider of bespoke carpets, handcrafted rugs and premium flooring
-              solutions, we bring together design creativity, material expertise
-              and precision to help transform architectural visions into
-              remarkable interiors.
+              Loomstone is a design-led flooring solutions company specializing
+              in bespoke carpets, rugs, and custom flooring for hospitality,
+              commercial, and luxury residential projects. Rooted in
+              craftsmanship and driven by innovation, we combine India's rich
+              textile heritage, contemporary design sensibilities, advanced
+              manufacturing, and technical expertise to create distinctive
+              flooring solutions that elevate interiors and reflect the unique
+              character of every space.
             </p>
             <p>
-              Rooted in the art of craftsmanship and guided by contemporary
-              design, we collaborate with architects, interior designers,
-              hospitality brands and commercial developers to create flooring
-              solutions tailored to each project's aesthetic, functional and
-              performance requirements. From luxury hotels and distinguished
-              commercial spaces to refined private residences, every solution is
-              developed with careful attention to detail, enduring quality and
-              the character of the space it serves.
+              Partnering closely with architects, interior designers,
+              developers, and project teams, we translate design vision into
+              thoughtfully crafted flooring solutions that balance aesthetics,
+              functionality, and long-term performance.
+            </p>
+            <p>
+              <span className="">
+                At Loomstone, we believe flooring is more than a surface. It is
+                a fundamental design element that shapes experiences, enhances
+                environments, and leaves a lasting impression.
+              </span>
             </p>
             <p>
               <span className="font-semibold">
@@ -70,7 +75,7 @@ export default function OurStorySection() {
           </Link>
         </Reveal>
 
-        <Reveal delay={300}>
+        {/* <Reveal delay={300}>
           <div className="mt-10 max-w-full border-t border-slate-200 pt-6 lg:max-w-[40vw]">
             <div className="flex items-start gap-4">
               <span
@@ -86,7 +91,7 @@ export default function OurStorySection() {
               </p>
             </div>
           </div>
-        </Reveal>
+        </Reveal> */}
       </div>
     </section>
   );
