@@ -11,7 +11,9 @@ export interface ContactInfo {
   linkedin: string;
   x: string;
   responseTime: string;
+  responseNote: string;
   workshopLocation: string;
+  workshopNote: string;
 }
 
 // Backend band ho ya CMS mein abhi kuch save na hua ho to yahi dikhega
@@ -24,7 +26,9 @@ export const DEFAULT_CONTACT: ContactInfo = {
   linkedin: "https://linkedin.com",
   x: "https://x.com",
   responseTime: "Within 12 hours",
+  responseNote: "",
   workshopLocation: "Gurgaon, India",
+  workshopNote: "",
 };
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
