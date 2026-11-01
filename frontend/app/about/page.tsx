@@ -10,12 +10,13 @@ import ProcessSection from "@/components/about/process-section";
 import FounderSection from "@/components/about/FounderSection";
 import CoreValuesSection from "@/components/about/Corevaluessection";
 
-const heroImage = "/about.jpeg";
+const heroImage = "/about.webp";
 
 export default function AboutPage() {
   return (
     <PageFrame active="About">
-      <div className="font-poppins min-h-screen overflow-x-hidden bg-[#FFFCF4] text-[15px] leading-relaxed text-slate-600 pt-20">
+      <div className="font-poppins min-h-screen overflow-x-hidden bg-[#FFFCF4] text-[15px] leading-relaxed text-slate-600">
+        {" "}
         <main>
           {/* 1. About Hero */}
           <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px] 3xl:min-h-[640px] 4xl:min-h-[720px]">
@@ -30,7 +31,7 @@ export default function AboutPage() {
 
             <div className="absolute inset-0 bg-black/50" />
 
-            <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 text-center">
+            <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 translate-y-1/4 text-center">
               <Reveal delay={100}>
                 <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl 3xl:text-7xl 4xl:text-8xl">
                   The Art of{" "}

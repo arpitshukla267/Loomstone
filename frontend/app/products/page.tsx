@@ -1,19 +1,19 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { MessageSquare } from "lucide-react";
 import { PageFrame } from "@/components/site/site-chrome";
 import { Reveal } from "@/components/ui/reveal";
 import { ProductImageCarousel } from "@/components/ui/product-image-carousel";
-import { InquiryModal } from "@/components/sections/inquiry-modal";
 import { getAllProducts, type Product } from "@/data/products";
 
 const heroImage = "/about.webp";
 
 /* ---------- Products Content Component ---------- */
 function ProductsContent() {
+  const router = useRouter();
   const [productsList, setProductsList] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -28,13 +28,8 @@ function ProductsContent() {
     };
   }, []);
 
-  // Inquiry Modal state for quick product enquiries
-  const [inquiryModalOpen, setInquiryModalOpen] = useState(false);
-  const [enquiryProduct, setEnquiryProduct] = useState<Product | null>(null);
-
-  const openInquiryForProduct = (product: Product) => {
-    setEnquiryProduct(product);
-    setInquiryModalOpen(true);
+  const handleEnquire = () => {
+    router.push("/contact");
   };
 
   return (
@@ -55,7 +50,10 @@ function ProductsContent() {
         <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 translate-y-1/4 text-center">
           <Reveal delay={100}>
             <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl 3xl:text-7xl 4xl:text-8xl">
-              Flooring Solutions
+              Our{" "}
+              <span className="block font-semibold text-[#E8A21C]">
+                Products
+              </span>
             </h1>
           </Reveal>
         </div>
@@ -81,9 +79,9 @@ function ProductsContent() {
 
                   {/* Card Info */}
                   <div className="flex flex-1 flex-col p-4 sm:p-5">
-                      <h3 className="font-manrope text-[18px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[20px] 3xl:text-[23px]">
-                        {product.name}
-                      </h3>
+                    <h3 className="font-manrope text-[18px] font-normal leading-snug text-navy transition-colors group-hover:text-gold sm:text-[20px] 3xl:text-[23px]">
+                      {product.name}
+                    </h3>
 
                     <p className="mt-2 line-clamp-4 text-[12px] 3xl:text-[14px] leading-relaxed text-cool">
                       {product.description}
@@ -93,7 +91,7 @@ function ProductsContent() {
                     <div className="mt-auto pt-4">
                       <button
                         type="button"
-                        onClick={() => openInquiryForProduct(product)}
+                        onClick={handleEnquire}
                         className="inline-flex min-h-[38px] 3xl:min-h-[44px] w-full items-center justify-center gap-1 rounded-[2px] border border-navy bg-navy px-2 text-[10px] 3xl:text-xs font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:border-gold hover:bg-gold hover:text-navy"
                       >
                         <MessageSquare size={13} />
@@ -107,16 +105,6 @@ function ProductsContent() {
           </div>
         </div>
       </section>
-
-      {/* Inquiry Modal */}
-      <InquiryModal
-        isOpen={inquiryModalOpen}
-        onClose={() => {
-          setInquiryModalOpen(false);
-          setEnquiryProduct(null);
-        }}
-        productName={enquiryProduct?.name}
-      />
     </PageFrame>
   );
 }
