@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { siteImages } from "@/components/site/site-images";
+import { ArrowUpRight } from "lucide-react";
 
 interface MetricProps {
   number: string;
@@ -33,12 +32,16 @@ export interface HeroSlide {
   image: string;
   heading: React.ReactNode;
   description: string;
-  primaryText: string;
+  primaryText?: string;
   secondaryText?: string;
 }
 
 export interface HeroSectionProps {
   onOpenInquiry?: () => void;
+  /**
+   * @deprecated Ab use nahi hota. Slides ki images array se hi aati hain.
+   * Sirf isliye rakha hai taaki parent me `heroImage={...}` pass ho to TS error na aaye.
+   */
   heroImage?: string;
   slides?: HeroSlide[];
 }
@@ -49,7 +52,7 @@ interface HeroSectionApiItem {
   image: string;
   heading: string;
   description: string;
-  primaryText: string;
+  primaryText?: string;
   secondaryText?: string;
 }
 
@@ -97,24 +100,22 @@ async function fetchHeroSlides(signal: AbortSignal): Promise<HeroSlide[]> {
   }));
 }
 
-/* ---------- Fallback (hardcoded) slides ---------- */
+/* ---------- Fallback (hardcoded) slides: buttons nahi ---------- */
 
-const defaultSlides = (heroImage: string): HeroSlide[] => [
-  // {
-  //   image: "hero/carpet-tiles.png",
-  //   heading: (
-  //     <>
-  //       Designed for <em className="text-gold not-italic">Spaces</em> That Move
-  //       You.
-  //     </>
-  //   ),
-  //   description:
-  //     "Redefine modern interiors with precision-crafted carpet tiles that bring together distinctive textures, contemporary patterns, and lasting performance.",
-  //   primaryText: "Discover Our Rugs",
-  //   secondaryText: "Create Your Custom Rug",
-  // },
+const defaultSlides: HeroSlide[] = [
   {
-    image: "hero/axminster.png",
+    image: "/hero-backup/textile-flooring-2.png",
+    heading: (
+      <>
+        Woven Comfort. <em className="text-gold not-italic">Refined</em>{" "}
+        Interiors.
+      </>
+    ),
+    description:
+      "Premium textile flooring designed for comfort, durability, and elegant spaces.",
+  },
+  {
+    image: "/hero-backup/axminster.png",
     heading: (
       <>
         Timeless Patterns. <em className="text-gold not-italic">Exceptional</em>{" "}
@@ -122,67 +123,51 @@ const defaultSlides = (heroImage: string): HeroSlide[] => [
       </>
     ),
     description:
-      "Discover premium Axminster carpets and rugs featuring intricate woven patterns, rich textures, and exceptional durability—crafted to bring timeless elegance to luxury homes, hotels, and commercial spaces.",
-    primaryText: "Discover Our Rugs",
-    secondaryText: "Create Your Custom Rug",
+      "Axminster carpets with intricate woven designs and lasting durability.",
   },
   {
-    image: "hero/hero-6.jpeg",
+    image: "/hero-backup/resilient-flooring.png",
+    heading: (
+      <>
+        Built to Last. <em className="text-gold not-italic">Designed</em> to
+        Impress.
+      </>
+    ),
+    description:
+      "Resilient flooring made for high-traffic spaces without compromising on style.",
+  },
+  {
+    image: "/hero-backup/resilient-flooring-2.png",
+    heading: (
+      <>
+        Strength Meets <em className="text-gold not-italic">Precision.</em>
+      </>
+    ),
+    description:
+      "Smart flooring solutions that combine performance, comfort, and clean design.",
+  },
+  {
+    image: "/hero/hero-6.jpeg",
     heading: (
       <>
         Made by hand. <em className="text-gold not-italic">Made for you.</em>
       </>
     ),
     description:
-      "From carefully chosen materials to refined finishes, find a rug that feels uniquely yours.",
-    primaryText: "View Collections",
-    secondaryText: "Design Your Own Rug",
+      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours.",
   },
-  // {
-  //   image: "hero/hero-1.png",
-  //   heading: (
-  //     <>
-  //       Handmade rugs for <em className="text-gold not-italic">beautiful</em>{" "}
-  //       spaces.
-  //     </>
-  //   ),
-  //   description:
-  //     "Carefully woven by hand using natural wool and silk. Designed to fit your home, hotel, or office perfectly.",
-  //   primaryText: "Explore Collections",
-  //   secondaryText: "Inquire About a Custom Rug",
-  // },
-  // {
-  //   image: "hero/handloom-rugs.png",
-  //   heading: (
-  //     <>
-  //       Handwoven Heritage, <br />
-  //       <em className="text-gold not-italic">Naturally Refined</em>
-  //     </>
-  //   ),
-  //   description:
-  //     "Discover handloom rugs crafted with traditional weaving techniques, natural textures, and timeless patterns—bringing warmth, character, and understated elegance to every space.",
-  //   primaryText: "View Collections",
-  //   secondaryText: "Design Your Own Rug",
-  // },
 ];
 
-const arrowClassName =
-  "absolute z-20 flex h-10 w-10 md:h-12 md:w-12 3xl:h-14 3xl:w-14 items-center justify-center rounded-full border-0 bg-navy/25 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-navy/45 cursor-pointer bottom-3 md:bottom-auto md:top-1/2 md:-translate-y-1/2";
-
-export function HeroSection({
-  onOpenInquiry,
-  heroImage = siteImages.hero,
-  slides,
-}: HeroSectionProps) {
+export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
   const hasPropSlides = Boolean(slides?.length);
 
   // null = backend se abhi kuch nahi aaya (ya backend down hai)
   const [remoteSlides, setRemoteSlides] = useState<HeroSlide[] | null>(null);
 
   // Priority: props > backend > hardcoded
-  const heroSlides = hasPropSlides
+  const heroSlides: HeroSlide[] = hasPropSlides
     ? slides!
-    : (remoteSlides ?? defaultSlides(heroImage));
+    : (remoteSlides ?? defaultSlides);
 
   const [activeSlide, setActiveSlide] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
@@ -236,11 +221,10 @@ export function HeroSection({
     setProgressKey((current) => current + 1);
   };
 
-  const goPrev = () =>
-    goToSlide((activeSlide - 1 + heroSlides.length) % heroSlides.length);
-  const goNext = () => goToSlide((activeSlide + 1) % heroSlides.length);
-
   const currentSlide = heroSlides[activeSlide] ?? heroSlides[0];
+  const hasButtons = Boolean(
+    currentSlide.primaryText || currentSlide.secondaryText,
+  );
 
   return (
     <motion.section
@@ -249,7 +233,7 @@ export function HeroSection({
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative min-h-screen flex items-center justify-start overflow-hidden pl-0 pr-6 md:pl-[max(5%,72px)] md:pr-[5%] pt-24 pb-28 md:pt-36 md:pb-28 3xl:pl-[max(7%,120px)] 3xl:pr-[7%] 3xl:pt-44 3xl:pb-36 4xl:pl-[max(9%,160px)] 4xl:pr-[9%]"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-[5%] pt-24 pb-28 md:pt-36 md:pb-28 3xl:px-[7%] 3xl:pt-44 3xl:pb-36 4xl:px-[9%]"
     >
       {/* Smooth Background Image Slider */}
       <AnimatePresence initial={false}>
@@ -268,16 +252,14 @@ export function HeroSection({
         />
       </AnimatePresence>
 
-      {/* Left Side Overlay: text ke peeche dark, right ki taraf fade */}
-      {/*
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.42)_45%,rgba(0,0,0,0)_80%)]" />
-      */}
+      {/* Black Overlay: text readable rakhne ke liye (opacity chahiye to bg-black/50 badlo) */}
+      <div className="pointer-events-none absolute inset-0 z-[5] bg-black/25" />
 
-      {/* Left-aligned Animated Content */}
+      {/* Center-aligned Animated Content */}
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={activeSlide}
-          className="relative z-10 w-full max-w-[1400px] 3xl:max-w-[1800px] 4xl:max-w-[2200px] mx-auto pl-6 3xl:pl-10 flex flex-col items-start text-left -mt-6"
+          className="relative z-10 w-full max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px] mx-auto flex flex-col items-center text-center"
           initial="hidden"
           animate="visible"
           exit="exit"
@@ -305,7 +287,7 @@ export function HeroSection({
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[700px] 3xl:max-w-[900px] my-4 md:my-5 text-navy font-manrope font-light text-4xl 3xl:text-5xl 4xl:text-6xl leading-[1.2] tracking-[-0.02em]"
+            className="max-w-[800px] 3xl:max-w-[1000px] my-4 md:my-5 text-white font-manrope font-light text-4xl md:text-5xl 3xl:text-6xl 4xl:text-7xl leading-[1.2] tracking-[-0.02em]"
           >
             {currentSlide.heading}
           </motion.h1>
@@ -321,66 +303,52 @@ export function HeroSection({
               duration: 0.65,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[480px] 3xl:max-w-[580px] m-0 text-navy/80 font-light text-sm 3xl:text-base 4xl:text-lg leading-[1.7]"
+            style={{
+              color: "#ffffff",
+              textShadow: "0 1px 12px rgba(0,0,0,0.45)",
+            }}
+            className="max-w-[560px] 3xl:max-w-[680px] mx-auto font-light text-sm md:text-base 3xl:text-lg 4xl:text-xl leading-[1.7]"
           >
             {currentSlide.description}
           </motion.p>
 
-          {/* Buttons */}
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0 },
-              exit: { opacity: 0, y: -6 },
-            }}
-            transition={{
-              duration: 0.6,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="flex flex-wrap justify-start items-center gap-3 mt-6 md:mt-[26px] 3xl:mt-9 3xl:gap-4"
-          >
-            <a
-              href="#products"
-              className="inline-flex items-center justify-center min-h-[44px] 3xl:min-h-[52px] px-5 3xl:px-7 text-white bg-navy text-[10px] 3xl:text-xs 4xl:text-sm font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:-translate-y-0.5 cursor-pointer rounded-[8px]"
+          {/* Buttons (optional: sirf tab dikhenge jab text ho) */}
+          {hasButtons && (
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+                exit: { opacity: 0, y: -6 },
+              }}
+              transition={{
+                duration: 0.6,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="flex flex-wrap justify-center items-center gap-3 mt-6 md:mt-[26px] 3xl:mt-9 3xl:gap-4"
             >
-              {currentSlide.primaryText}
-            </a>
+              {currentSlide.primaryText && (
+                <a
+                  href="#products"
+                  className="inline-flex items-center justify-center min-h-[44px] 3xl:min-h-[52px] px-5 3xl:px-7 text-navy bg-white text-[10px] 3xl:text-xs 4xl:text-sm font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:-translate-y-0.5 cursor-pointer rounded-[8px]"
+                >
+                  {currentSlide.primaryText}
+                </a>
+              )}
 
-            {currentSlide.secondaryText && (
-              <button
-                type="button"
-                onClick={onOpenInquiry}
-                className="inline-flex items-center justify-center gap-2 min-h-[44px] 3xl:min-h-[52px] px-5 3xl:px-7 text-navy bg-white/10 backdrop-blur-sm border border-navy/40 text-[10px] 3xl:text-xs 4xl:text-sm font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:border-gold hover:text-gold cursor-pointer rounded-[8px]"
-              >
-                {currentSlide.secondaryText}
-                <ArrowUpRight size={20} />
-              </button>
-            )}
-          </motion.div>
+              {currentSlide.secondaryText && (
+                <button
+                  type="button"
+                  onClick={onOpenInquiry}
+                  className="inline-flex items-center justify-center gap-2 min-h-[44px] 3xl:min-h-[52px] px-5 3xl:px-7 text-white bg-white/10 backdrop-blur-sm border border-white/50 text-[10px] 3xl:text-xs 4xl:text-sm font-normal tracking-[.13em] uppercase no-underline transition-all duration-200 hover:border-gold hover:text-gold cursor-pointer rounded-[8px]"
+                >
+                  {currentSlide.secondaryText}
+                  <ArrowUpRight size={20} />
+                </button>
+              )}
+            </motion.div>
+          )}
         </motion.div>
       </AnimatePresence>
-
-      {/* Side Arrows (mobile par neeche, dots ke dono taraf) */}
-      {heroSlides.length > 1 && (
-        <>
-          <button
-            type="button"
-            aria-label="Previous slide"
-            onClick={goPrev}
-            className={`${arrowClassName} left-3 md:left-6`}
-          >
-            <ChevronLeft size={26} strokeWidth={1.5} />
-          </button>
-          <button
-            type="button"
-            aria-label="Next slide"
-            onClick={goNext}
-            className={`${arrowClassName} right-3 md:right-6`}
-          >
-            <ChevronRight size={26} strokeWidth={1.5} />
-          </button>
-        </>
-      )}
 
       {/* Progressive Slide Indicators */}
       {heroSlides.length > 1 && (
@@ -394,8 +362,8 @@ export function HeroSection({
               onClick={() => goToSlide(index)}
               className={`relative overflow-hidden cursor-pointer transition-all duration-500 rounded-full ${
                 activeSlide === index
-                  ? "h-[4px] w-12 md:w-16 bg-navy/30"
-                  : "h-2 w-2 bg-navy/60 hover:bg-navy"
+                  ? "h-[4px] w-12 md:w-16 bg-white/30"
+                  : "h-2 w-2 bg-white/60 hover:bg-white"
               }`}
             >
               {activeSlide === index && (
