@@ -115,17 +115,6 @@ const defaultSlides: HeroSlide[] = [
       "Premium textile flooring designed for comfort, durability, and elegant spaces. Crafted to elevate every room with warmth and style.",
   },
   {
-    image: "/hero-backup/axminster.webp",
-    heading: (
-      <>
-        Timeless Patterns. <em className="text-gold not-italic">Exceptional</em>{" "}
-        Performance.
-      </>
-    ),
-    description:
-      "Axminster carpets with intricate woven designs and lasting durability. Built to stay vibrant and beautiful through years of everyday use.",
-  },
-  {
     image: "/hero-backup/resilient-flooring.png",
     heading: (
       <>
