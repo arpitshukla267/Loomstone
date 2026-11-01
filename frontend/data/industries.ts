@@ -44,7 +44,7 @@ export const INDUSTRIES: Industry[] = [
   {
     slug: "luxury-residential",
     name: "Luxury Residential",
-    image: "/industries/Residencieal.png",
+    image: "/industries/Residencieal.PNG",
     description:
       "Transform private residences with beautifully crafted rugs, premium carpets and refined flooring solutions tailored to individual tastes, architectural details and contemporary living.",
   },
