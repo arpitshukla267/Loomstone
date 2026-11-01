@@ -104,7 +104,7 @@ async function fetchHeroSlides(signal: AbortSignal): Promise<HeroSlide[]> {
 
 const defaultSlides: HeroSlide[] = [
   {
-    image: "/hero-backup/textile-flooring-2.png",
+    image: "/hero-backup/handmade.webp",
     heading: (
       <>
         Woven Comfort. <em className="text-gold not-italic">Refined</em>{" "}
@@ -115,7 +115,7 @@ const defaultSlides: HeroSlide[] = [
       "Premium textile flooring designed for comfort, durability, and elegant spaces.",
   },
   {
-    image: "/hero-backup/axminster.png",
+    image: "/hero-backup/axminster.webp",
     heading: (
       <>
         Timeless Patterns. <em className="text-gold not-italic">Exceptional</em>{" "}
@@ -135,16 +135,6 @@ const defaultSlides: HeroSlide[] = [
     ),
     description:
       "Resilient flooring made for high-traffic spaces without compromising on style.",
-  },
-  {
-    image: "/hero-backup/resilient-flooring-2.png",
-    heading: (
-      <>
-        Strength Meets <em className="text-gold not-italic">Precision.</em>
-      </>
-    ),
-    description:
-      "Smart flooring solutions that combine performance, comfort, and clean design.",
   },
   {
     image: "/hero/hero-6.jpeg",
@@ -252,8 +242,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
         />
       </AnimatePresence>
 
-      {/* Black Overlay: text readable rakhne ke liye (opacity chahiye to bg-black/50 badlo) */}
-      <div className="pointer-events-none absolute inset-0 z-[5] bg-black/25" />
+      <div className="pointer-events-none absolute inset-0 z-[5] bg-black/20" />
 
       {/* Center-aligned Animated Content */}
       <AnimatePresence mode="wait" initial={false}>
@@ -287,7 +276,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[800px] 3xl:max-w-[1000px] my-4 md:my-5 text-white font-manrope font-light text-4xl md:text-5xl 3xl:text-6xl 4xl:text-7xl leading-[1.2] tracking-[-0.02em]"
+            className="max-w-[800px] 3xl:max-w-[1000px] my-4 md:my-5 text-white font-manrope font-medium text-4xl md:text-5xl 3xl:text-6xl 4xl:text-7xl leading-[1.2] tracking-[-0.02em]"
           >
             {currentSlide.heading}
           </motion.h1>

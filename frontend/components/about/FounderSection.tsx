@@ -40,7 +40,7 @@ export default function FounderSection() {
         {/* Founder photo card */}
         <Reveal
           y={32}
-          className="relative z-10 mx-auto w-full max-w-[320px] sm:max-w-[380px] lg:mx-0 lg:max-w-none lg:-ml-[107px] 3xl:-ml-[140px] 4xl:-ml-[160px]"
+          className="relative z-10 mx-auto w-full max-w-[320px] sm:max-w-[380px] lg:mx-0 lg:max-w-none lg:-ml-[20px] xl:-ml-[107px] 3xl:-ml-[140px] 4xl:-ml-[160px]"
         >
           <div className="relative h-[320px] w-full overflow-hidden rounded-[28px] border-[5px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] sm:h-[380px] sm:rounded-[36px] sm:border-[6px] md:h-[460px] 3xl:h-[540px] 4xl:h-[620px]">
             <FadeImage
