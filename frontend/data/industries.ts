@@ -16,7 +16,7 @@ export const INDUSTRIES: Industry[] = [
   {
     slug: "corporate-commercial",
     name: "Corp & Commercial spaces",
-    image: "/industries/corporate-commercial.png",
+    image: "/industries/corporate-commercial.jpeg",
     description:
       "Create inspiring workplaces and distinctive commercial environments with versatile flooring solutions that balance contemporary design, acoustic comfort and everyday practicality.",
   },
