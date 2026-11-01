@@ -10,7 +10,7 @@ import { ProductImageCarousel } from "@/components/ui/product-image-carousel";
 import { InquiryModal } from "@/components/sections/inquiry-modal";
 import { getAllProducts, type Product } from "@/data/products";
 
-const heroImage = "/inventory.png";
+const heroImage = "/about.webp";
 
 /* ---------- Products Content Component ---------- */
 function ProductsContent() {

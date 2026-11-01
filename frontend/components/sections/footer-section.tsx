@@ -159,7 +159,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
         </p>
 
         {/* Created by */}
-        <a
+        {/* <a
           href="https://visitinglink.com/"
           target="_blank"
           rel="noopener noreferrer"
@@ -176,7 +176,7 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
             height={24}
             className="h-4 -mt-[1px] -ml-0.5 w-auto object-contain"
           />
-        </a>
+        </a> */}
       </div>
 
       {/* Scroll to top button */}

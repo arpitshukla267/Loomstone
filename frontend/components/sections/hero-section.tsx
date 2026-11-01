@@ -112,7 +112,7 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Premium textile flooring designed for comfort, durability, and elegant spaces.",
+      "Premium textile flooring designed for comfort, durability, and elegant spaces. Crafted to elevate every room with warmth and style.",
   },
   {
     image: "/hero-backup/axminster.webp",
@@ -123,7 +123,7 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Axminster carpets with intricate woven designs and lasting durability.",
+      "Axminster carpets with intricate woven designs and lasting durability. Built to stay vibrant and beautiful through years of everyday use.",
   },
   {
     image: "/hero-backup/resilient-flooring.png",
@@ -134,7 +134,7 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Resilient flooring made for high-traffic spaces without compromising on style.",
+      "Resilient flooring made for high-traffic spaces without compromising on style. Strong, easy to maintain, and designed to look flawless for years.",
   },
   {
     image: "/hero/hero-6.jpeg",
@@ -144,7 +144,7 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours.",
+      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours. Every piece is handcrafted with detail and care.",
   },
 ];
 
