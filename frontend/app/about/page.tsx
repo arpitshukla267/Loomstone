@@ -49,7 +49,7 @@ export default function AboutPage() {
           {/* <VisionMissionSection /> */}
 
           {/* 4. Our Craft & Manufacturing Process */}
-          <ProcessSection />
+          {/* <ProcessSection /> */}
 
           {/* 5. Founder's Message */}
           <FounderSection />
@@ -58,7 +58,7 @@ export default function AboutPage() {
           <CoreValuesSection />
 
           {/* 7. Quality & Responsibility */}
-          <section className="w-full py-12">
+          {/* <section className="w-full py-12">
             <div className="relative my-12 h-[65vh] min-h-[420px] w-full md:h-[90vh] 3xl:min-h-[700px] 4xl:min-h-[800px]">
               <Image
                 src="/quality.png"
@@ -68,7 +68,7 @@ export default function AboutPage() {
                 className="object-cover"
               />
             </div>
-          </section>
+          </section> */}
         </main>
       </div>
     </PageFrame>
