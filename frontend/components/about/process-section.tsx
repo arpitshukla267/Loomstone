@@ -204,7 +204,7 @@ export function ProcessSection({
   return (
     <MotionConfig reducedMotion="user">
       <section className="overflow-hidden bg-[#FFFCF4] ash" id="products">
-        <div className="mx-auto max-w-[90vw] 3xl:max-w-[1700px] 4xl:max-w-[2100px] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px] 3xl:py-[80px] 3xl:pb-[140px]">
+        <div className="mx-auto max-w-[90vw] 3xl:max-w-[90vw] 4xl:max-w-[90vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px] 3xl:py-[80px] 3xl:pb-[140px]">
           {/* HEADER */}
           <motion.div
             ref={headerRef}
