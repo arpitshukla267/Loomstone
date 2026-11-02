@@ -49,12 +49,13 @@ export default function AboutPage() {
           {/* 3. Vision & Mission */}
           {/* <VisionMissionSection /> */}
 
-          {/* 4. Our Craft & Manufacturing Process */}
-          {/* <ProcessSection /> */}
 
           {/* 5. Founder's Message */}
           <FounderSection />
 
+          {/* 4. Our Craft & Manufacturing Process */}
+          <ProcessSection />
+          
           {/* 6. Core Values */}
           {/* <CoreValuesSection /> */}
 
