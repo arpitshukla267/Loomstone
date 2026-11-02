@@ -16,7 +16,7 @@ export interface ProcessStep {
   /** Main heading (client's point), e.g. "Design Consultation" */
   title: string;
   description: string;
-  /** Optional image URL. Falls back to an icon panel when omitted */
+  /** Image URL (public folder se). Omit karne par icon panel fallback dikhega */
   media?: string;
   mediaAlt?: string;
 }
@@ -26,31 +26,43 @@ export const defaultProcessSteps: ProcessStep[] = [
     title: "Design Consultation",
     description:
       "We work with architects, designers and project teams to understand the vision, technical requirements and practical needs of every space.",
+    media: "/process/design-consultation.webp",
+    mediaAlt: "Design consultation with architects and project teams",
   },
   {
     title: "Bespoke Design Development",
     description:
       "From patterns and colours to textures and materials, we develop tailored flooring solutions that complement each project's architectural vision and functional requirements.",
+    media: "/process/design-development.webp",
+    mediaAlt: "Bespoke flooring design development",
   },
   {
     title: "Sampling & Prototyping",
     description:
       "Detailed samples bring concepts to life, allowing materials, colours and finishes to be reviewed and refined before production.",
+    media: "/process/sampling-prototyping.webp",
+    mediaAlt: "Flooring samples and prototypes under review",
   },
   {
     title: "Technical Planning & Specification",
     description:
       "We align design intent with material suitability, durability, performance requirements and project budgets to support informed decisions.",
+    media: "/process/technical-planning.webp",
+    mediaAlt: "Technical planning and specification of flooring",
   },
   {
     title: "Production & Quality Assurance",
     description:
       "Through careful coordination and quality checks, we focus on consistency, craftsmanship and adherence to agreed project specifications.",
+    media: "/process/production-quality.webp",
+    mediaAlt: "Flooring production and quality inspection",
   },
   {
     title: "Installation & Project Support",
     description:
       "From delivery coordination to installation guidance, we provide project support to help achieve a seamless finish and lasting performance.",
+    media: "/process/installation-support.webp",
+    mediaAlt: "Flooring installation and on-site project support",
   },
 ];
 
@@ -102,7 +114,10 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
   };
 
   return (
-    <div ref={ref} className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 3xl:gap-20 4xl:gap-24">
+    <div
+      ref={ref}
+      className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 3xl:gap-20 4xl:gap-24"
+    >
       {/* MEDIA */}
       <motion.div
         variants={mediaVariants}
@@ -118,6 +133,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
             src={step.media}
             alt={step.mediaAlt ?? step.title}
             loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover"
           />
         ) : (
@@ -135,7 +151,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
         variants={textContainer}
         initial="hidden"
         animate={inView ? "show" : "hidden"}
-        className={`flex flex-col items-center px-2 text-center ${
+        className={`flex flex-col items-start px-2 text-left ${
           mediaOnLeft ? "lg:order-2" : "lg:order-1"
         }`}
       >
@@ -174,7 +190,7 @@ export interface ProcessSectionProps {
 export function ProcessSection({
   steps = defaultProcessSteps,
   heading = "From Vision to Exceptional Spaces",
-  intro = "At Loomstone, we believe exceptional flooring begins with a clear vision and is realised through meticulous execution. Combining design intelligence, technical expertise, and project management excellence, we guide each project through a seamless journey, transforming concepts into distinctive flooring experiences that elevate the character, performance, and identity of a space.",
+  intro = "At Loomstone, exceptional flooring begins with a clear vision and is realised through meticulous execution. We guide every project from concept to completion, creating floors that elevate the character and identity of a space.",
   closingTitle = "Our Approach",
   closingText = "From luxury hospitality destinations and signature commercial developments to bespoke residential environments, Loomstone delivers flooring solutions that seamlessly unite design excellence, craftsmanship, technical precision, and enduring value.",
   firstMediaSide = "right",
