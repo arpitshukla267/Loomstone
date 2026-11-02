@@ -143,12 +143,16 @@ export interface WhyLoomstoneSectionProps {
   video?: string;
   /** Optional poster image shown until the video loads. */
   poster?: string;
+  /** Optional image for backwards compatibility */
+  image?: string;
 }
 
 export function WhyLoomstoneSection({
   video = "/why_loomstone.mp4",
-  poster,
+  poster = "/why_loomstone.png",
+  image,
 }: WhyLoomstoneSectionProps) {
+  const activePoster = poster || image;
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -213,7 +217,7 @@ export function WhyLoomstoneSection({
               ref={videoRef}
               className="absolute inset-0 h-full w-full scale-[1.02] object-cover"
               src={video}
-              poster={poster}
+              poster={activePoster}
               muted
               loop
               playsInline

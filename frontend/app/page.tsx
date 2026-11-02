@@ -52,7 +52,7 @@ export default function Home() {
       <HeroSection onOpenInquiry={openInquiry} />
 
       {/* Why Loomstone: image + content + 6 features */}
-      <WhyLoomstoneSection image="/why-loomstone.jpg" />
+      <WhyLoomstoneSection poster="/why_loomstone.png" />
 
       {/* Industries We Serve: arrow click par inquiry modal khulega */}
       <IndustriesServedSection onOpenInquiry={openInquiry} />
