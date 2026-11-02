@@ -107,8 +107,8 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/axminster.webp",
     heading: (
       <>
-        Elegance Underfoot.{""}{" "}
-        <em className="text-gold not-italic"> Comfort Within</em>
+        Soft on the Surface.{""}{" "}
+        <em className="text-gold not-italic"> Strong at the Core</em>
       </>
     ),
     description:
