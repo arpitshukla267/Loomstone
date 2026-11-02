@@ -56,7 +56,7 @@ export default function AboutPage() {
           <FounderSection />
 
           {/* 6. Core Values */}
-          <CoreValuesSection />
+          {/* <CoreValuesSection /> */}
 
           {/* 7. Quality & Responsibility */}
           {/* <section className="w-full py-12">
