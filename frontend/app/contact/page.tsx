@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Check, ChevronDown } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { PageFrame } from "@/components/site/site-chrome";
 import { useContactInfo, waHref } from "@/lib/contact-info";
 
@@ -40,46 +40,6 @@ function Input({
         placeholder={placeholder}
         className={lineCls}
       />
-    </label>
-  );
-}
-
-function Select({
-  label,
-  placeholder,
-  options,
-  required,
-}: {
-  label: string;
-  placeholder: string;
-  options: string[];
-  required?: boolean;
-}) {
-  const [value, setValue] = useState("");
-  return (
-    <label className={labelCls}>
-      <Label text={label} required={required} />
-      <div className="relative">
-        <select
-          required={required}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          className={`${lineCls} appearance-none cursor-pointer pr-8 pt-5 ${value ? "" : "text-[#8a9298]"}`}
-        >
-          <option value="" disabled>
-            {placeholder}
-          </option>
-          {options.map((o) => (
-            <option key={o} value={o} className="text-ink">
-              {o}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          size={16}
-          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-navy 3xl:h-5 3xl:w-5"
-        />
-      </div>
     </label>
   );
 }
@@ -214,20 +174,11 @@ export default function ContactPage() {
                   }}
                   className="flex flex-col"
                 >
+                  {/* Name, number, email, product */}
                   <div className="grid grid-cols-1 gap-x-[40px] gap-y-8 md:grid-cols-2 3xl:gap-x-[56px] 3xl:gap-y-11">
                     <Input
                       label="Full name"
                       placeholder="Your Full Name"
-                      required
-                    />
-                    <Input
-                      label="Company or residence"
-                      placeholder="Company or Residence Name"
-                    />
-                    <Input
-                      label="Email address"
-                      placeholder="Your Email Address"
-                      type="email"
                       required
                     />
                     <Input
@@ -236,33 +187,19 @@ export default function ContactPage() {
                       type="tel"
                       required
                     />
-                    <Select
-                      label="Room type"
-                      placeholder="Select room type"
-                      options={[
-                        "Living room",
-                        "Bedroom",
-                        "Dining room",
-                        "Hotel / Office",
-                      ]}
+                    <Input
+                      label="Email address"
+                      placeholder="Your Email Address"
+                      type="email"
                       required
                     />
-                    <Select
-                      label="Installation timeline"
-                      placeholder="Select timeline"
-                      options={[
-                        "Expedited · 8–12 weeks",
-                        "Standard · 14–20 weeks",
-                        "Future project",
-                      ]}
-                      required
+                    <Input
+                      label="Product"
+                      placeholder="Product you are interested in"
                     />
                   </div>
 
-                  <div className="mt-8 3xl:mt-11">
-                    <Input label="Estimated rug size" placeholder="" />
-                  </div>
-
+                  {/* Description */}
                   <label className={`${labelCls} mt-8 3xl:mt-11`}>
                     <Label text="Description" />
                     <textarea
