@@ -30,7 +30,7 @@ export const INDUSTRIES: Industry[] = [
   {
     slug: "leisure-entertainment",
     name: "Leisure & Entertainment",
-    image: "/industries/leisure-entertainment.png",
+    image: "/industries/leisure-entertainment.jpeg",
     description:
       "Bring distinctive character to casinos, cinemas, theatres and entertainment venues with expressive carpet designs that enhance the atmosphere and perform under heavy foot traffic.",
   },

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import {
   ClipboardCheck,
@@ -10,13 +11,12 @@ import {
   Palette,
   type LucideIcon,
 } from "lucide-react";
-import Image from "next/image";
 
 /* ------------------------------------------------------------------ */
 /* Theme colours (from your design)                                    */
 /* ------------------------------------------------------------------ */
 const HEADING = "#151f28"; // "What Sets Loomstone Apart"
-const ACCENT = "#ab7b4d"; // "Thoughtful Design. Tailored Solutions. Reliable Delivery."
+const ACCENT = "#ab7b4d"; // "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution."
 const ICON = "#5b2a1d"; // icon stroke (deep brown)
 const ICON_RING = "#d9c3b0"; // circle border around icons
 
@@ -43,7 +43,7 @@ const FEATURES: Feature[] = [
   {
     icon: Gem,
     title: "Bespoke Flooring Solutions",
-    text: "Custom patterns, colours textures and specifications crafted to bring each project's unique design vision to life.",
+    text: "Custom patterns, colours, textures and specifications crafted to bring each project's unique design vision to life.",
   },
   {
     icon: Globe,
@@ -53,12 +53,12 @@ const FEATURES: Feature[] = [
   {
     icon: ClipboardCheck,
     title: "Technical Precision",
-    text: "Meticulous attention to specification, accurate measurements, budget considration and project requirements ensuring flooring solutions that balance design intent, performance and practicality.",
+    text: "Meticulous attention to specification, accurate measurements, budget consideration and project requirements ensuring flooring solutions that balance design intent, performance and practicality.",
   },
   {
     icon: Handshake,
     title: "End to End Project Support",
-    text: "Coordinated support from design development to supply and installation, ensuring a seemless product journey from concept to completion .",
+    text: "Coordinated support from design development to supply and installation, ensuring a seamless product journey from concept to completion.",
   },
 ];
 
@@ -139,31 +139,90 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
 }
 
 export interface WhyLoomstoneSectionProps {
-  /** Put your left-side photo in /public and pass its path here. */
-  image?: string;
-  imageAlt?: string;
+  /** Put your left-side video in /public and pass its path here. */
+  video?: string;
+  /** Optional poster image shown until the video loads. */
+  poster?: string;
 }
 
 export function WhyLoomstoneSection({
-  image = "/new-folder/why.jpg",
-  imageAlt = "Loomstone luxury interior with textured flooring",
+  video = "/why_loomstone.mp4",
+  poster,
 }: WhyLoomstoneSectionProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    // Muted is required, otherwise browsers block autoplay
+    v.muted = true;
+    v.defaultMuted = true;
+    v.loop = true;
+    v.setAttribute("muted", "");
+    v.setAttribute("playsinline", "");
+
+    let visible = false;
+
+    const play = () => {
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+
+    // threshold 0 = starts as soon as even 1px of the video is visible
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) play();
+        else v.pause();
+      },
+      { threshold: 0 },
+    );
+    io.observe(v);
+
+    // If the video finishes loading while it's already on screen, start it
+    const onReady = () => {
+      if (visible) play();
+    };
+    v.addEventListener("loadeddata", onReady);
+    v.addEventListener("canplay", onReady);
+
+    // Resume when the tab becomes active again
+    const onVisibility = () => {
+      if (!document.hidden && visible) play();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      io.disconnect();
+      v.removeEventListener("loadeddata", onReady);
+      v.removeEventListener("canplay", onReady);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+
   return (
     <MotionConfig reducedMotion="user">
-      {/* 30 / 70 split. Image is full-bleed: touches the left edge of the screen. */}
+      {/* 35 / 65 split. */}
       <section className="relative left-1/2 grid w-screen max-w-[100vw] -translate-x-1/2 grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
-        {" "}
-        {/* ================= IMAGE ================= */}
-        <div className="relative h-[280px] sm:h-[380px] lg:h-auto lg:min-h-[640px] 3xl:min-h-[780px] 4xl:min-h-[900px]">
-          <Image
-            src={image}
-            alt={imageAlt}
-            fill
-            sizes="(min-width: 1024px) 30vw, 100vw"
-            className="object-cover"
-            priority={false}
-          />
+        {/* ================= VIDEO (left edge se start, sirf upar/neeche padding) ================= */}
+        <div className="flex h-[300px] py-4 sm:h-[400px] sm:py-6 lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
+          {/* overflow-hidden + slight scale removes the black hairline on the edge */}
+          <div className="relative flex-1 overflow-hidden bg-[#fdfbf7]">
+            <video
+              ref={videoRef}
+              className="absolute inset-0 h-full w-full scale-[1.02] object-cover"
+              src={video}
+              poster={poster}
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+            />
+          </div>
         </div>
+
         {/* ================= CONTENT ================= */}
         <div className="flex items-center px-4 py-12 sm:px-10 md:px-14 lg:px-[6%] lg:py-20 xl:px-[7%] 3xl:px-[8%] 3xl:py-28 4xl:px-[10%] 4xl:py-32">
           <div className="mx-auto w-full max-w-[100vw] sm:max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
@@ -186,7 +245,7 @@ export function WhyLoomstoneSection({
               viewport={VIEWPORT}
               transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
             >
-              Thoughtful Design. Bespoke Craftmenship. Seemless Execution.
+              Thoughtful Design. Bespoke Craftsmanship. Seamless Execution.
             </motion.p>
 
             {/* Feature grid: 2 columns on mobile, 3 columns x 2 rows on sm+ */}

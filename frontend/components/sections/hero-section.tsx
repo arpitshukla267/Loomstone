@@ -104,7 +104,7 @@ async function fetchHeroSlides(signal: AbortSignal): Promise<HeroSlide[]> {
 
 const defaultSlides: HeroSlide[] = [
   {
-    image: "/hero-backup/handmade.webp",
+    image: "/hero-backup/axminster.webp",
     heading: (
       <>
         Elegance Underfoot.{""}{" "}
@@ -112,7 +112,18 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Premium textile flooring designed for comfort, durability, and elegant spaces. Crafted to elevate every room with warmth and style.",
+      "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth. ye line ayegai niche",
+  },
+  {
+    image: "/hero-backup/handmade.webp",
+    heading: (
+      <>
+        Born in the Workshop.{" "}
+        <em className="text-gold not-italic"> Brought to Life</em> in Your Home
+      </>
+    ),
+    description:
+      "Handcrafted rugs woven with patience and precision, made to your design, colour and size, and built to be treasured for generations.",
   },
   {
     image: "/hero-backup/resilient-flooring.png",

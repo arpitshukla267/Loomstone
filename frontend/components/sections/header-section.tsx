@@ -99,10 +99,8 @@ export function HeaderSection({
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full border-b transition-all duration-300 motion-reduce:transition-none ${
-        solid
-          ? "border-[#e4e9ec] bg-[#FFFCF4] shadow-sm py-[6px]"
-          : "border-transparent bg-transparent py-[10px]"
+      className={`fixed top-0 z-50 w-full border-b border-transparent shadow-none transition-[background-color,padding] duration-300 motion-reduce:transition-none ${
+        solid ? "bg-[#FFFCF4] py-[6px]" : "bg-transparent py-[10px]"
       }`}
     >
       {/* Main row: 3 columns -> left links | logo | right links */}
@@ -134,10 +132,10 @@ export function HeaderSection({
             width={160}
             height={50}
             priority
-            className={`absolute left-1/2 top-1 -translate-x-1/2 w-auto max-w-none object-contain transition-all duration-500 ease-out motion-reduce:transition-none ${
+            className={`absolute left-1/2 top-1 -translate-x-1/2 w-auto max-w-none object-contain transition-[height] duration-500 ease-out motion-reduce:transition-none ${
               solid
                 ? "h-[60px] md:h-[84px] 3xl:h-[100px]"
-                : "h-28 md:h-48 3xl:h-56 drop-shadow-[0_6px_14px_rgba(0,0,0,0.25)]"
+                : "h-28 md:h-48 3xl:h-56"
             }`}
           />
         </Link>
@@ -209,7 +207,7 @@ export function HeaderSection({
       {/* Mobile panel */}
       <div
         id="mobile-menu"
-        className={`absolute left-0 top-full grid w-full bg-white shadow-lg transition-[grid-template-rows,visibility] duration-300 ease-out motion-reduce:transition-none md:hidden ${
+        className={`absolute left-0 top-full grid w-full bg-white shadow-none transition-[grid-template-rows,visibility] duration-300 ease-out motion-reduce:transition-none md:hidden ${
           menuOpen ? "visible grid-rows-[1fr]" : "invisible grid-rows-[0fr]"
         }`}
       >

@@ -31,7 +31,7 @@ export default function AboutPage() {
 
             <div className="absolute inset-0 bg-black/50" />
 
-            <div className="relative z-10 mx-auto max-w-[85vw] px-4 py-16 translate-y-1/4 text-center">
+            <div className="relative z-10 mx-auto max-w-[85vw] px-4 translate-y-1/4 text-center">
               <Reveal delay={100}>
                 <h1 className="font-manrope text-[40px] font-semibold leading-[1.25] text-white md:text-6xl 3xl:text-7xl 4xl:text-8xl">
                   The Art of{" "}
