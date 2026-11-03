@@ -1,13 +1,16 @@
 "use client";
 
 import { useRef } from "react";
-import { Great_Vibes } from "next/font/google";
+import { Cormorant_Garamond } from "next/font/google";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { FadeImage } from "@/components/ui/reveal";
 
-const cursive = Great_Vibes({
+// Tagline font. Badalna ho to yahi import + ye block change karo
+// (e.g. Playfair_Display, Playfair, Dancing_Script, etc.)
+const taglineFont = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["500", "600"],
+  style: ["italic"],
   display: "swap",
 });
 
@@ -34,7 +37,7 @@ const REST_BASE = QUOTE_BASE + 0.25;
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// negative inset: cursive ke loops aur descenders (y, g, p) cut na hon
+// negative inset: letters ke loops aur descenders (y, g, p) cut na hon
 // hidden state: right inset = 100% + left padding, taaki visible width bilkul 0 rahe
 const CLIP_HIDDEN = "inset(-30% 115% -40% -15%)";
 const CLIP_SHOWN = "inset(-30% -15% -40% -15%)";
@@ -102,7 +105,7 @@ export default function FounderSection() {
         className="font-manrope mb-10 px-4 text-center text-[32px] font-bold leading-[1.1] tracking-[-0.02em] sm:mb-12 sm:text-[44px] lg:mb-[4vw] lg:text-[4vw] 3xl:text-[3.6vw]"
       >
         <span className="text-[#2a2a6b]">Meet Our</span>{" "}
-        <span className="text-[#e8a21c]">Founder</span>
+        <span className="text-[#e8a21c]">Visionary</span>
       </motion.h2>
 
       <div className="mx-auto grid max-w-[90vw] items-center gap-10 sm:max-w-[85vw] lg:max-w-[80vw] lg:grid-cols-[24vw_1fr] lg:gap-[6vw] 3xl:max-w-[76vw] 3xl:grid-cols-[22vw_1fr] 3xl:gap-[7vw]">
@@ -114,7 +117,7 @@ export default function FounderSection() {
           <div className="relative h-[320px] w-full overflow-hidden rounded-[28px] border-[5px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] sm:h-[380px] sm:rounded-[36px] sm:border-[6px] lg:h-[27vw] 3xl:h-[25vw]">
             <FadeImage
               src={founderImage}
-              alt={`${OWNER}, founder of ${COMPANY}`}
+              alt={`${OWNER}, Managing Partner at ${COMPANY}`}
               fill
               sizes="(min-width: 1024px) 24vw, 380px"
               className="object-cover object-top"
@@ -142,9 +145,9 @@ export default function FounderSection() {
             &ldquo;
           </motion.span>
 
-          {/* 2. Cursive tagline: likhte hue reveal */}
+          {/* 2. Tagline: likhte hue reveal */}
           <p
-            className={`${cursive.className} mt-4 text-[28px] leading-[1.3] sm:mt-6 sm:text-[34px] lg:mt-[1.2vw] lg:text-[2.5vw] 3xl:text-[2.3vw]`}
+            className={`${taglineFont.className} mt-4 text-[26px] font-semibold leading-[1.3] sm:mt-6 sm:text-[32px] lg:mt-[1.2vw] lg:text-[2.4vw] 3xl:text-[2.1vw]`}
           >
             {TAGLINE_WORDS.map((w, i) => (
               <span key={i}>
@@ -170,11 +173,11 @@ export default function FounderSection() {
 
           {/* 5. Naam + designation */}
           <motion.div {...revealAfter(REST_BASE + 0.1)}>
-            <h3 className="font-manrope text-[20px] font-bold leading-tight sm:text-[22px] lg:text-[1.6vw]">
+            <h3 className="font-manrope text-[16px] font-bold leading-tight sm:text-[18px] lg:text-[1.3vw] 3xl:text-[1.4vw]">
               Mr. {OWNER}
             </h3>
             <p className="mt-1 text-xs font-medium uppercase tracking-wide text-[#e8a21c] sm:text-sm lg:text-[0.9vw]">
-              Founder &amp; Owner, {COMPANY}
+              Managing Partner at {COMPANY}
             </p>
           </motion.div>
         </div>

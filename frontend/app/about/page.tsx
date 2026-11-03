@@ -19,7 +19,7 @@ export default function AboutPage() {
         {" "}
         <main>
           {/* 1. About Hero */}
-          <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px] 3xl:min-h-[640px] 4xl:min-h-[720px]">
+          {/* <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px] 3xl:min-h-[640px] 4xl:min-h-[720px]">
             <Image
               src={heroImage}
               alt="Loomstone flooring solutions and craftsmanship"
@@ -41,7 +41,7 @@ export default function AboutPage() {
                 </h1>
               </Reveal>
             </div>
-          </section>
+          </section> */}
 
           {/* 2. Our Story */}
           <OurStorySection />
