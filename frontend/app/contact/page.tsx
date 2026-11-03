@@ -217,11 +217,11 @@ export default function ContactPage() {
                       Send inquiry &amp; request swatches{" "}
                       <ArrowRight size={18} />
                     </button>
-                    <p className="max-w-[400px] text-[12.5px] leading-[1.6] text-cool 3xl:max-w-[500px] 3xl:text-[14px] 4xl:max-w-[560px] 4xl:text-[16px]">
+                    {/* <p className="max-w-[400px] text-[12.5px] leading-[1.6] text-cool 3xl:max-w-[500px] 3xl:text-[14px] 4xl:max-w-[560px] 4xl:text-[16px]">
                       NDA protection: proprietary blueprints and residential
                       client details are protected under our strict Atelier
                       Confidentiality Covenant.
-                    </p>
+                    </p> */}
                   </div>
                 </form>
               )}
