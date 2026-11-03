@@ -12,10 +12,8 @@ const clients = [
   { name: "DLF Hospitality", logo: "/clients/dlf.webp" },
   { name: "FCML India", logo: "/clients/fcml.png" },
   { name: "Airtel", logo: "/clients/airtel.webp" },
-  //   { name: "The Executive Centre", logo: "/clients/tec.jpeg" },
 ];
 
-// Placeholders – replace with real testimonials
 const testimonials = [
   {
     text: "Testimonial text goes here.",
@@ -120,7 +118,8 @@ export default function ClientelePage() {
                   <img
                     src={client.logo}
                     alt={client.name}
-                    loading="lazy"
+                    loading="eager"
+                    decoding="async"
                     className="max-h-[70px] w-auto max-w-[75%] object-contain md:max-h-[90px] 3xl:max-h-[110px] 4xl:max-h-[130px]"
                   />
                 </div>
@@ -142,7 +141,6 @@ export default function ClientelePage() {
 
         <div className="testimonial-viewport mt-8 overflow-hidden pb-4 md:mt-10">
           <div className="testimonial-track flex w-max gap-6">
-            {/* two identical groups → -50% translate loops seamlessly */}
             {[0, 1].map((group) => (
               <div
                 key={group}

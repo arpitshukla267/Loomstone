@@ -119,6 +119,7 @@ export default function FounderSection() {
               src={founderImage}
               alt={`${OWNER}, Managing Partner at ${COMPANY}`}
               fill
+              priority
               sizes="(min-width: 1024px) 24vw, 380px"
               className="object-cover object-top"
             />

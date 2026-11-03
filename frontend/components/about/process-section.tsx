@@ -132,7 +132,6 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
             variants={imageVariants}
             src={step.media}
             alt={step.mediaAlt ?? step.title}
-            loading="lazy"
             decoding="async"
             className="h-full w-full object-cover"
           />
@@ -236,22 +235,6 @@ export function ProcessSection({
               );
             })}
           </div>
-
-          {/* CLOSING: heading + description */}
-          {/* <motion.div
-            ref={closingRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={closingInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: EASE }}
-            className="mx-auto mt-16 flex max-w-[760px] flex-col items-center text-center md:mt-24"
-          >
-            <h2 className="font-manrope text-[32px] font-normal leading-[1.15] text-navy sm:text-[40px] md:text-[48px]">
-              {closingTitle}
-            </h2>
-            <p className="mt-4 font-manrope text-[18px] font-normal leading-[1.7] text-navy sm:text-[22px]">
-              {closingText}
-            </p>
-          </motion.div> */}
         </div>
       </section>
     </MotionConfig>

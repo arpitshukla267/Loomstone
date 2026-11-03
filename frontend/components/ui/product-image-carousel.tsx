@@ -195,7 +195,8 @@ export function ProductImageCarousel({ images, alt }: Props) {
             <img
               src={src}
               alt={`${alt} ${i + 1}`}
-              loading="lazy"
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
               draggable={false}
               className="h-full w-full object-cover"
             />

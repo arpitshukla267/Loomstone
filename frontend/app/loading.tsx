@@ -2,9 +2,9 @@ export default function Loading() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm"
+      className="fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#FFFCF4]/98 md:bg-[#FFFCF4]/95 backdrop-blur-sm"
     >
-      {/* Top Progressive Line (Without Shadow) */}
+      {/* Top Progressive Line */}
       <div className="fixed top-0 left-0 right-0 z-[100000] h-[3.5px] bg-transparent pointer-events-none">
         <div className="h-full w-full bg-gold animate-[pulse_1.5s_ease-in-out_infinite]" />
       </div>

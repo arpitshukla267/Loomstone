@@ -8,6 +8,7 @@ import { PageFrame } from "@/components/site/site-chrome";
 import { Reveal } from "@/components/ui/reveal";
 import { ProductImageCarousel } from "@/components/ui/product-image-carousel";
 import { getAllProducts, type Product } from "@/data/products";
+import { preloadImage } from "@/lib/asset-preloader";
 
 const heroImage = "/product.webp";
 
@@ -17,10 +18,24 @@ function ProductsContent() {
   const [productsList, setProductsList] = useState<Product[]>([]);
 
   useEffect(() => {
-    setProductsList(getAllProducts());
+    const list = getAllProducts();
+    setProductsList(list);
+
+    // Preload top product card images in background while user views hero section
+    list.slice(0, 12).forEach((product) => {
+      if (product.images?.[0]) {
+        preloadImage(product.images[0]);
+      }
+    });
 
     const handleUpdate = () => {
-      setProductsList(getAllProducts());
+      const updated = getAllProducts();
+      setProductsList(updated);
+      updated.slice(0, 12).forEach((product) => {
+        if (product.images?.[0]) {
+          preloadImage(product.images[0]);
+        }
+      });
     };
     window.addEventListener("loomstone_products_updated", handleUpdate);
     return () => {
@@ -34,7 +49,7 @@ function ProductsContent() {
 
   return (
     <PageFrame active="Products">
-      {/* ================= HERO ================= */}
+      {/* ================= HERO (preloaded in background while loader is active) ================= */}
       <section className="relative flex min-h-[380px] items-center justify-center overflow-hidden md:min-h-[500px] 3xl:min-h-[640px] 4xl:min-h-[720px]">
         <Image
           src={heroImage}

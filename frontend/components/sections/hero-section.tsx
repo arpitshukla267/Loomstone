@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { preloadImage } from "@/lib/asset-preloader";
 
 interface MetricProps {
   number: string;
@@ -162,6 +163,13 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
 
+  // Preload all slides in background
+  useEffect(() => {
+    heroSlides.forEach((s) => {
+      if (s.image) preloadImage(s.image);
+    });
+  }, [heroSlides]);
+
   // Backend se slides fetch karo (fail hua to hardcoded hi chalte rahenge)
   useEffect(() => {
     if (hasPropSlides) return;
@@ -231,6 +239,8 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
           key={currentSlide.image}
           src={currentSlide.image}
           alt="Handcrafted rugs in an elegant interior"
+          loading="eager"
+          decoding="async"
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
