@@ -8,7 +8,7 @@ export default function OurStorySection() {
   return (
     <section
       id="our-story"
-      className="grid w-full items-center gap-10 pb-20 mt-24 lg:mt-32 min-[1400px]:mt-24 lg:grid-cols-[1.1fr_1fr] lg:gap-[4vw] 3xl:items-stretch 3xl:pb-[5vw] 3xl:pt-[2vw] 4xl:items-center"
+      className="grid w-full items-center gap-10 pb-20 mt-24 lg:mt-36 min-[1400px]:mt-28 lg:grid-cols-[1.1fr_1fr] lg:gap-[4vw] 3xl:items-stretch 3xl:pb-[5vw] 3xl:pt-[2vw] 4xl:items-center"
     >
       {/* ================= Left: story illustration ================= */}
       <Reveal>
