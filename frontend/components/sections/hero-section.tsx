@@ -112,17 +112,17 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
+    "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
   },
   {
-    image: "/hero-backup/handmade.webp",
+    image: "/hero-backup/axminster-2.jpeg",
     heading: (
       <>
-        From Our Looms.{" "}
-        <em className="text-gold not-italic"> Direct to Your Site.</em>
+        Made by hand. <em className="text-gold not-italic">Made for you.</em>
       </>
     ),
-    description: "",
+    description:
+      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours. Every piece is handcrafted with detail and care.",
   },
   {
     image: "/hero-backup/resilient-flooring.png",
@@ -136,24 +136,14 @@ const defaultSlides: HeroSlide[] = [
       "Resilient flooring made for high-traffic spaces without compromising on style. Strong, easy to maintain, and designed to look flawless for years.",
   },
   {
-    image: "/hero-backup/axminster.jpeg",
+    image: "/hero-backup/handmade.webp",
     heading: (
       <>
-        Made by hand. <em className="text-gold not-italic">Made for you.</em>
+        From Our Looms.{" "}
+        <em className="text-gold not-italic"> Direct to Your Site.</em>
       </>
     ),
-    description:
-      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours. Every piece is handcrafted with detail and care.",
-  },
-  {
-    image: "/hero-backup/axminster-2.jpeg",
-    heading: (
-      <>
-        Made by hand. <em className="text-gold not-italic">Made for you.</em>
-      </>
-    ),
-    description:
-      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours. Every piece is handcrafted with detail and care.",
+    description: "",
   },
 ];
 
