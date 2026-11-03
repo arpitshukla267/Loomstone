@@ -112,18 +112,17 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth. ye line ayegai niche",
+      "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
   },
   {
     image: "/hero-backup/handmade.webp",
     heading: (
       <>
-        Born in the Workshop.{" "}
-        <em className="text-gold not-italic"> Brought to Life</em> in Your Home
+        From Our Looms.{" "}
+        <em className="text-gold not-italic"> Direct to Your Site.</em>
       </>
     ),
-    description:
-      "Handcrafted rugs woven with patience and precision, made to your design, colour and size, and built to be treasured for generations.",
+    description: "",
   },
   {
     image: "/hero-backup/resilient-flooring.png",
@@ -137,7 +136,17 @@ const defaultSlides: HeroSlide[] = [
       "Resilient flooring made for high-traffic spaces without compromising on style. Strong, easy to maintain, and designed to look flawless for years.",
   },
   {
-    image: "/hero/hero-6.jpeg",
+    image: "/hero-backup/axminster.jpeg",
+    heading: (
+      <>
+        Made by hand. <em className="text-gold not-italic">Made for you.</em>
+      </>
+    ),
+    description:
+      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours. Every piece is handcrafted with detail and care.",
+  },
+  {
+    image: "/hero-backup/axminster-2.jpeg",
     heading: (
       <>
         Made by hand. <em className="text-gold not-italic">Made for you.</em>
@@ -248,7 +257,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={activeSlide}
-          className="relative z-10 w-full max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px] mx-auto flex flex-col items-center text-center"
+          className="relative z-10 w-full max-w-[1000px] 3xl:max-w-[1200px] 4xl:max-w-[1400px] mx-auto flex flex-col items-center text-center"
           initial="hidden"
           animate="visible"
           exit="exit"
@@ -276,7 +285,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[800px] 3xl:max-w-[1000px] my-4 md:my-5 text-white font-manrope font-medium text-4xl md:text-5xl 3xl:text-6xl 4xl:text-7xl leading-[1.2] tracking-[-0.02em]"
+            className="max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px] my-4 md:my-5 text-white font-manrope font-medium text-4xl md:text-5xl 3xl:text-6xl 4xl:text-7xl leading-[1.2] tracking-[-0.02em]"
           >
             {currentSlide.heading}
           </motion.h1>
@@ -296,7 +305,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
               color: "#ffffff",
               textShadow: "0 1px 12px rgba(0,0,0,0.45)",
             }}
-            className="max-w-[560px] 3xl:max-w-[680px] mx-auto font-light text-sm md:text-base 3xl:text-lg 4xl:text-xl leading-[1.7]"
+            className="max-w-[660px] 3xl:max-w-[760px] mx-auto font-light text-sm md:text-base 3xl:text-lg 4xl:text-xl leading-[1.7]"
           >
             {currentSlide.description}
           </motion.p>
