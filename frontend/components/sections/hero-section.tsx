@@ -112,17 +112,18 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-    "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
+      "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
   },
   {
     image: "/hero-backup/axminster-2.jpeg",
     heading: (
       <>
-        Made by hand. <em className="text-gold not-italic">Made for you.</em>
+        Inspired by nature.{" "}
+        <em className="text-gold not-italic"> Crafted to be timeless.</em>
       </>
     ),
     description:
-      "Carefully chosen materials and refined finishes for a rug that feels uniquely yours. Every piece is handcrafted with detail and care.",
+      "Every rug tells a story through thoughtful design, rich textures and exceptional craftsmanship.",
   },
   {
     image: "/hero-backup/resilient-flooring.png",
