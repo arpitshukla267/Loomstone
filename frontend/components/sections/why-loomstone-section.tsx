@@ -23,6 +23,20 @@ const ICON_RING = "#d9c3b0"; // circle border around icons
 const EASE = [0.22, 1, 0.36, 1] as const;
 const VIEWPORT = { once: true, amount: 0.15 } as const;
 
+/**
+ * Video file ke andar left/right black bars baked-in hain.
+ * Us wajah se video ko zoom karte hain taaki bars overflow hokar
+ * parent ke `overflow-hidden` se cut ho jayein.
+ *
+ * Screenshot se: content ~546px / frame ~663px  =>  ~1.22 scale chahiye.
+ * Agar abhi bhi bars dikhein to isse badhao (1.28, 1.3 ...),
+ * agar video zyada cut ho raha ho to kam karo.
+ *
+ * Best long-term fix: video ko re-export karke bars crop kar do,
+ * phir ye value 1.02 kar dena.
+ */
+const VIDEO_ZOOM = 1.25;
+
 type Feature = {
   icon: LucideIcon;
   title: string;
@@ -211,11 +225,12 @@ export function WhyLoomstoneSection({
       <section className="relative left-1/2 grid w-screen max-w-[100vw] -translate-x-1/2 grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
         {/* ================= VIDEO (left edge se start, sirf upar/neeche padding) ================= */}
         <div className="flex h-[300px] py-4 sm:h-[400px] sm:py-6 lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
-          {/* overflow-hidden + slight scale removes the black hairline on the edge */}
+          {/* overflow-hidden: zoomed video ke black bars yahin cut hote hain */}
           <div className="relative flex-1 overflow-hidden bg-[#fdfbf7]">
             <video
               ref={videoRef}
-              className="absolute inset-0 h-full w-full scale-[1.02] object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ transform: `scale(${VIDEO_ZOOM})` }}
               src={video}
               poster={activePoster}
               muted
