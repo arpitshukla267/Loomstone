@@ -115,7 +115,7 @@ const defaultSlides: HeroSlide[] = [
       "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
   },
   {
-    image: "/hero-backup/axminster-2.jpeg",
+    image: "/hero-backup/axminster-2.webp",
     heading: (
       <>
         Inspired by nature.{" "}
@@ -126,7 +126,7 @@ const defaultSlides: HeroSlide[] = [
       "Every rug tells a story through thoughtful design, rich textures and exceptional craftsmanship.",
   },
   {
-    image: "/hero-backup/resilient-flooring.png",
+    image: "/hero-backup/resilient-flooring.webp",
     heading: (
       <>
         Unmatched Durability.{" "}

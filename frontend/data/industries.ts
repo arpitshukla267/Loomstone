@@ -9,7 +9,7 @@ export const INDUSTRIES: Industry[] = [
   {
     slug: "hospitality",
     name: "Hospitality",
-    image: "/industries/Hospitality.png",
+    image: "/industries/Hospitality.PNG",
     description:
       "Elevate hotels, resorts and dining spaces with bespoke carpets and rugs that express your brand identity, enrich guest experiences and deliver lasting performance.",
   },

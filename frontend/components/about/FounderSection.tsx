@@ -16,7 +16,7 @@ const taglineFont = Cormorant_Garamond({
 
 const COMPANY = "Loomstone";
 const OWNER = "Pawan Yadav";
-const founderImage = "/founder.jpeg";
+const founderImage = "/founder.webp";
 const TAGLINE = "Perfection is the foundation beneath every great space.";
 
 const QUOTE = `We believe exceptional hospitality is shaped by thoughtful details. Flooring is more than a surface; it is a defining design element that enhances environments, enriches guest experiences, and contributes to the enduring identity of a space.`;

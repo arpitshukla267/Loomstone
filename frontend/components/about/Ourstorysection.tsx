@@ -14,7 +14,7 @@ export default function OurStorySection() {
       <Reveal>
         <div className="flex items-center justify-start">
           <img
-            src="/story.png"
+            src="/story.webp"
             alt="A child imagining spaces as stories, surrounded by rug sketches and textures"
             loading="lazy"
             className="h-auto w-full object-contain object-left mix-blend-multiply"
