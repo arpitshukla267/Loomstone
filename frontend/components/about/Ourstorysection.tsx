@@ -8,7 +8,7 @@ export default function OurStorySection() {
   return (
     <section
       id="our-story"
-      className="grid w-full items-center gap-10 pb-20 pt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-[4vw] 3xl:items-stretch 3xl:pb-[5vw] 3xl:pt-[2vw] 4xl:items-center"
+      className="grid w-full items-center gap-10 pb-20 mt-24 lg:mt-32 min-[1400px]:mt-24 lg:grid-cols-[1.1fr_1fr] lg:gap-[4vw] 3xl:items-stretch 3xl:pb-[5vw] 3xl:pt-[2vw] 4xl:items-center"
     >
       {/* ================= Left: story illustration ================= */}
       <Reveal>
@@ -25,7 +25,8 @@ export default function OurStorySection() {
       {/* ================= Right: content ================= */}
       <div className="pl-6 pr-6 md:pl-[5vw] md:pr-[5vw] lg:pl-0 lg:pr-[5vw] 3xl:flex 3xl:flex-col 3xl:justify-around 3xl:pr-[6vw] 4xl:block">
         <Reveal delay={100}>
-          <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[48px] 3xl:mb-0 3xl:text-[3.5vw] 4xl:mb-[1.8vw]">
+          <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[36px] lg:text-[42px] min-[1400px]:text-[48px] 3xl:mb-0 3xl:text-[3.5vw] 4xl:mb-[1.8vw]">
+            {" "}
             Flooring That Brings
             <br />
             <span className="text-[#e8a21c]">Design Visions to Life.</span>
@@ -33,7 +34,7 @@ export default function OurStorySection() {
         </Reveal>
 
         <Reveal delay={150}>
-          <div className="max-w-full space-y-4 text-xs leading-[1.8] text-slate-600 md:text-base lg:max-w-[40vw] 3xl:space-y-[1vw] 3xl:text-[1.17vw] 3xl:leading-[1.4] 4xl:leading-[1.6]">
+          <div className="max-w-full space-y-4 text-xs leading-[1.8] text-slate-600 md:text-sm min-[1400px]:text-base lg:max-w-[40vw] 3xl:space-y-[1vw] 3xl:text-[1.17vw] 3xl:leading-[1.4] 4xl:leading-[1.6]">
             <p>
               Loomstone is a design-led flooring solutions company specializing
               in bespoke carpets, rugs, and custom flooring for hospitality,
