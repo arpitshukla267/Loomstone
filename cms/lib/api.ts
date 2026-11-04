@@ -184,6 +184,75 @@ export const industryApi = {
     }),
 };
 
+// ─── Founder Types & API ───────────────────────────────────────────────────
+
+export type Founder = {
+  _id?: string;
+  sectionTitle: string;
+  founderName: string;
+  designation: string;
+  tagline: string;
+  quote: string;
+  image?: string;
+  imagePublicId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export const founderApi = {
+  get: () => req<Founder>("/api/founder"),
+  update: (data: FormData) =>
+    req<Founder>("/api/founder", { method: "PUT", body: data }),
+};
+
+// ─── Process Types & API ───────────────────────────────────────────────────
+
+export type ProcessStep = {
+  _id: string;
+  id?: string;
+  title: string;
+  description: string;
+  media?: string;
+  mediaPublicId?: string;
+  order: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type ProcessData = {
+  _id?: string;
+  heading: string;
+  intro: string;
+  steps: ProcessStep[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export const processApi = {
+  get: () => req<ProcessData>("/api/process"),
+  updateSection: (data: { heading: string; intro: string }) =>
+    req<{ heading: string; intro: string }>("/api/process/section", {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  createStep: (data: FormData) =>
+    req<ProcessStep>("/api/process/steps", { method: "POST", body: data }),
+  updateStep: (id: string, data: FormData) =>
+    req<ProcessStep>(`/api/process/steps/${id}`, { method: "PUT", body: data }),
+  deleteStep: (id: string) =>
+    req<{ message: string; id: string }>(`/api/process/steps/${id}`, {
+      method: "DELETE",
+    }),
+  reorderSteps: (orderedIds: string[]) =>
+    req<{ message: string; steps: ProcessStep[] }>(
+      "/api/process/steps/reorder",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ orderedIds }),
+      }
+    ),
+};
+
 // ─── Contact Info Types & API ───────────────────────────────────────────────
 
 export type ContactInfo = {

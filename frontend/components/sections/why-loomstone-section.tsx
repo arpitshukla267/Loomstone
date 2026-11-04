@@ -23,15 +23,36 @@ const ICON_RING = "#d9c3b0"; // circle border around icons
 const EASE = [0.22, 1, 0.36, 1] as const;
 const VIEWPORT = { once: true, amount: 0.15 } as const;
 
+/* ------------------------------------------------------------------ */
+/* Video scaling (the video file has black bars baked into left/right) */
+/* Zoom pushes the bars out of the `overflow-hidden` container.        */
+/*                                                                     */
+/* Tuning: black bar visible  -> increase ZOOM                         */
+/*         bar only on left   -> decrease SHIFT_X                      */
+/*         bar only on right  -> increase SHIFT_X                      */
+/* Best long-term fix: crop the bars out of the file with ffmpeg,      */
+/* then set every ZOOM to 1 and every SHIFT_X to 0.                    */
+/* ------------------------------------------------------------------ */
+
+// Tablet + laptop (sm up to < 1700px)
 const VIDEO_ZOOM = 1.28;
 const VIDEO_SHIFT_X = 1.2;
 
+// Mobile (< 640px) -> video box is 4:6 (portrait)
+const MOBILE_MAX_WIDTH = 639; // px
+const VIDEO_ZOOM_MOBILE = 1.3;
+const VIDEO_SHIFT_X_MOBILE = 1.2;
+
+// Large screens (>= 1700px)
 const XL_MIN_WIDTH = 1700; // px
 const VIDEO_ZOOM_XL = 1.45;
 const VIDEO_SHIFT_X_XL = 0.2;
 
 const VIDEO_CSS = `
 .loomstone-video{transform:translateX(${VIDEO_SHIFT_X}%) scale(${VIDEO_ZOOM});transform-origin:center}
+@media (max-width:${MOBILE_MAX_WIDTH}px){
+  .loomstone-video{transform:translateX(${VIDEO_SHIFT_X_MOBILE}%) scale(${VIDEO_ZOOM_MOBILE})}
+}
 @media (min-width:${XL_MIN_WIDTH}px){
   .loomstone-video{transform:translateX(${VIDEO_SHIFT_X_XL}%) scale(${VIDEO_ZOOM_XL})}
 }
@@ -190,7 +211,7 @@ export function WhyLoomstoneSection({
 
   const [headingText, setHeadingText] = useState("What Sets Loomstone Apart");
   const [subheadingText, setSubheadingText] = useState(
-    "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution."
+    "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution.",
   );
   const [featuresList, setFeaturesList] = useState<Feature[]>(DEFAULT_FEATURES);
 
@@ -199,7 +220,10 @@ export function WhyLoomstoneSection({
     if (!API_URL) return;
 
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+    const timeoutId = window.setTimeout(
+      () => controller.abort(),
+      FETCH_TIMEOUT,
+    );
 
     fetch(`${API_URL}/api/why-loomstone`, { signal: controller.signal })
       .then((res) => {
@@ -225,7 +249,7 @@ export function WhyLoomstoneSection({
                 title: item.title || "",
                 text: item.text || "",
               };
-            })
+            }),
           );
         }
       })
@@ -263,7 +287,7 @@ export function WhyLoomstoneSection({
         if (visible) play();
         else v.pause();
       },
-      { threshold: 0 }
+      { threshold: 0 },
     );
     io.observe(v);
 
@@ -288,9 +312,13 @@ export function WhyLoomstoneSection({
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="relative left-1/2 grid w-screen max-w-[100vw] -translate-x-1/2 grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
-        {/* ================= VIDEO (left edge se start) ================= */}
-        <div className="flex h-[300px] py-4 sm:h-[400px] sm:py-6 lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
+      <section className="relative left-1/2 flex w-screen max-w-[100vw] -translate-x-1/2 flex-col bg-[#fdfbf7] lg:grid lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
+        {/* ================= VIDEO =================
+            Mobile order: heading -> description -> VIDEO -> points.
+            Mobile (< sm): 4:6 (portrait) box with light side padding (px-4).
+            sm to < lg: same as before (fixed 400px height).
+            lg and up: unchanged. */}
+        <div className="order-2 mt-6 flex aspect-[4/6] w-full px-8 py-6 sm:mt-0 sm:aspect-auto sm:px-0 sm:h-[400px] sm:py-6 lg:order-none lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
           <div
             className="relative flex-1 overflow-hidden bg-[#fdfbf7] select-none"
             onContextMenu={(e) => e.preventDefault()}
@@ -322,10 +350,10 @@ export function WhyLoomstoneSection({
         </div>
 
         {/* ================= CONTENT ================= */}
-        <div className="flex items-center px-4 py-12 sm:px-10 md:px-14 lg:px-[6%] lg:py-20 xl:px-[7%] 3xl:px-[8%] 3xl:py-28 4xl:px-[10%] 4xl:py-32">
-          <div className="mx-auto w-full max-w-[100vw] sm:max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
+        <div className="contents lg:flex lg:items-center lg:px-[6%] lg:py-20 xl:px-[7%] 3xl:px-[8%] 3xl:py-28 4xl:px-[10%] 4xl:py-32">
+          <div className="contents lg:mx-auto lg:block lg:w-full lg:max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
             <motion.h2
-              className="m-0 text-center font-manrope text-[28px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-left sm:text-[46px] lg:text-[clamp(44px,3.9vw,58px)] 3xl:text-[64px] 4xl:text-[76px]"
+              className="order-1 m-0 px-4 pt-12 text-center font-manrope text-[28px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-left sm:text-[46px] lg:text-[clamp(44px,3.9vw,58px)] 3xl:text-[64px] 4xl:text-[76px] sm:px-10 md:px-14 lg:order-none lg:px-0 lg:pt-0"
               style={{ color: HEADING }}
               initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -336,7 +364,7 @@ export function WhyLoomstoneSection({
             </motion.h2>
 
             <motion.p
-              className="m-0 mt-2 text-center font-manrope text-[16px] font-medium leading-[1.25] tracking-[-0.005em] sm:text-left sm:text-[26px] lg:text-[clamp(24px,2.3vw,34px)] 3xl:text-[38px] 4xl:text-[44px]"
+              className="order-1 m-0 mt-2 px-4 text-center font-manrope text-[16px] font-medium leading-[1.25] tracking-[-0.005em] sm:text-left sm:text-[26px] lg:text-[clamp(24px,2.3vw,34px)] 3xl:text-[38px] 4xl:text-[44px] sm:px-10 md:px-14 lg:order-none lg:px-0"
               style={{ color: ACCENT }}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -346,10 +374,14 @@ export function WhyLoomstoneSection({
               {subheadingText}
             </motion.p>
 
-            {/* Feature grid: 2 columns on mobile, 3 columns x 2 rows on sm+ */}
-            <div className="mt-10 grid grid-cols-2 gap-0 sm:grid-cols-3 3xl:mt-14 4xl:mt-16">
+            {/* Feature grid: 2 columns on mobile, 3 columns x 2 rows on sm+ (shown after the video on mobile) */}
+            <div className="order-3 mt-10 grid grid-cols-2 gap-0 px-4 pb-12 sm:grid-cols-3 sm:px-10 md:px-14 lg:order-none lg:px-0 lg:pb-0 3xl:mt-14 4xl:mt-16">
               {featuresList.map((feature, i) => (
-                <FeatureItem key={`${feature.title}-${i}`} feature={feature} index={i} />
+                <FeatureItem
+                  key={`${feature.title}-${i}`}
+                  feature={feature}
+                  index={i}
+                />
               ))}
             </div>
           </div>

@@ -116,7 +116,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
   return (
     <div
       ref={ref}
-      className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 3xl:gap-20 4xl:gap-24"
+      className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 3xl:gap-20 4xl:gap-24 py-8 sm:py-0"
     >
       {/* MEDIA */}
       <motion.div
@@ -202,8 +202,8 @@ export function ProcessSection({
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="overflow-hidden bg-[#FFFCF4] ash" id="products">
-        <div className="mx-auto max-w-[90vw] 3xl:max-w-[90vw] 4xl:max-w-[90vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px] 3xl:py-[80px] 3xl:pb-[140px]">
+      <section className="overflow-hidden bg-[#FFFCF4] mt-12 sm:mt-0" id="products">
+        <div className="mx-auto max-w-[95vw] 3xl:max-w-[90vw] 4xl:max-w-[90vw] px-6 py-[20px] md:px-[5%] md:py-[50px] md:pb-[100px] 3xl:py-[80px] 3xl:pb-[140px]">
           {/* HEADER */}
           <motion.div
             ref={headerRef}

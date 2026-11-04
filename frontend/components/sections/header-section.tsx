@@ -212,7 +212,8 @@ export function HeaderSection({
         }`}
       >
         <nav className="min-h-0 overflow-hidden" aria-label="Mobile navigation">
-          <div className="flex flex-col gap-1 px-6 pb-6 pt-3">
+          {/* px-3: panel ka side padding kam kiya gaya hai */}
+          <div className="flex flex-col gap-1 px-3 pb-5 pt-3">
             {mobileLinks.map(([link, href], index) => {
               const active = isLinkActive(link, href);
               return (
@@ -224,7 +225,7 @@ export function HeaderSection({
                   style={{
                     transitionDelay: menuOpen ? `${90 + index * 50}ms` : "0ms",
                   }}
-                  className={`relative flex items-center rounded-lg py-[13px] pl-5 pr-4 text-sm uppercase tracking-[.13em] no-underline transition-all duration-300 motion-reduce:transition-none ${
+                  className={`flex items-center rounded-lg px-3 py-[13px] text-sm uppercase tracking-[.13em] no-underline transition-all duration-300 motion-reduce:transition-none ${
                     menuOpen
                       ? "translate-x-0 opacity-100"
                       : "-translate-x-5 opacity-0"
@@ -234,12 +235,6 @@ export function HeaderSection({
                       : "font-medium text-cool active:bg-[#f3f5f7]"
                   }`}
                 >
-                  <span
-                    aria-hidden="true"
-                    className={`absolute left-0 top-1/2 w-1 -translate-y-1/2 rounded-full bg-gold transition-all duration-300 motion-reduce:transition-none ${
-                      active ? "h-6 opacity-100" : "h-0 opacity-0"
-                    }`}
-                  />
                   {link}
                 </Link>
               );
