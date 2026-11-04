@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Cormorant_Garamond } from "next/font/google";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { FadeImage } from "@/components/ui/reveal";
 
-// Tagline font. Badalna ho to yahi import + ye block change karo
-// (e.g. Playfair_Display, Playfair, Dancing_Script, etc.)
+// Tagline font.
 const taglineFont = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["500", "600"],
@@ -14,35 +13,26 @@ const taglineFont = Cormorant_Garamond({
   display: "swap",
 });
 
-const COMPANY = "Loomstone";
-const OWNER = "Pawan Yadav";
-const founderImage = "/founder.webp";
-const TAGLINE = "Perfection is the foundation beneath every great space.";
+const DEFAULT_COMPANY = "Loomstone";
+const DEFAULT_OWNER = "Pawan Yadav";
+const DEFAULT_FOUNDER_IMAGE = "/founder.webp";
+const DEFAULT_TAGLINE = "Perfection is the foundation beneath every great space.";
+const DEFAULT_QUOTE = `We believe exceptional hospitality is shaped by thoughtful details. Flooring is more than a surface; it is a defining design element that enhances environments, enriches guest experiences, and contributes to the enduring identity of a space.`;
 
-const QUOTE = `We believe exceptional hospitality is shaped by thoughtful details. Flooring is more than a surface; it is a defining design element that enhances environments, enriches guest experiences, and contributes to the enduring identity of a space.`;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const FETCH_TIMEOUT = 4000;
 
-const TAGLINE_WORDS = TAGLINE.split(/\s+/);
-
-/*
-  Viewport animation timeline (seconds), column viewport mein aate hi start:
-  icon -> tagline (likhte hue) -> quote (simple fade-up) -> divider -> naam & designation
-  Quote tagline ke last word ke saath hi shuru ho jaata hai, taaki total time kam rahe.
-*/
 const ICON_DELAY = 0;
-const TAG_BASE = 0.2; // tagline kab se shuru
-const TAG_STEP = 0.2; // har word ke beech gap
-const TAG_DUR = 0.45; // ek word likhne ka time
-const QUOTE_BASE = TAG_BASE + (TAGLINE_WORDS.length - 1) * TAG_STEP;
-const REST_BASE = QUOTE_BASE + 0.25;
+const TAG_BASE = 0.2;
+const TAG_STEP = 0.2;
+const TAG_DUR = 0.45;
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// negative inset: letters ke loops aur descenders (y, g, p) cut na hon
-// hidden state: right inset = 100% + left padding, taaki visible width bilkul 0 rahe
 const CLIP_HIDDEN = "inset(-30% 115% -40% -15%)";
 const CLIP_SHOWN = "inset(-30% -15% -40% -15%)";
 
-/* Tagline ka ek word: left se right wipe hota hai, jaise pen se likha ja raha ho */
+/* Tagline word */
 function TaglineWord({
   word,
   index,
@@ -76,7 +66,47 @@ export default function FounderSection() {
   const quoteRef = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion() ?? false;
 
-  // Right column viewport mein aate hi pura sequence ek baar chalega
+  const [sectionTitle, setSectionTitle] = useState("Meet Our Visionary");
+  const [founderName, setFounderName] = useState(DEFAULT_OWNER);
+  const [designation, setDesignation] = useState(`Managing Partner`);
+  const [tagline, setTagline] = useState(DEFAULT_TAGLINE);
+  const [quote, setQuote] = useState(DEFAULT_QUOTE);
+  const [image, setImage] = useState(DEFAULT_FOUNDER_IMAGE);
+
+  // Fetch from backend
+  useEffect(() => {
+    if (!API_URL) return;
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+    fetch(`${API_URL}/api/founder`, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch founder info");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.sectionTitle) setSectionTitle(data.sectionTitle);
+        if (data.founderName) setFounderName(data.founderName);
+        if (data.designation) setDesignation(data.designation);
+        if (data.tagline) setTagline(data.tagline);
+        if (data.quote) setQuote(data.quote);
+        if (data.image) setImage(data.image);
+      })
+      .catch(() => {})
+      .finally(() => window.clearTimeout(timeoutId));
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
+  const taglineWords = tagline.split(/\s+/);
+  const quoteBase = TAG_BASE + (taglineWords.length - 1) * TAG_STEP;
+  const restBase = quoteBase + 0.25;
+
+  // Right column in-view
   const show = useInView(quoteRef, { once: true, amount: 0.25 });
 
   const fadeUp = (y: number, delay = 0) =>
@@ -98,14 +128,19 @@ export default function FounderSection() {
           transition: { duration: 0.6, delay, ease: EASE },
         };
 
+  // Split title if it has spaces, e.g. "Meet Our" and "Visionary"
+  const titleParts = sectionTitle.split(" ");
+  const titlePrefix = titleParts.slice(0, -1).join(" ") || "Meet Our";
+  const titleHighlight = titleParts[titleParts.length - 1] || "Visionary";
+
   return (
     <section className="overflow-hidden bg-[#FFFCF4] py-12 sm:py-14 lg:py-[6vw] 3xl:py-[5vw]">
       <motion.h2
         {...fadeUp(60)}
         className="font-manrope mb-10 px-4 text-center text-[32px] font-bold leading-[1.1] tracking-[-0.02em] sm:mb-12 sm:text-[44px] lg:mb-[4vw] lg:text-[4vw] 3xl:text-[3.6vw]"
       >
-        <span className="text-[#2a2a6b]">Meet Our</span>{" "}
-        <span className="text-[#e8a21c]">Visionary</span>
+        <span className="text-[#2a2a6b]">{titlePrefix}</span>{" "}
+        <span className="text-[#e8a21c]">{titleHighlight}</span>
       </motion.h2>
 
       <div className="mx-auto grid max-w-[90vw] items-center gap-10 sm:max-w-[85vw] lg:max-w-[80vw] lg:grid-cols-[24vw_1fr] lg:gap-[6vw] 3xl:max-w-[76vw] 3xl:grid-cols-[22vw_1fr] 3xl:gap-[7vw]">
@@ -116,8 +151,8 @@ export default function FounderSection() {
         >
           <div className="relative h-[320px] w-full overflow-hidden rounded-[28px] border-[5px] border-white bg-[#2a2a6b] shadow-[0_16px_40px_rgba(42,42,107,0.25)] sm:h-[380px] sm:rounded-[36px] sm:border-[6px] lg:h-[27vw] 3xl:h-[25vw]">
             <FadeImage
-              src={founderImage}
-              alt={`${OWNER}, Managing Partner at ${COMPANY}`}
+              src={image}
+              alt={`${founderName}, ${designation}`}
               fill
               priority
               sizes="(min-width: 1024px) 24vw, 380px"
@@ -150,35 +185,35 @@ export default function FounderSection() {
           <p
             className={`${taglineFont.className} mt-4 text-[26px] font-semibold leading-[1.3] sm:mt-6 sm:text-[32px] lg:mt-[1.2vw] lg:text-[2.4vw] 3xl:text-[2.1vw]`}
           >
-            {TAGLINE_WORDS.map((w, i) => (
-              <span key={i}>
+            {taglineWords.map((w, i) => (
+              <span key={`${w}-${i}`}>
                 <TaglineWord word={w} index={i} show={show} disabled={reduce} />
-                {i < TAGLINE_WORDS.length - 1 ? " " : ""}
+                {i < taglineWords.length - 1 ? " " : ""}
               </span>
             ))}
           </p>
 
-          {/* 3. Founder ka quote: simple fade-up (poora paragraph ek saath) */}
+          {/* 3. Founder quote: simple fade-up */}
           <motion.p
-            {...revealAfter(QUOTE_BASE)}
+            {...revealAfter(quoteBase)}
             className="font-manrope mt-5 max-w-none text-[14px] font-medium leading-[1.6] sm:mt-6 sm:text-[16px] md:text-[16px] lg:mt-[1.6vw] lg:text-[1.3vw] 3xl:text-[1.2vw]"
           >
-            {QUOTE}
+            {quote}
           </motion.p>
 
           {/* 4. Divider */}
           <motion.div
-            {...revealAfter(REST_BASE)}
+            {...revealAfter(restBase)}
             className="my-6 h-[2px] w-20 bg-[#e8a21c] sm:my-8 sm:w-24 lg:my-[2vw] lg:w-[6vw]"
           />
 
-          {/* 5. Naam + designation */}
-          <motion.div {...revealAfter(REST_BASE + 0.1)}>
-            <h3 className="font-manrope text-[16px] font-bold leading-tight sm:text-[18px] lg:text-[1.3vw] 3xl:text-[1.4vw]">
-              Mr. {OWNER}
+          {/* 5. Name + designation */}
+          <motion.div {...revealAfter(restBase + 0.1)}>
+            <h3 className="font-manrope text-[16px] font-bold leading-tight sm:text-[17px] lg:text-[1.3vw] 3xl:text-[1.4vw]">
+              {founderName.startsWith("Mr.") ? founderName : `Mr. ${founderName}`}
             </h3>
-            <p className="mt-1 text-xs font-medium uppercase tracking-wide text-[#e8a21c] sm:text-sm lg:text-[0.9vw]">
-              Managing Partner at {COMPANY}
+            <p className="mt-1 text-[11px] font-medium uppercase tracking-wide text-[#e8a21c] sm:text-sm lg:text-[0.9vw]">
+              {designation}
             </p>
           </motion.div>
         </div>

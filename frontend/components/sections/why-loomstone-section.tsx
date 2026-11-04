@@ -16,7 +16,7 @@ import {
 /* Theme colours (from your design)                                    */
 /* ------------------------------------------------------------------ */
 const HEADING = "#151f28"; // "What Sets Loomstone Apart"
-const ACCENT = "#ab7b4d"; // "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution."
+const ACCENT = "#5b2a1d"; // "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution."
 const ICON = "#5b2a1d"; // icon stroke (deep brown)
 const ICON_RING = "#d9c3b0"; // circle border around icons
 
@@ -128,7 +128,10 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
   return (
     <motion.div
       className={
-        "relative flex flex-col " +
+        // Subgrid: each item spans 3 parent rows (icon / heading / text),
+        // so the heading + description of every item in the same row line
+        // up automatically, whatever the screen size or title length.
+        "relative row-span-3 grid [grid-template-rows:subgrid] " +
         (mobRow2Plus ? "pt-6 " : "") +
         (mobRow2Plus ? "pb-0 " : "pb-6 ") +
         (mobOdd ? "pl-4 " : "pr-4 ") +
@@ -173,14 +176,14 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
       )}
 
       <span
-        className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-full border bg-white/40 sm:h-[52px] sm:w-[52px]"
+        className="flex h-[44px] w-[44px] shrink-0 items-center justify-center justify-self-start rounded-full border bg-white/40 sm:h-[52px] sm:w-[52px]"
         style={{ borderColor: ICON_RING }}
       >
         <Icon size={20} strokeWidth={1.6} style={{ color: ICON }} />
       </span>
 
       <h3
-        className="mb-0 mt-3 text-[14px] font-semibold leading-[1.25] sm:mt-4 sm:max-w-[170px] sm:text-[15px] 3xl:max-w-[220px] 3xl:text-[17px] 4xl:text-[19px]"
+        className="mb-0 mt-3 text-[12px] font-semibold leading-[1.25] sm:mt-4 sm:max-w-[200px] sm:text-[13px] 3xl:max-w-[220px] 3xl:text-[15px] 4xl:text-[17px]"
         style={{ color: HEADING }}
       >
         {feature.title}
@@ -374,7 +377,8 @@ export function WhyLoomstoneSection({
               {subheadingText}
             </motion.p>
 
-            {/* Feature grid: 2 columns on mobile, 3 columns x 2 rows on sm+ (shown after the video on mobile) */}
+            {/* Feature grid: 2 columns on mobile, 3 columns x 2 rows on sm+ (shown after the video on mobile).
+                Each FeatureItem uses subgrid (row-span-3) so headings/descriptions align per row. */}
             <div className="order-3 mt-10 grid grid-cols-2 gap-0 px-4 pb-12 sm:grid-cols-3 sm:px-10 md:px-14 lg:order-none lg:px-0 lg:pb-0 3xl:mt-14 4xl:mt-16">
               {featuresList.map((feature, i) => (
                 <FeatureItem

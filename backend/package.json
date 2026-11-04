@@ -15,7 +15,9 @@
     "seed:why": "node scripts/seedWhyLoomstone.js",
     "seed:why-loomstone": "node scripts/seedWhyLoomstone.js",
     "seed:industries": "node scripts/seedIndustries.js",
-    "seed:about": "node scripts/seedAbout.js"
+    "seed:about": "node scripts/seedAbout.js",
+    "seed:clientele": "node scripts/seedClientele.js",
+    "seed:inspiration": "node scripts/seedInspiration.js"
   },
   "keywords": [],
   "author": "",

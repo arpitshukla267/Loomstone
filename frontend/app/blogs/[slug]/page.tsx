@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageFrame } from "@/components/site/site-chrome";
-import { BLOG_POSTS, getBlogBySlug } from "@/data/blogs";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
+export const dynamic = "force-dynamic";
 
 interface BlogDetailPageProps {
   params: {
@@ -9,14 +12,20 @@ interface BlogDetailPageProps {
   };
 }
 
-export function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({
-    slug: post.slug,
-  }));
+async function fetchBlog(slug: string) {
+  try {
+    const res = await fetch(`${API_URL}/api/blogs/${slug}`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
 }
 
-export function generateMetadata({ params }: BlogDetailPageProps) {
-  const post = getBlogBySlug(params.slug);
+export async function generateMetadata({ params }: BlogDetailPageProps) {
+  const post = await fetchBlog(params.slug);
   if (!post) return { title: "Blog Not Found | Loomstone" };
   return {
     title: `${post.title} | Loomstone Blog`,
@@ -24,12 +33,18 @@ export function generateMetadata({ params }: BlogDetailPageProps) {
   };
 }
 
-export default function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const post = getBlogBySlug(params.slug);
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
+  const post = await fetchBlog(params.slug);
 
   if (!post) {
     notFound();
   }
+
+  const contentParagraphs: string[] = Array.isArray(post.content)
+    ? post.content
+    : typeof post.content === "string"
+    ? [post.content]
+    : [];
 
   return (
     <PageFrame active="Blogs">
@@ -56,18 +71,20 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           </h1>
 
           {/* Featured Image */}
-          <div className="mt-8 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-ash shadow-sm">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={post.image}
-              alt={post.title}
-              className="h-full w-full object-cover"
-            />
-          </div>
+          {post.image && (
+            <div className="mt-8 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-ash shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={post.image}
+                alt={post.title}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          )}
 
           {/* Simple Story Content */}
           <div className="mt-10 space-y-6 text-[15px] leading-[1.85] text-cool sm:text-[16px] md:text-[17px] 3xl:text-[19px] 4xl:text-[21px]">
-            {post.content.map((paragraph, index) => (
+            {contentParagraphs.map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
           </div>

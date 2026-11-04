@@ -253,6 +253,147 @@ export const processApi = {
     ),
 };
 
+// ─── Clientele Types & API ──────────────────────────────────────────────────
+
+export type ClientLogoItem = {
+  _id: string;
+  id?: string;
+  name: string;
+  logo: string;
+  logoPublicId?: string;
+  order: number;
+  isActive?: boolean;
+};
+
+export type TestimonialItem = {
+  _id?: string;
+  text: string;
+  name: string;
+  designation: string;
+  company: string;
+  order?: number;
+};
+
+export type ClienteleData = {
+  heading: string;
+  headingHighlight: string;
+  description: string;
+  subheading: string;
+  testimonialsHeading: string;
+  testimonials: TestimonialItem[];
+  clients: ClientLogoItem[];
+};
+
+export const clienteleApi = {
+  get: (all = true) =>
+    req<ClienteleData>(`/api/clientele${all ? "?all=true" : ""}`),
+  updateSection: (data: Partial<ClienteleData>) =>
+    req<ClienteleData>("/api/clientele/section", {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+  createClient: (data: FormData) =>
+    req<ClientLogoItem>("/api/clientele/clients", {
+      method: "POST",
+      body: data,
+    }),
+  updateClient: (id: string, data: FormData) =>
+    req<ClientLogoItem>(`/api/clientele/clients/${id}`, {
+      method: "PUT",
+      body: data,
+    }),
+  deleteClient: (id: string) =>
+    req<{ message: string; id: string }>(`/api/clientele/clients/${id}`, {
+      method: "DELETE",
+    }),
+  reorderClients: (orderedIds: string[]) =>
+    req<{ message: string }>("/api/clientele/clients/reorder", {
+      method: "PATCH",
+      body: JSON.stringify({ orderedIds }),
+    }),
+};
+
+// ─── Inspiration Types & API ────────────────────────────────────────────────
+
+export type InspirationItem = {
+  _id: string;
+  id?: string;
+  title: string;
+  category?: string;
+  label?: string;
+  text?: string;
+  image: string;
+  imagePublicId?: string;
+  order: number;
+  createdAt?: string;
+};
+
+export const inspirationApi = {
+  list: () => req<InspirationItem[]>("/api/inspiration"),
+  create: (data: FormData) =>
+    req<InspirationItem>("/api/inspiration", {
+      method: "POST",
+      body: data,
+    }),
+  update: (id: string, data: FormData) =>
+    req<InspirationItem>(`/api/inspiration/${id}`, {
+      method: "PUT",
+      body: data,
+    }),
+  delete: (id: string) =>
+    req<{ message: string; id: string }>(`/api/inspiration/${id}`, {
+      method: "DELETE",
+    }),
+  reorder: (orderedIds: string[]) =>
+    req<{ message: string }>("/api/inspiration/reorder", {
+      method: "PATCH",
+      body: JSON.stringify({ orderedIds }),
+    }),
+};
+
+// ─── Blog Types & API ───────────────────────────────────────────────────────
+
+export type BlogPostItem = {
+  _id: string;
+  id?: string;
+  title: string;
+  slug: string;
+  summary: string;
+  content: string[];
+  image: string;
+  imagePublicId?: string;
+  date: string;
+  readTime: string;
+  isPublished: boolean;
+  order: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export const blogApi = {
+  list: (all = true) =>
+    req<BlogPostItem[]>(`/api/blogs${all ? "?all=true" : ""}`),
+  get: (idOrSlug: string) => req<BlogPostItem>(`/api/blogs/${idOrSlug}`),
+  create: (data: FormData) =>
+    req<BlogPostItem>("/api/blogs", {
+      method: "POST",
+      body: data,
+    }),
+  update: (id: string, data: FormData) =>
+    req<BlogPostItem>(`/api/blogs/${id}`, {
+      method: "PUT",
+      body: data,
+    }),
+  delete: (id: string) =>
+    req<{ message: string; id: string }>(`/api/blogs/${id}`, {
+      method: "DELETE",
+    }),
+  toggle: (id: string) =>
+    req<BlogPostItem>(`/api/blogs/${id}/toggle`, {
+      method: "PATCH",
+    }),
+};
+
 // ─── Contact Info Types & API ───────────────────────────────────────────────
 
 export type ContactInfo = {

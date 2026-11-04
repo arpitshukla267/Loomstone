@@ -133,7 +133,7 @@ export default function ContactPage() {
                       )}
                       {info.workshopLocation && (
                         <Detail
-                          label="Workshop Address:"
+                          label="Sales Office:"
                           value={info.workshopLocation}
                           sub={info.workshopNote || undefined}
                         />

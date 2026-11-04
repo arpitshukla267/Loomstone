@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, MotionConfig, useInView, type Variants } from "framer-motion";
 import {
   ClipboardCheck,
@@ -77,6 +77,9 @@ const STEP_ICONS: LucideIcon[] = [
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const FETCH_TIMEOUT = 4000;
+
 /* ------------------------------------------------------------------ */
 /* Single row                                                          */
 /* ------------------------------------------------------------------ */
@@ -116,7 +119,7 @@ function ProcessRow({ step, index, mediaOnLeft }: ProcessRowProps) {
   return (
     <div
       ref={ref}
-      className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 3xl:gap-20 4xl:gap-24 py-8 sm:py-0"
+      className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12 3xl:gap-20 4xl:gap-24"
     >
       {/* MEDIA */}
       <motion.div
@@ -187,18 +190,65 @@ export interface ProcessSectionProps {
 }
 
 export function ProcessSection({
-  steps = defaultProcessSteps,
-  heading = "From Vision to Exceptional Spaces",
-  intro = "At Loomstone, exceptional flooring begins with a clear vision and is realised through meticulous execution. We guide every project from concept to completion, creating floors that elevate the character and identity of a space.",
+  steps: propSteps,
+  heading: propHeading,
+  intro: propIntro,
   closingTitle = "Our Approach",
   closingText = "From luxury hospitality destinations and signature commercial developments to bespoke residential environments, Loomstone delivers flooring solutions that seamlessly unite design excellence, craftsmanship, technical precision, and enduring value.",
   firstMediaSide = "right",
 }: ProcessSectionProps) {
+  const [headingText, setHeadingText] = useState(
+    propHeading || "From Vision to Exceptional Spaces"
+  );
+  const [introText, setIntroText] = useState(
+    propIntro ||
+      "At Loomstone, exceptional flooring begins with a clear vision and is realised through meticulous execution. We guide every project from concept to completion, creating floors that elevate the character and identity of a space."
+  );
+  const [stepsList, setStepsList] = useState<ProcessStep[]>(
+    propSteps || defaultProcessSteps
+  );
+
+  // Fetch dynamic process content from backend if not passed as props
+  useEffect(() => {
+    if (propSteps && propHeading && propIntro) return;
+    if (!API_URL) return;
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+    fetch(`${API_URL}/api/process`, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch process data");
+        return res.json();
+      })
+      .then((data) => {
+        if (!propHeading && data.heading) setHeadingText(data.heading);
+        if (!propIntro && data.intro) setIntroText(data.intro);
+        if (!propSteps && Array.isArray(data.steps) && data.steps.length > 0) {
+          const sorted = [...data.steps].sort(
+            (a, b) => (a.order ?? 0) - (b.order ?? 0)
+          );
+          setStepsList(
+            sorted.map((s) => ({
+              title: s.title,
+              description: s.description,
+              media: s.media || undefined,
+              mediaAlt: s.title,
+            }))
+          );
+        }
+      })
+      .catch(() => {})
+      .finally(() => window.clearTimeout(timeoutId));
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+    };
+  }, [propSteps, propHeading, propIntro]);
+
   const headerRef = useRef<HTMLDivElement>(null);
   const headerInView = useInView(headerRef, { once: true, amount: 0.4 });
-
-  const closingRef = useRef<HTMLDivElement>(null);
-  const closingInView = useInView(closingRef, { once: true, amount: 0.5 });
 
   return (
     <MotionConfig reducedMotion="user">
@@ -213,21 +263,21 @@ export function ProcessSection({
             className="mx-auto mb-10 flex w-full flex-col items-center text-center md:mb-14"
           >
             <h2 className="mx-auto max-w-[900px] 3xl:max-w-[1100px] font-manrope text-[36px] font-normal leading-[1.15] text-navy sm:text-[46px] md:text-[clamp(42px,4.5vw,64px)] 3xl:text-[70px] 4xl:text-[80px]">
-              {heading}
+              {headingText}
             </h2>
             <p className="mx-auto mt-4 max-w-[760px] 3xl:max-w-[950px] text-[14px] leading-[1.8] text-cool sm:text-[16px] 3xl:text-[18px] 4xl:text-[20px]">
-              {intro}
+              {introText}
             </p>
           </motion.div>
 
           {/* ZIG-ZAG ROWS */}
           <div className="flex flex-col gap-8 md:gap-10 lg:gap-12 3xl:gap-16 4xl:gap-20">
-            {steps.map((step, index) => {
+            {stepsList.map((step, index) => {
               const firstOnLeft = firstMediaSide === "left";
               const mediaOnLeft = index % 2 === 0 ? firstOnLeft : !firstOnLeft;
               return (
                 <ProcessRow
-                  key={step.title}
+                  key={`${step.title}-${index}`}
                   step={step}
                   index={index}
                   mediaOnLeft={mediaOnLeft}

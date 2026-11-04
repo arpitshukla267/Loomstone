@@ -21,6 +21,11 @@ import {
   Phone,
   Sparkles,
   Building2,
+  UserCheck,
+  Workflow,
+  Handshake,
+  Palette,
+  BookOpen,
 } from "lucide-react";
 import Image from "next/image";
 import { authFetch, setToken, clearToken } from "@/lib/auth";
@@ -31,6 +36,11 @@ const NAV = [
   { label: "Products", href: "/dashboard/products", icon: Package },
   { label: "Why Loomstone", href: "/dashboard/why-loomstone", icon: Sparkles },
   { label: "Industries We Serve", href: "/dashboard/industries", icon: Building2 },
+  { label: "Founder", href: "/dashboard/founder", icon: UserCheck },
+  { label: "Process", href: "/dashboard/process", icon: Workflow },
+  { label: "Clientele", href: "/dashboard/clientele", icon: Handshake },
+  { label: "Inspiration", href: "/dashboard/inspiration", icon: Palette },
+  { label: "Blogs", href: "/dashboard/blogs", icon: BookOpen },
   { label: "Contact Info", href: "/dashboard/contactinfo", icon: Phone },
 ];
 
@@ -138,7 +148,7 @@ function ChangePasswordModal({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-modal="true"
         aria-label="Change password"
-        className="w-full max-w-sm rounded-2xl bg-[#0B1C30] border border-slate-800 p-6 text-slate-300 shadow-2xl"
+        className="w-full max-w-sm rounded-2xl bg-navy border border-slate-800 p-6 text-slate-300 shadow-2xl"
       >
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2 text-white font-semibold text-sm">
@@ -277,7 +287,7 @@ export function Sidebar() {
   const [showChangePassword, setShowChangePassword] = useState(false);
 
   return (
-    <aside className="w-64 shrink-0 bg-[#0B1C30] h-full flex flex-col border-r border-slate-800/60 text-slate-300">
+    <aside className="w-64 shrink-0 bg-navy h-full flex flex-col border-r border-slate-800/60 text-slate-300">
       {/* Brand Header */}
       <div className="px-6 py-6 border-b border-slate-800/70">
         <div className="flex flex-col items-center gap-3">

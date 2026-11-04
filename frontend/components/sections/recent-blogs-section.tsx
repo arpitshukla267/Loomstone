@@ -3,12 +3,38 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { BLOG_POSTS } from "@/data/blogs";
+import type { BlogPost } from "@/data/blogs";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 export function RecentBlogsSection() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${API_URL}/api/blogs`, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch blogs");
+        return res.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setPosts(data);
+        }
+      })
+      .catch(() => {
+        setPosts([]);
+      })
+      .finally(() => {
+        setLoaded(true);
+      });
+
+    return () => controller.abort();
+  }, []);
 
   const updateArrows = useCallback(() => {
     const el = scrollerRef.current;
@@ -27,7 +53,7 @@ export function RecentBlogsSection() {
       el.removeEventListener("scroll", updateArrows);
       window.removeEventListener("resize", updateArrows);
     };
-  }, [updateArrows]);
+  }, [updateArrows, posts]);
 
   const scrollByCard = (direction: 1 | -1) => {
     const el = scrollerRef.current;
@@ -35,6 +61,11 @@ export function RecentBlogsSection() {
     const scrollAmount = el.clientWidth * 0.85 * direction;
     el.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
+
+  // If blogs loaded and there are no published blogs, don't show an empty broken section
+  if (loaded && posts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="bg-white px-6 py-16 md:px-[5%] md:py-24 3xl:px-[7%] 3xl:py-32 4xl:py-40">
@@ -78,7 +109,7 @@ export function RecentBlogsSection() {
             ref={scrollerRef}
             className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mx-0 md:grid md:snap-none md:grid-cols-2 md:gap-7 md:overflow-visible md:px-0 lg:grid-cols-4 3xl:gap-10 4xl:gap-12"
           >
-            {BLOG_POSTS.slice(0, 4).map((post) => (
+            {posts.slice(0, 4).map((post) => (
               <article
                 key={post.slug}
                 className="flex w-[82vw] shrink-0 snap-center flex-col md:w-auto md:shrink"

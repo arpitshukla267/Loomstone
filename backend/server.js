@@ -10,6 +10,9 @@ import whyLoomstoneRoutes from "./routes/whyLoomstoneRoutes.js";
 import industryRoutes from "./routes/industryRoutes.js";
 import founderRoutes from "./routes/founderRoutes.js";
 import processRoutes from "./routes/processRoutes.js";
+import clienteleRoutes from "./routes/clienteleRoutes.js";
+import inspirationRoutes from "./routes/inspirationRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
 
 import { ensureDefaultAdmin } from "./controllers/authController.js";
 
@@ -56,6 +59,9 @@ app.use("/api/why-loomstone", whyLoomstoneRoutes);
 app.use("/api/industries", industryRoutes);
 app.use("/api/founder", founderRoutes);
 app.use("/api/process", processRoutes);
+app.use("/api/clientele", clienteleRoutes);
+app.use("/api/inspiration", inspirationRoutes);
+app.use("/api/blogs", blogRoutes);
 
 // Health check
 app.get("/", (req, res) => {
