@@ -15,7 +15,7 @@ import {
 /* ------------------------------------------------------------------ */
 /* Theme colours (from your design)                                    */
 /* ------------------------------------------------------------------ */
-const HEADING = "#151f28"; // "What Sets Loomstone Apart"
+const HEADING = "#2A2967"; // "What Sets Loomstone Apart"
 const ACCENT = "#E1A31C"; // "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution."
 const ICON = "#5b2a1d"; // icon stroke (deep brown)
 const ICON_RING = "#d9c3b0"; // circle border around icons
