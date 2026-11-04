@@ -28,6 +28,13 @@ export const INDUSTRIES: Industry[] = [
       "Create inspiring workplaces and distinctive commercial environments with versatile flooring solutions that balance contemporary design, acoustic comfort and everyday practicality.",
   },
   {
+    slug: "public-institutional",
+    name: "Public Spaces",
+    image: "/industries/public-institutional.png",
+    description:
+      "Equip airports, healthcare facilities, educational institutions and public spaces with resilient flooring solutions designed for demanding environments, easy maintenance and long-term performance.",
+  },
+  {
     slug: "leisure-entertainment",
     name: "Leisure & Entertainment",
     image: "/industries/leisure-entertainment.jpeg",
@@ -40,12 +47,5 @@ export const INDUSTRIES: Industry[] = [
     image: "/industries/Gaming.png",
     description:
       "Enhance gaming arenas, esports venues and gaming lounges with high-performance flooring solutions that combine modern aesthetics, acoustic comfort and durability for high-traffic environments.",
-  },
-  {
-    slug: "public-institutional",
-    name: "Public Spaces",
-    image: "/industries/public-institutional.png",
-    description:
-      "Equip airports, healthcare facilities, educational institutions and public spaces with resilient flooring solutions designed for demanding environments, easy maintenance and long-term performance.",
   },
 ];
