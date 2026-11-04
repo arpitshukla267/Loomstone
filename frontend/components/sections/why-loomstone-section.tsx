@@ -30,31 +30,56 @@ const VIEWPORT = { once: true, amount: 0.15 } as const;
 /* Tuning: black bar visible  -> increase ZOOM                         */
 /*         bar only on left   -> decrease SHIFT_X                      */
 /*         bar only on right  -> increase SHIFT_X                      */
+/*         move video down    -> increase SHIFT_Y (up -> decrease)     */
 /* Best long-term fix: crop the bars out of the file with ffmpeg,      */
 /* then set every ZOOM to 1 and every SHIFT_X to 0.                    */
 /* ------------------------------------------------------------------ */
 
-// Tablet + laptop (sm up to < 1700px)
+// Tablet + small laptop (sm up to < 1500px)
 const VIDEO_ZOOM = 1.28;
 const VIDEO_SHIFT_X = 1.2;
+const VIDEO_SHIFT_Y = 7;
 
 // Mobile (< 640px) -> video box is 4:6 (portrait)
 const MOBILE_MAX_WIDTH = 639; // px
 const VIDEO_ZOOM_MOBILE = 1.3;
 const VIDEO_SHIFT_X_MOBILE = 1.2;
+const VIDEO_SHIFT_Y_MOBILE = 6;
+
+// Tablet (640px - 1023px) -> video box is 4:5 (portrait)
+const TABLET_MIN_WIDTH = 640; // px
+const TABLET_MAX_WIDTH = 1023; // px
+const VIDEO_ZOOM_TABLET = 1.5;
+const VIDEO_SHIFT_X_TABLET = 1.2;
+const VIDEO_SHIFT_Y_TABLET = 6;
+
+// Large laptop (>= 1500px and < 1700px)
+const LG_MIN_WIDTH = 1500; // px
+const VIDEO_ZOOM_LG = 1.38;
+const VIDEO_SHIFT_X_LG = 0.6;
+const VIDEO_SHIFT_Y_LG = 6;
 
 // Large screens (>= 1700px)
 const XL_MIN_WIDTH = 1700; // px
-const VIDEO_ZOOM_XL = 1.45;
+const VIDEO_ZOOM_XL = 1.55;
 const VIDEO_SHIFT_X_XL = 0.2;
+const VIDEO_SHIFT_Y_XL = 6;
 
+// NOTE: order matters — the 1500px block must come before the 1700px block
+// so that >= 1700px screens are overridden by the XL rule.
 const VIDEO_CSS = `
-.loomstone-video{transform:translateX(${VIDEO_SHIFT_X}%) scale(${VIDEO_ZOOM});transform-origin:center}
+.loomstone-video{transform:translate(${VIDEO_SHIFT_X}%,${VIDEO_SHIFT_Y}%) scale(${VIDEO_ZOOM});transform-origin:center}
 @media (max-width:${MOBILE_MAX_WIDTH}px){
-  .loomstone-video{transform:translateX(${VIDEO_SHIFT_X_MOBILE}%) scale(${VIDEO_ZOOM_MOBILE})}
+  .loomstone-video{transform:translate(${VIDEO_SHIFT_X_MOBILE}%,${VIDEO_SHIFT_Y_MOBILE}%) scale(${VIDEO_ZOOM_MOBILE})}
+}
+@media (min-width:${TABLET_MIN_WIDTH}px) and (max-width:${TABLET_MAX_WIDTH}px){
+  .loomstone-video{transform:translate(${VIDEO_SHIFT_X_TABLET}%,${VIDEO_SHIFT_Y_TABLET}%) scale(${VIDEO_ZOOM_TABLET})}
+}
+@media (min-width:${LG_MIN_WIDTH}px){
+  .loomstone-video{transform:translate(${VIDEO_SHIFT_X_LG}%,${VIDEO_SHIFT_Y_LG}%) scale(${VIDEO_ZOOM_LG})}
 }
 @media (min-width:${XL_MIN_WIDTH}px){
-  .loomstone-video{transform:translateX(${VIDEO_SHIFT_X_XL}%) scale(${VIDEO_ZOOM_XL})}
+  .loomstone-video{transform:translate(${VIDEO_SHIFT_X_XL}%,${VIDEO_SHIFT_Y_XL}%) scale(${VIDEO_ZOOM_XL})}
 }
 `;
 
@@ -101,22 +126,25 @@ const DEFAULT_FEATURES: Feature[] = [
   {
     icon: Globe,
     title: "Global Manufacturing Partnerships",
-    text: "Working with trusted manufacturing partners and specialist suppliers to deliver quality material, consistent standards & Bespoke flooring solutions.",
+    text: "Working with trusted manufacturing partners to deliver quality material, consistent standards & Bespoke flooring solutions.",
   },
   {
     icon: ClipboardCheck,
     title: "Technical Precision",
-    text: "Meticulous attention to specification, accurate measurements, budget consideration and project requirements ensuring flooring solutions that balance design intent, performance and practicality.",
+    text: "Precision in every detail, creating flooring solutions that unite design, quality and performance.",
   },
   {
     icon: Handshake,
     title: "End to End Project Support",
-    text: "Coordinated support from design development to supply and installation, ensuring a seamless product journey from concept to completion.",
+    text: "Coordinated support from design development to supply & installation, ensuring a seamless product journey from concept to completion.",
   },
 ];
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const FETCH_TIMEOUT = 4000;
+
+// Video freezes (pauses) once it reaches this many seconds.
+const STOP_AT_SECONDS = 10;
 
 function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
   const Icon = feature.icon;
@@ -137,7 +165,9 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
         (mobOdd ? "pl-4 " : "pr-4 ") +
         "sm:pb-0 " +
         (row === 0 ? "sm:pt-0 sm:pb-8 " : "sm:pt-8 ") +
-        (col > 0 ? "sm:pl-6 sm:pr-0 lg:pl-8" : "sm:pl-0 sm:pr-2")
+        (col > 0 ? "sm:pl-6 lg:pl-8 " : "sm:pl-0 ") +
+        // right gap so the description never touches the next column's divider
+        (col < 2 ? "sm:pr-5" : "sm:pr-0")
       }
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -183,7 +213,10 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
       </span>
 
       <h3
-        className="mb-0 mt-3 text-[12px] font-semibold leading-[1.25] sm:mt-4 sm:max-w-[200px] sm:text-[13px] 3xl:max-w-[220px] 3xl:text-[15px] 4xl:text-[17px]"
+        className={
+          "mb-0 mt-3 text-[12px] font-semibold leading-[1.25] sm:mt-4 sm:max-w-[200px] sm:text-[13px] 3xl:max-w-[220px] 3xl:text-[15px] 4xl:text-[17px] " +
+          (index === 3 ? "!max-w-none whitespace-nowrap" : "")
+        }
         style={{ color: HEADING }}
       >
         {feature.title}
@@ -273,16 +306,40 @@ export function WhyLoomstoneSection({
 
     v.muted = true;
     v.defaultMuted = true;
-    v.loop = true;
+    v.loop = false;
     v.setAttribute("muted", "");
     v.setAttribute("playsinline", "");
 
     let visible = false;
+    let finished = false; // reached STOP_AT_SECONDS -> never play again
 
     const play = () => {
+      if (finished) return;
       const p = v.play();
       if (p && typeof p.catch === "function") p.catch(() => {});
     };
+
+    const freeze = () => {
+      finished = true;
+      v.pause(); // freeze on this frame
+    };
+
+    // Check every 100ms (more precise + reliable than `timeupdate`).
+    // If the file is shorter than STOP_AT_SECONDS, stop just before its end.
+    const stopTimer = window.setInterval(() => {
+      if (finished) return;
+      const limit =
+        Number.isFinite(v.duration) && v.duration > 0
+          ? Math.min(STOP_AT_SECONDS, v.duration - 0.1)
+          : STOP_AT_SECONDS;
+      if (v.currentTime >= limit) freeze();
+    }, 100);
+
+    // Safety net: if the video ends by itself, never restart it.
+    const onEnded = () => {
+      finished = true;
+    };
+    v.addEventListener("ended", onEnded);
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -307,6 +364,8 @@ export function WhyLoomstoneSection({
 
     return () => {
       io.disconnect();
+      window.clearInterval(stopTimer);
+      v.removeEventListener("ended", onEnded);
       v.removeEventListener("loadeddata", onReady);
       v.removeEventListener("canplay", onReady);
       document.removeEventListener("visibilitychange", onVisibility);
@@ -321,7 +380,7 @@ export function WhyLoomstoneSection({
             Mobile (< sm): 4:6 (portrait) box with light side padding (px-4).
             sm to < lg: same as before (fixed 400px height).
             lg and up: unchanged. */}
-        <div className="order-2 mt-6 flex aspect-[4/6] w-full px-8 py-6 sm:mt-0 sm:aspect-auto sm:px-0 sm:h-[400px] sm:py-6 lg:order-none lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
+        <div className="order-2 mt-6 flex aspect-[4/6] w-full px-8 py-6 sm:mt-6 sm:aspect-[4/5] sm:h-auto sm:px-8 sm:py-6 lg:order-none lg:mt-0 lg:px-0 lg:aspect-auto lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
           <div
             className="relative flex-1 overflow-hidden bg-[#fdfbf7] select-none"
             onContextMenu={(e) => e.preventDefault()}
@@ -333,7 +392,6 @@ export function WhyLoomstoneSection({
               src={video}
               poster={activePoster}
               muted
-              loop
               playsInline
               preload="auto"
               aria-hidden="true"
