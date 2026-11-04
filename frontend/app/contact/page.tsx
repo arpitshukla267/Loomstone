@@ -56,19 +56,19 @@ function Detail({
   href?: string;
 }) {
   return (
-    <div>
+    <div className="min-w-0">
       <div className="text-[14px] text-cool 3xl:text-[16px] 4xl:text-[18px]">
         {label}
       </div>
       {href ? (
         <a
           href={href}
-          className="mt-1 block text-[17px] text-navy no-underline transition-colors hover:text-gold 3xl:text-[20px] 4xl:text-[23px]"
+          className="mt-1 block break-words text-[17px] text-navy no-underline transition-colors hover:text-gold 3xl:text-[20px] 4xl:text-[23px]"
         >
           {value}
         </a>
       ) : (
-        <div className="mt-1 text-[17px] text-navy 3xl:text-[20px] 4xl:text-[23px]">
+        <div className="mt-1 break-words text-[17px] text-navy 3xl:text-[20px] 4xl:text-[23px]">
           {value}
         </div>
       )}
@@ -107,7 +107,8 @@ export default function ContactPage() {
               </div>
 
               <div className="mt-16 border-t border-line pt-9 lg:mt-0 3xl:pt-12">
-                <div className="flex flex-col gap-8 3xl:gap-10">
+                {/* 2-2 grid: Email + Phone, then Quick response + Sales Office */}
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 3xl:gap-10">
                   {info.email && (
                     <Detail
                       label="Email inquiries"
@@ -122,23 +123,19 @@ export default function ContactPage() {
                       href={waHref(info.phone)}
                     />
                   )}
-                  {(info.responseTime || info.workshopLocation) && (
-                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 3xl:gap-10">
-                      {info.responseTime && (
-                        <Detail
-                          label="Quick response"
-                          value={info.responseTime}
-                          sub={info.responseNote || undefined}
-                        />
-                      )}
-                      {info.workshopLocation && (
-                        <Detail
-                          label="Sales Office:"
-                          value={info.workshopLocation}
-                          sub={info.workshopNote || undefined}
-                        />
-                      )}
-                    </div>
+                  {info.responseTime && (
+                    <Detail
+                      label="Quick response"
+                      value={info.responseTime}
+                      sub={info.responseNote || undefined}
+                    />
+                  )}
+                  {info.workshopLocation && (
+                    <Detail
+                      label="Sales Office:"
+                      value={info.workshopLocation}
+                      sub={info.workshopNote || undefined}
+                    />
                   )}
                 </div>
               </div>
