@@ -130,8 +130,8 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/resilient-flooring.webp",
     heading: (
       <>
-        Unmatched Durability.{" "}
-        <em className="text-gold not-italic"> Unrivaled Beauty</em>
+        Where Performance{" "}
+        <em className="text-gold not-italic"> Meets Perfection.</em>
       </>
     ),
     description:

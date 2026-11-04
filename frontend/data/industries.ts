@@ -12,20 +12,20 @@ export const INDUSTRIES: Industry[] = [
     image: "/industries/Hospitality.PNG",
     description:
       "Elevate hotels, resorts and dining spaces with bespoke carpets and rugs that express your brand identity, enrich guest experiences and deliver lasting performance.",
-  },
+    },
+    {
+      slug: "luxury-residential",
+      name: "Luxury Residential",
+      image: "/industries/Residencieal.PNG",
+      description:
+        "Transform private residences with beautifully crafted rugs, premium carpets and refined flooring solutions tailored to individual tastes, architectural details and contemporary living.",
+    },
   {
     slug: "corporate-commercial",
     name: "Corp & Commercial spaces",
     image: "/industries/corporate-commercial.jpeg",
     description:
       "Create inspiring workplaces and distinctive commercial environments with versatile flooring solutions that balance contemporary design, acoustic comfort and everyday practicality.",
-  },
-  {
-    slug: "public-institutional",
-    name: "Public Spaces",
-    image: "/industries/public-institutional.png",
-    description:
-      "Equip airports, healthcare facilities, educational institutions and public spaces with resilient flooring solutions designed for demanding environments, easy maintenance and long-term performance.",
   },
   {
     slug: "leisure-entertainment",
@@ -42,10 +42,10 @@ export const INDUSTRIES: Industry[] = [
       "Enhance gaming arenas, esports venues and gaming lounges with high-performance flooring solutions that combine modern aesthetics, acoustic comfort and durability for high-traffic environments.",
   },
   {
-    slug: "luxury-residential",
-    name: "Luxury Residential",
-    image: "/industries/Residencieal.PNG",
+    slug: "public-institutional",
+    name: "Public Spaces",
+    image: "/industries/public-institutional.png",
     description:
-      "Transform private residences with beautifully crafted rugs, premium carpets and refined flooring solutions tailored to individual tastes, architectural details and contemporary living.",
+      "Equip airports, healthcare facilities, educational institutions and public spaces with resilient flooring solutions designed for demanding environments, easy maintenance and long-term performance.",
   },
 ];
