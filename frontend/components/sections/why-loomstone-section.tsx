@@ -125,7 +125,7 @@ const DEFAULT_FEATURES: Feature[] = [
   },
   {
     icon: Globe,
-    title: "Global Manufacturing Partnerships",
+    title: "Global Partnerships",
     text: "Working with trusted manufacturing partners to deliver quality material, consistent standards & Bespoke flooring solutions.",
   },
   {
@@ -136,7 +136,7 @@ const DEFAULT_FEATURES: Feature[] = [
   {
     icon: Handshake,
     title: "End to End Project Support",
-    text: "Coordinated support from design development to supply & installation, ensuring a seamless product journey from concept to completion.",
+    text: "Seamless coordination from design development to supply and installation, ensuring smooth project execution from concept to completion.",
   },
 ];
 

@@ -21,7 +21,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     name: "Bespoke Hand-crafted Carpets & Rugs",
     description:
       "Created by skilled artisans and tailored to the most demanding design visions, our bespoke carpets and rugs combine exquisite craftsmanship, unparalleled customization, and timeless luxury.",
-    images: ["/final-website/hk.jpg", "/final-website/hand-tuffted.jpg"],
+    images: ["/final-website/hk.jpg"],
   },
   {
     id: "prod-03",
