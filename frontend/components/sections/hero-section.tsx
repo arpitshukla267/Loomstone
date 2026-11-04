@@ -104,17 +104,17 @@ async function fetchHeroSlides(signal: AbortSignal): Promise<HeroSlide[]> {
 /* ---------- Fallback (hardcoded) slides: buttons nahi ---------- */
 
 const defaultSlides: HeroSlide[] = [
-  {
-    image: "/hero-backup/axminster.webp",
-    heading: (
-      <>
-        Soft on the Surface.{""}{" "}
-        <em className="text-gold not-italic"> Strong at the Core</em>
-      </>
-    ),
-    description:
-      "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
-  },
+  // {
+  //   image: "/hero-backup/axminster.webp",
+  //   heading: (
+  //     <>
+  //       Soft on the Surface.{""}{" "}
+  //       <em className="text-gold not-italic"> Strong at the Core</em>
+  //     </>
+  //   ),
+  //   description:
+  //     "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
+  // },
   {
     image: "/hero-backup/axminster-2.webp",
     heading: (
@@ -127,6 +127,16 @@ const defaultSlides: HeroSlide[] = [
       "Every rug tells a story through thoughtful design, rich textures and exceptional craftsmanship.",
   },
   {
+    image: "/hero-backup/carpet-tiles.webp",
+    heading: (
+      <>
+        Soft on the Surface.{" "}
+        <em className="text-gold not-italic"> Strong at the Core.</em>
+      </>
+    ),
+    description: "Where every floor tells a story.",
+  },
+  {
     image: "/hero-backup/resilient-flooring.webp",
     heading: (
       <>
@@ -136,16 +146,6 @@ const defaultSlides: HeroSlide[] = [
     ),
     description:
       "Resilient flooring made for high-traffic spaces without compromising on style. Strong, easy to maintain, and designed to look flawless for years.",
-  },
-  {
-    image: "/hero-backup/handmade.webp",
-    heading: (
-      <>
-        From Our Looms.{" "}
-        <em className="text-gold not-italic"> Direct to Your Site.</em>
-      </>
-    ),
-    description: "",
   },
 ];
 
