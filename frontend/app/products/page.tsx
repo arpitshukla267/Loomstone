@@ -60,7 +60,7 @@ function ProductsContent() {
           className="object-cover object-right-top"
         />
         {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-[#000000]/50" />
+        <div className="absolute inset-0 bg-[#000000]/60" />
 
         <div className="relative z-10 mx-auto max-w-[85vw] px-4 translate-y-1/4 text-center">
           <Reveal delay={100}>

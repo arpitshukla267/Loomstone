@@ -24,18 +24,38 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 const VIEWPORT = { once: true, amount: 0.15 } as const;
 
 /**
- * Video file ke andar left/right black bars baked-in hain.
- * Us wajah se video ko zoom karte hain taaki bars overflow hokar
- * parent ke `overflow-hidden` se cut ho jayein.
+ * Video file ke andar left/right black bars baked-in hain (left ~58px, right ~70px,
+ * yaani right wali thodi badi hai). Isliye:
+ *  - VIDEO_ZOOM    : bars ko bahar dhakelne ke liye zoom
+ *  - VIDEO_SHIFT_X : (% mein) video ko RIGHT ki taraf kheenchta hai, taaki
+ *                    dono side ke bars barabar cut hon
  *
- * Screenshot se: content ~546px / frame ~663px  =>  ~1.22 scale chahiye.
- * Agar abhi bhi bars dikhein to isse badhao (1.28, 1.3 ...),
- * agar video zyada cut ho raha ho to kam karo.
+ * Left side black dikhe  -> VIDEO_SHIFT_X kam karo (0.5, 0)
+ * Right side black dikhe -> VIDEO_SHIFT_X badhao (1.5, 2)
+ * Dono side dikhe        -> VIDEO_ZOOM badhao (1.3, 1.35)
  *
- * Best long-term fix: video ko re-export karke bars crop kar do,
- * phir ye value 1.02 kar dena.
+ * Best fix: video ko ffmpeg se crop karke re-export karo, phir
+ * VIDEO_ZOOM = 1 aur VIDEO_SHIFT_X = 0 kar dena.
  */
-const VIDEO_ZOOM = 1.25;
+const VIDEO_ZOOM = 1.28;
+const VIDEO_SHIFT_X = 1.2;
+
+/**
+ * Badi screens (min-width: 1700px) par container ka shape badal jata hai,
+ * isliye wahan zyada zoom chahiye. Sirf yahi values badlo.
+ * Black patti dikhe -> XL_ZOOM badhao (1.5, 1.55)
+ * Left/right ek taraf dikhe -> XL_SHIFT_X thoda badlo (left dikhe: kam, right dikhe: zyada)
+ */
+const XL_MIN_WIDTH = 1700; // px
+const VIDEO_ZOOM_XL = 1.45;
+const VIDEO_SHIFT_X_XL = 0.2;
+
+const VIDEO_CSS = `
+.loomstone-video{transform:translateX(${VIDEO_SHIFT_X}%) scale(${VIDEO_ZOOM});transform-origin:center}
+@media (min-width:${XL_MIN_WIDTH}px){
+  .loomstone-video{transform:translateX(${VIDEO_SHIFT_X_XL}%) scale(${VIDEO_ZOOM_XL})}
+}
+`;
 
 type Feature = {
   icon: LucideIcon;
@@ -230,10 +250,10 @@ export function WhyLoomstoneSection({
             className="relative flex-1 overflow-hidden bg-[#fdfbf7] select-none"
             onContextMenu={(e) => e.preventDefault()}
           >
+            <style>{VIDEO_CSS}</style>
             <video
               ref={videoRef}
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-              style={{ transform: `scale(${VIDEO_ZOOM})` }}
+              className="loomstone-video pointer-events-none absolute inset-0 h-full w-full object-cover"
               src={video}
               poster={activePoster}
               muted
