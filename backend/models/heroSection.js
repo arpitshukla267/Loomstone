@@ -22,12 +22,14 @@ const heroSectionSchema = new mongoose.Schema(
     },
     primaryText: {
       type: String,
-      required: true,
+      required: false,
+      default: "",
       trim: true,
     },
     secondaryText: {
       type: String,
       required: false,
+      default: "",
       trim: true,
     },
     order: {
@@ -39,7 +41,7 @@ const heroSectionSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export default mongoose.model("HeroSection", heroSectionSchema);

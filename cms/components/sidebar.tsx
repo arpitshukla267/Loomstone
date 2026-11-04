@@ -20,6 +20,7 @@ import {
   Package,
   Phone,
   Sparkles,
+  Building2,
 } from "lucide-react";
 import Image from "next/image";
 import { authFetch, setToken, clearToken } from "@/lib/auth";
@@ -29,6 +30,7 @@ const NAV = [
   { label: "Hero Slides", href: "/dashboard/hero", icon: Clapperboard },
   { label: "Products", href: "/dashboard/products", icon: Package },
   { label: "Why Loomstone", href: "/dashboard/why-loomstone", icon: Sparkles },
+  { label: "Industries We Serve", href: "/dashboard/industries", icon: Building2 },
   { label: "Contact Info", href: "/dashboard/contactinfo", icon: Phone },
 ];
 

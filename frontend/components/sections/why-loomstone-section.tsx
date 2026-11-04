@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, MotionConfig } from "framer-motion";
 import {
   ClipboardCheck,
@@ -23,29 +23,9 @@ const ICON_RING = "#d9c3b0"; // circle border around icons
 const EASE = [0.22, 1, 0.36, 1] as const;
 const VIEWPORT = { once: true, amount: 0.15 } as const;
 
-/**
- * Video file ke andar left/right black bars baked-in hain (left ~58px, right ~70px,
- * yaani right wali thodi badi hai). Isliye:
- *  - VIDEO_ZOOM    : bars ko bahar dhakelne ke liye zoom
- *  - VIDEO_SHIFT_X : (% mein) video ko RIGHT ki taraf kheenchta hai, taaki
- *                    dono side ke bars barabar cut hon
- *
- * Left side black dikhe  -> VIDEO_SHIFT_X kam karo (0.5, 0)
- * Right side black dikhe -> VIDEO_SHIFT_X badhao (1.5, 2)
- * Dono side dikhe        -> VIDEO_ZOOM badhao (1.3, 1.35)
- *
- * Best fix: video ko ffmpeg se crop karke re-export karo, phir
- * VIDEO_ZOOM = 1 aur VIDEO_SHIFT_X = 0 kar dena.
- */
 const VIDEO_ZOOM = 1.28;
 const VIDEO_SHIFT_X = 1.2;
 
-/**
- * Badi screens (min-width: 1700px) par container ka shape badal jata hai,
- * isliye wahan zyada zoom chahiye. Sirf yahi values badlo.
- * Black patti dikhe -> XL_ZOOM badhao (1.5, 1.55)
- * Left/right ek taraf dikhe -> XL_SHIFT_X thoda badlo (left dikhe: kam, right dikhe: zyada)
- */
 const XL_MIN_WIDTH = 1700; // px
 const VIDEO_ZOOM_XL = 1.45;
 const VIDEO_SHIFT_X_XL = 0.2;
@@ -63,7 +43,25 @@ type Feature = {
   text: string;
 };
 
-const FEATURES: Feature[] = [
+const DEFAULT_ICONS: LucideIcon[] = [
+  Layers,
+  Palette,
+  Gem,
+  Globe,
+  ClipboardCheck,
+  Handshake,
+];
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Layers,
+  Palette,
+  Gem,
+  Globe,
+  ClipboardCheck,
+  Handshake,
+};
+
+const DEFAULT_FEATURES: Feature[] = [
   {
     icon: Layers,
     title: "Flooring Expertise",
@@ -96,6 +94,9 @@ const FEATURES: Feature[] = [
   },
 ];
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const FETCH_TIMEOUT = 4000;
+
 function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
   const Icon = feature.icon;
   const row = Math.floor(index / 3); // desktop row
@@ -107,11 +108,9 @@ function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
     <motion.div
       className={
         "relative flex flex-col " +
-        // mobile spacing (2 columns)
         (mobRow2Plus ? "pt-6 " : "") +
         (mobRow2Plus ? "pb-0 " : "pb-6 ") +
         (mobOdd ? "pl-4 " : "pr-4 ") +
-        // desktop spacing (original 3 columns)
         "sm:pb-0 " +
         (row === 0 ? "sm:pt-0 sm:pb-8 " : "sm:pt-8 ") +
         (col > 0 ? "sm:pl-6 sm:pr-0 lg:pl-8" : "sm:pl-0 sm:pr-2")
@@ -189,11 +188,62 @@ export function WhyLoomstoneSection({
   const activePoster = poster || image;
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const [headingText, setHeadingText] = useState("What Sets Loomstone Apart");
+  const [subheadingText, setSubheadingText] = useState(
+    "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution."
+  );
+  const [featuresList, setFeaturesList] = useState<Feature[]>(DEFAULT_FEATURES);
+
+  // Fetch dynamic Why Loomstone content from backend
+  useEffect(() => {
+    if (!API_URL) return;
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+    fetch(`${API_URL}/api/why-loomstone`, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch why-loomstone");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.heading) setHeadingText(data.heading);
+        if (data.subheading) setSubheadingText(data.subheading);
+
+        if (Array.isArray(data.features) && data.features.length > 0) {
+          const sorted = [...data.features]
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+            .slice(0, 6);
+
+          setFeaturesList(
+            sorted.map((item, i) => {
+              const matchedIcon =
+                (item.icon && ICON_MAP[item.icon]) ||
+                DEFAULT_ICONS[i % DEFAULT_ICONS.length];
+              return {
+                icon: matchedIcon,
+                title: item.title || "",
+                text: item.text || "",
+              };
+            })
+          );
+        }
+      })
+      .catch(() => {
+        // Fallback silently to defaults
+      })
+      .finally(() => window.clearTimeout(timeoutId));
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
 
-    // Muted is required, otherwise browsers block autoplay
     v.muted = true;
     v.defaultMuted = true;
     v.loop = true;
@@ -207,25 +257,22 @@ export function WhyLoomstoneSection({
       if (p && typeof p.catch === "function") p.catch(() => {});
     };
 
-    // threshold 0 = starts as soon as even 1px of the video is visible
     const io = new IntersectionObserver(
       ([entry]) => {
         visible = entry.isIntersecting;
         if (visible) play();
         else v.pause();
       },
-      { threshold: 0 },
+      { threshold: 0 }
     );
     io.observe(v);
 
-    // If the video finishes loading while it's already on screen, start it
     const onReady = () => {
       if (visible) play();
     };
     v.addEventListener("loadeddata", onReady);
     v.addEventListener("canplay", onReady);
 
-    // Resume when the tab becomes active again
     const onVisibility = () => {
       if (!document.hidden && visible) play();
     };
@@ -241,11 +288,9 @@ export function WhyLoomstoneSection({
 
   return (
     <MotionConfig reducedMotion="user">
-      {/* 35 / 65 split. */}
       <section className="relative left-1/2 grid w-screen max-w-[100vw] -translate-x-1/2 grid-cols-1 bg-[#fdfbf7] lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
-        {/* ================= VIDEO (left edge se start, sirf upar/neeche padding) ================= */}
+        {/* ================= VIDEO (left edge se start) ================= */}
         <div className="flex h-[300px] py-4 sm:h-[400px] sm:py-6 lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
-          {/* overflow-hidden: zoomed video ke black bars yahin cut hote hain */}
           <div
             className="relative flex-1 overflow-hidden bg-[#fdfbf7] select-none"
             onContextMenu={(e) => e.preventDefault()}
@@ -268,7 +313,6 @@ export function WhyLoomstoneSection({
               draggable={false}
               onContextMenu={(e) => e.preventDefault()}
             />
-            {/* transparent overlay: right-click / long-press video tak pahunchne hi nahi dega */}
             <div
               aria-hidden="true"
               className="absolute inset-0 z-10"
@@ -288,7 +332,7 @@ export function WhyLoomstoneSection({
               viewport={VIEWPORT}
               transition={{ duration: 0.8, ease: EASE }}
             >
-              What Sets Loomstone Apart
+              {headingText}
             </motion.h2>
 
             <motion.p
@@ -299,13 +343,13 @@ export function WhyLoomstoneSection({
               viewport={VIEWPORT}
               transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
             >
-              Thoughtful Design. Bespoke Craftsmanship. Seamless Execution.
+              {subheadingText}
             </motion.p>
 
             {/* Feature grid: 2 columns on mobile, 3 columns x 2 rows on sm+ */}
             <div className="mt-10 grid grid-cols-2 gap-0 sm:grid-cols-3 3xl:mt-14 4xl:mt-16">
-              {FEATURES.map((feature, i) => (
-                <FeatureItem key={feature.title} feature={feature} index={i} />
+              {featuresList.map((feature, i) => (
+                <FeatureItem key={`${feature.title}-${i}`} feature={feature} index={i} />
               ))}
             </div>
           </div>

@@ -7,6 +7,7 @@ import heroSectionRoutes from "./routes/heroSectionRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import contactInfoRoutes from "./routes/contactInfoRoutes.js";
 import whyLoomstoneRoutes from "./routes/whyLoomstoneRoutes.js";
+import industryRoutes from "./routes/industryRoutes.js";
 
 import { ensureDefaultAdmin } from "./controllers/authController.js";
 
@@ -50,6 +51,7 @@ app.use("/api/hero-section", heroSectionRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/contact-info", contactInfoRoutes);
 app.use("/api/why-loomstone", whyLoomstoneRoutes);
+app.use("/api/industries", industryRoutes);
 
 // Health check
 app.get("/", (req, res) => {

@@ -13,9 +13,22 @@ const queryClassName =
 const arrowClassName =
   "absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-navy shadow-[0_4px_14px_rgba(0,0,0,0.18)] transition duration-300 hover:text-gold";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const FETCH_TIMEOUT = 4000;
+
+interface IndustryApiResponse {
+  heading?: string;
+  description?: string;
+  eyebrow?: string;
+  cards?: Array<{
+    _id?: string;
+    name: string;
+    slug?: string;
+    image: string;
+  }>;
+}
+
 // Exported so other pages can reuse the exact same card.
-// onOpenInquiry diya ho to button inquiry modal kholta hai,
-// warna /contact?industry=<slug> par le jaata hai.
 export function IndustryCard({
   industry,
   onOpenInquiry,
@@ -34,7 +47,7 @@ export function IndustryCard({
       />
 
       {/* Neeche se dark overlay, upar ki taraf fade */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent" />
 
       {/* Bottom row: left mein text, right mein arrow button */}
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-center gap-4 p-5">
@@ -42,9 +55,6 @@ export function IndustryCard({
           <h3 className="line-clamp-2 font-manrope text-xl 3xl:text-2xl 4xl:text-3xl font-bold leading-[1.3] text-white">
             {industry.name}
           </h3>
-          {/* <p className="mt-1.5 line-clamp-3 text-sm leading-[1.25] text-gray-200/70">
-            {industry.description}
-          </p> */}
         </div>
 
         {onOpenInquiry ? (
@@ -81,6 +91,54 @@ export function IndustriesServedSection({
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
+  // Dynamic state loaded from backend with static fallback
+  const [eyebrow, setEyebrow] = useState("Global Flooring Solutions");
+  const [title, setTitle] = useState("Industries We Serve");
+  const [description, setDescription] = useState(
+    "From iconic hospitality destinations to refined commercial spaces and residences, we create bespoke flooring that brings design vision to life."
+  );
+  const [industriesList, setIndustriesList] = useState<Industry[]>(INDUSTRIES);
+
+  useEffect(() => {
+    if (!API_URL) return;
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+    fetch(`${API_URL}/api/industries`, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch industries");
+        return res.json() as Promise<IndustryApiResponse>;
+      })
+      .then((data) => {
+        if (data.eyebrow) setEyebrow(data.eyebrow);
+        if (data.heading) setTitle(data.heading);
+        if (data.description) setDescription(data.description);
+
+        if (Array.isArray(data.cards) && data.cards.length > 0) {
+          setIndustriesList(
+            data.cards.map((c) => ({
+              name: c.name,
+              slug:
+                c.slug ||
+                c.name.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-"),
+              image: c.image,
+              description: "",
+            }))
+          );
+        }
+      })
+      .catch(() => {
+        // Fallback to static INDUSTRIES cleanly
+      })
+      .finally(() => window.clearTimeout(timeoutId));
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
   const updateArrows = useCallback(() => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -92,7 +150,7 @@ export function IndustriesServedSection({
     updateArrows();
     window.addEventListener("resize", updateArrows);
     return () => window.removeEventListener("resize", updateArrows);
-  }, [updateArrows]);
+  }, [updateArrows, industriesList]);
 
   // Arrow click par agla/pichla card screen ke horizontal center mein aata hai
   const scrollByCard = (dir: 1 | -1) => {
@@ -106,7 +164,7 @@ export function IndustriesServedSection({
     let best = Infinity;
     cards.forEach((card, i) => {
       const distance = Math.abs(
-        card.offsetLeft + card.offsetWidth / 2 - center,
+        card.offsetLeft + card.offsetWidth / 2 - center
       );
       if (distance < best) {
         best = distance;
@@ -125,9 +183,9 @@ export function IndustriesServedSection({
     <section className="mx-auto max-w-[1500px] 3xl:max-w-[1900px] 4xl:max-w-[2400px] bg-[#FFFCF4] px-6 py-[70px] md:px-[5%] md:py-[50px] 3xl:py-[80px] 4xl:py-[100px]">
       <Reveal>
         <SectionIntro
-          eyebrow="Global Flooring Solutions"
-          title="Industries We Serve"
-          text="From iconic hospitality destinations to refined commercial spaces and residences, we create bespoke flooring that brings design vision to life."
+          eyebrow={eyebrow}
+          title={title}
+          text={description}
         />
       </Reveal>
 
@@ -158,9 +216,9 @@ export function IndustriesServedSection({
           onScroll={updateArrows}
           className="relative my-4 flex snap-x snap-mandatory gap-6 overflow-x-auto overflow-y-hidden py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {INDUSTRIES.map((industry, index) => (
+          {industriesList.map((industry, index) => (
             <Reveal
-              key={industry.slug}
+              key={`${industry.slug}-${index}`}
               delay={(index % 3) * 160}
               className="h-full shrink-0 basis-full snap-center min-[721px]:basis-[calc((100%-3rem)/3)] 3xl:basis-[calc((100%-4rem)/4)]"
             >

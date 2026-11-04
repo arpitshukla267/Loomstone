@@ -101,7 +101,7 @@ export const productApi = {
 // ─── Why Loomstone Types & API ──────────────────────────────────────────────
 
 export type WhyFeature = {
-  icon: string;
+  icon?: string;
   title: string;
   text: string;
   order: number;
@@ -111,8 +111,8 @@ export type WhyLoomstone = {
   _id?: string;
   heading: string;
   subheading: string;
-  image: string;
-  imageId: string;
+  image?: string;
+  imageId?: string;
   features: WhyFeature[];
   createdAt?: string;
   updatedAt?: string;
@@ -120,8 +120,68 @@ export type WhyLoomstone = {
 
 export const whyLoomstoneApi = {
   get: () => req<WhyLoomstone>("/api/why-loomstone"),
-  update: (data: FormData) =>
-    req<WhyLoomstone>("/api/why-loomstone", { method: "PUT", body: data }),
+  update: (data: FormData | Partial<WhyLoomstone>) =>
+    req<WhyLoomstone>("/api/why-loomstone", {
+      method: "PUT",
+      body: data instanceof FormData ? data : JSON.stringify(data),
+    }),
+};
+
+// ─── Industries We Serve Types & API ──────────────────────────────────────────
+
+export type IndustryCard = {
+  _id: string;
+  id?: string;
+  name: string;
+  slug: string;
+  image: string;
+  imageId?: string;
+  order: number;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type IndustriesData = {
+  heading: string;
+  description: string;
+  eyebrow?: string;
+  cards: IndustryCard[];
+};
+
+export const industryApi = {
+  get: (all = true) =>
+    req<IndustriesData>(`/api/industries${all ? "?all=true" : ""}`),
+  updateSection: (data: {
+    sectionHeading?: string;
+    heading?: string;
+    sectionDesc?: string;
+    description?: string;
+    eyebrow?: string;
+  }) =>
+    req<{ heading: string; description: string; eyebrow: string }>(
+      "/api/industries/section",
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }
+    ),
+  createCard: (data: FormData) =>
+    req<IndustryCard>("/api/industries/cards", { method: "POST", body: data }),
+  updateCard: (id: string, data: FormData) =>
+    req<IndustryCard>(`/api/industries/cards/${id}`, {
+      method: "PUT",
+      body: data,
+    }),
+  deleteCard: (id: string) =>
+    req<{ message: string; id: string }>(`/api/industries/cards/${id}`, {
+      method: "DELETE",
+    }),
+  reorderCards: (orderedIds: string[]) =>
+    req<{ message: string }>("/api/industries/cards/reorder", {
+      method: "PATCH",
+      body: JSON.stringify({ orderedIds }),
+    }),
 };
 
 // ─── Contact Info Types & API ───────────────────────────────────────────────

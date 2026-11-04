@@ -11,7 +11,10 @@
     "seed:rooms": "node scripts/seedRooms.js",
     "seed:categories": "node scripts/seedCategories.js",
     "seed:products": "node scripts/seedProducts.js",
-    "seed:contact": "node scripts/seedContactInfo.js"
+    "seed:contact": "node scripts/seedContactInfo.js",
+    "seed:why": "node scripts/seedWhyLoomstone.js",
+    "seed:why-loomstone": "node scripts/seedWhyLoomstone.js",
+    "seed:industries": "node scripts/seedIndustries.js"
   },
   "keywords": [],
   "author": "",

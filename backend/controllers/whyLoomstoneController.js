@@ -19,7 +19,7 @@ export const getWhyLoomstone = async (req, res) => {
       doc = await WhyLoomstone.create({
         heading: "What Sets Loomstone Apart",
         subheading:
-          "Thoughtful Design. Bespoke Craftmenship. Seemless Execution.",
+          "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution.",
         features: [
           {
             icon: "Layers",
@@ -36,7 +36,7 @@ export const getWhyLoomstone = async (req, res) => {
           {
             icon: "Gem",
             title: "Bespoke Flooring Solutions",
-            text: "Custom patterns, colours textures and specifications crafted to bring each project's unique design vision to life.",
+            text: "Custom patterns, colours, textures and specifications crafted to bring each project's unique design vision to life.",
             order: 2,
           },
           {
@@ -48,13 +48,13 @@ export const getWhyLoomstone = async (req, res) => {
           {
             icon: "ClipboardCheck",
             title: "Technical Precision",
-            text: "Meticulous attention to specification, accurate measurements, budget considration and project requirements ensuring flooring solutions that balance design intent, performance and practicality.",
+            text: "Meticulous attention to specification, accurate measurements, budget consideration and project requirements ensuring flooring solutions that balance design intent, performance and practicality.",
             order: 4,
           },
           {
             icon: "Handshake",
             title: "End to End Project Support",
-            text: "Coordinated support from design development to supply and installation, ensuring a seemless product journey from concept to completion .",
+            text: "Coordinated support from design development to supply and installation, ensuring a seamless product journey from concept to completion.",
             order: 5,
           },
         ],
@@ -87,9 +87,16 @@ export const updateWhyLoomstone = async (req, res) => {
         const parsed =
           typeof features === "string" ? JSON.parse(features) : features;
         if (Array.isArray(parsed)) {
-          doc.features = parsed;
+          doc.features = parsed.map((item, index) => ({
+            icon: item.icon || "Layers",
+            title: item.title || item.heading || "",
+            text: item.text || item.subheading || "",
+            order: item.order !== undefined ? item.order : index,
+          }));
         }
-      } catch {}
+      } catch (err) {
+        console.error("Failed to parse features:", err);
+      }
     }
 
     const oldImageId = doc.imageId;
