@@ -36,9 +36,9 @@ const VIEWPORT = { once: true, amount: 0.15 } as const;
 /* ------------------------------------------------------------------ */
 
 // Tablet + small laptop (sm up to < 1500px)
-const VIDEO_ZOOM = 1.28;
+const VIDEO_ZOOM = 1.4;
 const VIDEO_SHIFT_X = 1.2;
-const VIDEO_SHIFT_Y = 7;
+const VIDEO_SHIFT_Y = 8;
 
 // Mobile (< 640px) -> video box is 4:6 (portrait)
 const MOBILE_MAX_WIDTH = 639; // px
@@ -51,11 +51,11 @@ const TABLET_MIN_WIDTH = 640; // px
 const TABLET_MAX_WIDTH = 1023; // px
 const VIDEO_ZOOM_TABLET = 1.5;
 const VIDEO_SHIFT_X_TABLET = 1.2;
-const VIDEO_SHIFT_Y_TABLET = 6;
+const VIDEO_SHIFT_Y_TABLET = 7;
 
 // Large laptop (>= 1500px and < 1700px)
 const LG_MIN_WIDTH = 1500; // px
-const VIDEO_ZOOM_LG = 1.38;
+const VIDEO_ZOOM_LG = 1.65;
 const VIDEO_SHIFT_X_LG = 0.6;
 const VIDEO_SHIFT_Y_LG = 6;
 
@@ -63,7 +63,7 @@ const VIDEO_SHIFT_Y_LG = 6;
 const XL_MIN_WIDTH = 1700; // px
 const VIDEO_ZOOM_XL = 1.55;
 const VIDEO_SHIFT_X_XL = 0.2;
-const VIDEO_SHIFT_Y_XL = 6;
+const VIDEO_SHIFT_Y_XL = 8;
 
 // NOTE: order matters — the 1500px block must come before the 1700px block
 // so that >= 1700px screens are overridden by the XL rule.
@@ -136,7 +136,7 @@ const DEFAULT_FEATURES: Feature[] = [
   {
     icon: Handshake,
     title: "End to End Project Support",
-    text: "Seamless coordination from design development to supply and installation, ensuring smooth project execution from concept to completion.",
+    text: "Seamless coordination from design development to supply & installation, ensuring smooth project execution from concept to completion.",
   },
 ];
 
@@ -144,7 +144,12 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const FETCH_TIMEOUT = 4000;
 
 // Video freezes (pauses) once it reaches this many seconds.
-const STOP_AT_SECONDS = 10;
+const STOP_AT_SECONDS = 11;
+
+// false = video autoplay + loop (freeze logic disconnected from the video)
+// true  = video freezes at STOP_AT_SECONDS (old behaviour; also remove the
+//         `loop` attribute from the <video> tag below)
+const ENABLE_FREEZE = false;
 
 function FeatureItem({ feature, index }: { feature: Feature; index: number }) {
   const Icon = feature.icon;
@@ -306,7 +311,7 @@ export function WhyLoomstoneSection({
 
     v.muted = true;
     v.defaultMuted = true;
-    v.loop = false;
+    v.loop = !ENABLE_FREEZE; // loop only when freeze is disabled
     v.setAttribute("muted", "");
     v.setAttribute("playsinline", "");
 
@@ -324,22 +329,28 @@ export function WhyLoomstoneSection({
       v.pause(); // freeze on this frame
     };
 
-    // Check every 100ms (more precise + reliable than `timeupdate`).
-    // If the file is shorter than STOP_AT_SECONDS, stop just before its end.
-    const stopTimer = window.setInterval(() => {
-      if (finished) return;
-      const limit =
-        Number.isFinite(v.duration) && v.duration > 0
-          ? Math.min(STOP_AT_SECONDS, v.duration - 0.1)
-          : STOP_AT_SECONDS;
-      if (v.currentTime >= limit) freeze();
-    }, 100);
+    // ---- Freeze logic (kept, but only wired when ENABLE_FREEZE = true) ----
+    let stopTimer: number | undefined;
 
     // Safety net: if the video ends by itself, never restart it.
     const onEnded = () => {
       finished = true;
     };
-    v.addEventListener("ended", onEnded);
+
+    if (ENABLE_FREEZE) {
+      // Check every 100ms (more precise + reliable than `timeupdate`).
+      // If the file is shorter than STOP_AT_SECONDS, stop just before its end.
+      stopTimer = window.setInterval(() => {
+        if (finished) return;
+        const limit =
+          Number.isFinite(v.duration) && v.duration > 0
+            ? Math.min(STOP_AT_SECONDS, v.duration - 0.1)
+            : STOP_AT_SECONDS;
+        if (v.currentTime >= limit) freeze();
+      }, 100);
+
+      v.addEventListener("ended", onEnded);
+    }
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -364,7 +375,7 @@ export function WhyLoomstoneSection({
 
     return () => {
       io.disconnect();
-      window.clearInterval(stopTimer);
+      if (stopTimer !== undefined) window.clearInterval(stopTimer);
       v.removeEventListener("ended", onEnded);
       v.removeEventListener("loadeddata", onReady);
       v.removeEventListener("canplay", onReady);
@@ -391,6 +402,8 @@ export function WhyLoomstoneSection({
               className="loomstone-video pointer-events-none absolute inset-0 h-full w-full object-cover"
               src={video}
               poster={activePoster}
+              autoPlay
+              loop
               muted
               playsInline
               preload="auto"
@@ -425,7 +438,7 @@ export function WhyLoomstoneSection({
             </motion.h2>
 
             <motion.p
-              className="order-1 m-0 mt-2 px-4 text-center font-manrope text-[16px] font-medium leading-[1.25] tracking-[-0.005em] sm:text-left sm:text-[26px] lg:text-[clamp(24px,2.3vw,34px)] 3xl:text-[38px] 4xl:text-[44px] sm:px-10 md:px-14 lg:order-none lg:px-0"
+              className="order-1 m-0 mt-2 px-4 text-center font-manrope text-[14px] font-medium leading-[1.25] tracking-[-0.005em] sm:whitespace-nowrap sm:text-left sm:text-[clamp(15px,2.5vw,26px)] lg:text-[clamp(15px,1.6vw,30px)] 3xl:text-[clamp(15px,1.6vw,32px)] 4xl:text-[36px] sm:px-10 md:px-14 lg:order-none lg:px-0"
               style={{ color: ACCENT }}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}

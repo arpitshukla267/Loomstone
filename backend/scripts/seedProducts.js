@@ -41,7 +41,7 @@ const presentProductsData = [
     slug: "bespoke-hand-crafted-carpets-rugs",
     description:
       "Created by skilled artisans and tailored to the most demanding design visions, our bespoke carpets and rugs combine exquisite craftsmanship, unparalleled customization, and timeless luxury.",
-    fileNames: ["hk.jpg", "hand-tuffted.jpg"],
+    fileNames: ["hk.jpg"],
     order: 1,
   },
   {
