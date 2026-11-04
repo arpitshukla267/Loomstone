@@ -34,7 +34,7 @@ export function IndustryCard({
       />
 
       {/* Neeche se dark overlay, upar ki taraf fade */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
 
       {/* Bottom row: left mein text, right mein arrow button */}
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-center gap-4 p-5">

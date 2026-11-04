@@ -226,10 +226,13 @@ export function WhyLoomstoneSection({
         {/* ================= VIDEO (left edge se start, sirf upar/neeche padding) ================= */}
         <div className="flex h-[300px] py-4 sm:h-[400px] sm:py-6 lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
           {/* overflow-hidden: zoomed video ke black bars yahin cut hote hain */}
-          <div className="relative flex-1 overflow-hidden bg-[#fdfbf7]">
+          <div
+            className="relative flex-1 overflow-hidden bg-[#fdfbf7] select-none"
+            onContextMenu={(e) => e.preventDefault()}
+          >
             <video
               ref={videoRef}
-              className="absolute inset-0 h-full w-full object-cover"
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover"
               style={{ transform: `scale(${VIDEO_ZOOM})` }}
               src={video}
               poster={activePoster}
@@ -238,6 +241,18 @@ export function WhyLoomstoneSection({
               playsInline
               preload="auto"
               aria-hidden="true"
+              controls={false}
+              controlsList="nodownload noremoteplayback nofullscreen"
+              disablePictureInPicture
+              disableRemotePlayback
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+            />
+            {/* transparent overlay: right-click / long-press video tak pahunchne hi nahi dega */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 z-10"
+              onContextMenu={(e) => e.preventDefault()}
             />
           </div>
         </div>

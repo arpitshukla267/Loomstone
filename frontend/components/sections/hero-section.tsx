@@ -104,34 +104,34 @@ async function fetchHeroSlides(signal: AbortSignal): Promise<HeroSlide[]> {
 /* ---------- Fallback (hardcoded) slides: buttons nahi ---------- */
 
 const defaultSlides: HeroSlide[] = [
-  // {
-  //   image: "/hero-backup/axminster.webp",
-  //   heading: (
-  //     <>
-  //       Soft on the Surface.{""}{" "}
-  //       <em className="text-gold not-italic"> Strong at the Core</em>
-  //     </>
-  //   ),
-  //   description:
-  //     "Thoughtfully crafted to enhance every space with timeless style, lasting durability, and exceptional warmth.",
-  // },
   {
     image: "/hero-backup/axminster-2.webp",
     heading: (
       <>
-        Inspired by nature.{" "}
-        <em className="text-gold not-italic"> Crafted to be timeless.</em>
+        Bespoke Fashionable Soft Flooring{" "}
+        <em className="text-gold not-italic"> </em>
       </>
     ),
     description:
-      "Every rug tells a story through thoughtful design, rich textures and exceptional craftsmanship.",
+      "Crafted for exceptional interiors, Designed around your vision.",
+  },
+  {
+    image: "/hero-backup/handmade.webp",
+    heading: (
+      <>
+        Beyond Flooring, An Art of Living.{""}{" "}
+        <em className="text-gold not-italic"></em>
+      </>
+    ),
+    description:
+      "Expertly handcrafted to bring timeless elegance, refined textures, and exceptional character to every space.",
   },
   {
     image: "/hero-backup/carpet-tiles.webp",
     heading: (
       <>
-        Soft on the Surface.{" "}
-        <em className="text-gold not-italic"> Strong at the Core.</em>
+        Soft on the Surface. Strong at the Core.
+        <em className="text-gold not-italic"> </em>
       </>
     ),
     description: "Where every floor tells a story.",
@@ -140,8 +140,8 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/resilient-flooring.webp",
     heading: (
       <>
-        Where Performance{" "}
-        <em className="text-gold not-italic"> Meets Perfection.</em>
+        Where Performance Meets Perfection.
+        <em className="text-gold not-italic"></em>
       </>
     ),
     description:
@@ -306,7 +306,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
               color: "#ffffff",
               textShadow: "0 1px 12px rgba(0,0,0,0.45)",
             }}
-            className="max-w-[660px] 3xl:max-w-[760px] mx-auto font-light text-sm md:text-base 3xl:text-lg 4xl:text-xl leading-[1.7]"
+            className="max-w-[660px] 3xl:max-w-[760px] mx-auto font-light text-sm md:text-[20px] 3xl:text-lg 4xl:text-xl leading-[1.5]"
           >
             {currentSlide.description}
           </motion.p>
