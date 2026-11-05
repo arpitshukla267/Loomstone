@@ -25,21 +25,21 @@ export const defaultProcessSteps: ProcessStep[] = [
   {
     title: "Design Consultation",
     description:
-      "We work with architects, designers and project teams to understand the vision, technical requirements and practical needs of every space.",
-    media: "/process/design-consultation.webp",
+      "Working closely with architects, designers and project teams, we translate creative visions into practical flooring solutions, balancing aesthetics, technical requirements and project objectives.",
+    media: "/process/design-consultation.jpeg",
     mediaAlt: "Design consultation with architects and project teams",
   },
   {
     title: "Bespoke Design Development",
     description:
-      "From patterns and colours to textures and materials, we develop tailored flooring solutions that complement each project's architectural vision and functional requirements.",
+      "From patterns and colours to textures and materials, we develop bespoke flooring solutions that bring each project's architectural vision to life.",
     media: "/process/design-development.webp",
     mediaAlt: "Bespoke flooring design development",
   },
   {
     title: "Sampling & Prototyping",
     description:
-      "Detailed samples bring concepts to life, allowing materials, colours and finishes to be reviewed and refined before production.",
+      "Detailed samples and prototypes bring designs to life, allowing materials, colours and finishes to be evaluated and refined before production.",
     media: "/process/sampling-prototyping.webp",
     mediaAlt: "Flooring samples and prototypes under review",
   },
@@ -202,7 +202,7 @@ export function ProcessSection({
   );
   const [introText, setIntroText] = useState(
     propIntro ||
-      "At Loomstone, exceptional flooring begins with a clear vision and is realised through meticulous execution. We guide every project from concept to completion, creating floors that elevate the character and identity of a space."
+      "At Loomstone, every exceptional space begins with a vision. From concept to completion, we bring together design expertise, technical precision and craftsmanship to create flooring solutions that define spaces.",
   );
   const [stepsList, setStepsList] = useState<ProcessStep[]>(
     propSteps || defaultProcessSteps
