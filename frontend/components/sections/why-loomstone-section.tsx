@@ -35,8 +35,8 @@ const VIEWPORT = { once: true, amount: 0.15 } as const;
 /* then set every ZOOM to 1 and every SHIFT_X to 0.                    */
 /* ------------------------------------------------------------------ */
 
-// Tablet + small laptop (sm up to < 1500px)
-const VIDEO_ZOOM = 1.4;
+// Small laptop / desktop (base, 1024px - 1499px)
+const VIDEO_ZOOM = 1.7;
 const VIDEO_SHIFT_X = 1.2;
 const VIDEO_SHIFT_Y = 8;
 
@@ -55,13 +55,13 @@ const VIDEO_SHIFT_Y_TABLET = 7;
 
 // Large laptop (>= 1500px and < 1700px)
 const LG_MIN_WIDTH = 1500; // px
-const VIDEO_ZOOM_LG = 1.65;
+const VIDEO_ZOOM_LG = 1.9;
 const VIDEO_SHIFT_X_LG = 0.6;
 const VIDEO_SHIFT_Y_LG = 6;
 
 // Large screens (>= 1700px)
 const XL_MIN_WIDTH = 1700; // px
-const VIDEO_ZOOM_XL = 1.55;
+const VIDEO_ZOOM_XL = 2.1;
 const VIDEO_SHIFT_X_XL = 0.2;
 const VIDEO_SHIFT_Y_XL = 8;
 
@@ -385,12 +385,12 @@ export function WhyLoomstoneSection({
 
   return (
     <MotionConfig reducedMotion="user">
-      <section className="relative left-1/2 flex w-screen max-w-[100vw] -translate-x-1/2 flex-col bg-[#fdfbf7] lg:grid lg:grid-cols-[35%_65%] 3xl:grid-cols-[30%_70%]">
+      <section className="relative left-1/2 flex w-screen max-w-[100vw] -translate-x-1/2 flex-col bg-[#fdfbf7] lg:grid lg:grid-cols-[30%_70%] 3xl:grid-cols-[26%_74%]">
         {/* ================= VIDEO =================
             Mobile order: heading -> description -> VIDEO -> points.
             Mobile (< sm): 4:6 (portrait) box with light side padding (px-4).
             sm to < lg: same as before (fixed 400px height).
-            lg and up: unchanged. */}
+            lg and up: narrower video column (30% / 26% on 3xl). */}
         <div className="order-2 mt-6 flex aspect-[4/6] w-full px-8 py-6 sm:mt-6 sm:aspect-[4/5] sm:h-auto sm:px-8 sm:py-6 lg:order-none lg:mt-0 lg:px-0 lg:aspect-auto lg:h-auto lg:min-h-[540px] lg:py-8 3xl:min-h-[780px] 4xl:min-h-[900px]">
           <div
             className="relative flex-1 overflow-hidden bg-[#fdfbf7] select-none"
