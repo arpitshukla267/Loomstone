@@ -123,13 +123,13 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Thoughtfully crafted for exceptional comfort, enduring quality and timeless elegance",
+      "Thoughtfully crafted for exceptional comfort, enduring quality and timeless elegance.",
   },
   {
     image: "/hero-backup/hero.webp",
     heading: (
       <>
-        Soft on the Surface. Strong at the Core.
+        Soft on the Surface, Strong at the Core
         <em className="text-gold not-italic"> </em>
       </>
     ),
@@ -139,12 +139,12 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/resilient-flooring.webp",
     heading: (
       <>
-        Where Performance Meets Perfection.
+        Where Performance Meets Perfection
         <em className="text-gold not-italic"></em>
       </>
     ),
     description:
-      "Engineered for durability, designed for elegance, built for lasting performance.",
+      "Engineered for durability, designed for elegance, built to last.",
   },
 ];
 
