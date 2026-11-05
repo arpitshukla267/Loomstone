@@ -118,7 +118,7 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/axminster.webp",
     heading: (
       <>
-        Every Surface, A Statment of Luxury{""}{" "}
+        Every Surface, A Statement of Luxury{""}{" "}
         <em className="text-gold not-italic"></em>
       </>
     ),

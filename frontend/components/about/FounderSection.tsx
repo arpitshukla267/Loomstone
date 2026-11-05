@@ -18,7 +18,7 @@ const DEFAULT_OWNER = "Pawan Yadav";
 const DEFAULT_FOUNDER_IMAGE = "/founder.webp";
 const DEFAULT_TAGLINE =
   "I believe great spaces are shaped by thoughtful details—and the right flooring brings them to life.";
-const DEFAULT_QUOTE = `With more then 20 years of experience in the flooring industry, Pawan Yadav brings expertise in bespoke flooring solutions , product development and project delivery across luxury hospitality, commercial and premium residential spaces.
+const DEFAULT_QUOTE = `With more than 20 years of experience in the flooring industry, Pawan Yadav brings expertise in bespoke flooring solutions, product development and project delivery across luxury hospitality, commercial and premium residential spaces.
 His approach combines design insight, technical knowledge and market understanding to create tailored flooring solutions that elevate interiors and deliver lasting value.`;
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;

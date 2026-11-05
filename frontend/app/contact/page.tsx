@@ -94,8 +94,8 @@ export default function ContactPage() {
             <div className="flex flex-col justify-between gap-12">
               <div>
                 <h1 className="font-manrope text-[44px] font-medium leading-[1.05] tracking-[-0.03em] text-navy md:text-[60px] 3xl:text-[72px] 4xl:text-[84px]">
-                  Lets create something{" "}
-                  <em className="text-gold not-italic">Exceptional together</em>
+                  Let's create something{" "}
+                  <em className="text-gold not-italic">exceptional together</em>
                 </h1>
                 <p className="mt-9 max-w-[570px] text-[17px] leading-[1.95] text-cool 3xl:max-w-[700px] 3xl:text-[20px] 4xl:max-w-[820px] 4xl:text-[23px]">
                   Share your vision with us, from bespoke carpets to distinctive

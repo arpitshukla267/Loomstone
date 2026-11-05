@@ -44,7 +44,7 @@ export default function BlogsPage() {
               The Loomstone Journal
             </h1>
             <p className="mt-3 text-[15px] 3xl:text-[18px] 4xl:text-[20px] leading-relaxed text-cool">
-              A curated space for design inspiration, craftsmanship stories, emerging trends and insights into the evolving world of carpets and contemporary flooring
+              A curated space for design inspiration, craftsmanship stories, emerging trends and insights into the evolving world of carpets and contemporary flooring.
             </p>
           </div>
 
