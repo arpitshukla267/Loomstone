@@ -115,7 +115,7 @@ const defaultSlides: HeroSlide[] = [
       "Crafted for exceptional interiors, Designed around your vision.",
   },
   {
-    image: "/hero-backup/handmade.webp",
+    image: "/hero-backup/axminster.webp",
     heading: (
       <>
         Every Surface, A Statment of Luxury{""}{" "}
@@ -126,7 +126,7 @@ const defaultSlides: HeroSlide[] = [
       "Thoughtfully crafted for exceptional comfort, enduring quality and timeless elegance",
   },
   {
-    image: "/hero-backup/carpet-tiles.webp",
+    image: "/hero-backup/hero.webp",
     heading: (
       <>
         Soft on the Surface. Strong at the Core.
@@ -223,6 +223,9 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
     currentSlide.primaryText || currentSlide.secondaryText,
   );
 
+  // Sirf 2nd slide (index 1) ki image halka neeche
+  const isShiftedSlide = activeSlide === 1; 
+
   return (
     <motion.section
       id="top"
@@ -240,8 +243,13 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
           alt="Handcrafted rugs in an elegant interior"
           loading="eager"
           decoding="async"
-          initial={{ opacity: 0, scale: 1.04 }}
-          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            objectPosition: "50% 50%",
+            // top edge fix rakho, taaki upar white line na aaye
+            transformOrigin: isShiftedSlide ? "50% 0%" : "50% 50%",
+          }}
+          initial={{ opacity: 0, scale: isShiftedSlide ? 1.24 : 1.04 }}
+          animate={{ opacity: 1, scale: isShiftedSlide ? 1.15 : 1 }}
           exit={{ opacity: 0 }}
           transition={{
             opacity: { duration: 0.9, ease: "easeInOut" },
