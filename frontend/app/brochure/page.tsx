@@ -78,7 +78,7 @@ export default function BrochurePage() {
     <PageFrame active="Brochure">
       <section className="bg-[#FFFCF4] px-6 pb-[70px] pt-[190px] md:px-[5%] md:pb-[100px] md:pt-[250px]">
         <div className="mx-auto max-w-[80vw] 3xl:max-w-[80vw] 4xl:max-w-[80vw]">
-          <div className="grid items-start gap-10 md:grid-cols-2 md:gap-16 3xl:gap-24 4xl:gap-32">
+          <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16 3xl:gap-24 4xl:gap-32">
             {/* Left: copy */}
             <div>
               {/* <div className="relative h-[48px] w-[180px] md:h-[60px] md:w-[220px]">
