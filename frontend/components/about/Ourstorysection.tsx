@@ -27,7 +27,7 @@ export default function OurStorySection() {
       {/* ================= Right: content ================= */}
       <div className="3xl:flex 3xl:flex-col 3xl:justify-around 4xl:block">
         <Reveal delay={100}>
-          <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[36px] lg:text-[42px] min-[1400px]:text-[48px] 3xl:mb-0 3xl:text-[3.5vw] 4xl:mb-[1.8vw]">
+          <h2 className="font-manrope mb-6 text-[34px] font-semibold leading-[1.1] tracking-[-0.02em] text-[#2a2a6b] md:text-[36px] lg:text-[42px] min-[1400px]:text-[48px] 3xl:mb-8 3xl:text-[3.5vw] 4xl:mb-[1.8vw]">
             {" "}
             Flooring That Brings
             <br />
@@ -36,7 +36,7 @@ export default function OurStorySection() {
         </Reveal>
 
         <Reveal delay={150}>
-          <div className="max-w-full space-y-4 text-xs leading-[1.8] text-slate-600 md:text-sm min-[1400px]:text-base lg:max-w-[52vw] 3xl:max-w-none 3xl:space-y-[1vw] 3xl:text-[1.17vw] 3xl:leading-[1.4] 4xl:leading-[1.6]">
+          <div className="max-w-full space-y-4 text-xs leading-[1.8] text-slate-600 md:text-sm min-[1400px]:text-base lg:max-w-[52vw] 3xl:max-w-none 3xl:space-y-[1.5vw] 3xl:text-[1.17vw] 3xl:leading-[1.4] 4xl:leading-[1.6]">
             <p>
               Loomstone is a design-led flooring solutions company specializing
               in bespoke carpets, rugs, and custom flooring for hospitality,
@@ -72,9 +72,9 @@ export default function OurStorySection() {
         <Reveal delay={250}>
           <Link
             href="/products"
-            className="mt-9 inline-flex items-center gap-2.5 rounded-[8px] bg-[#2a2a6b] px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#e8a21c] hover:text-[#2a2a6b] 3xl:mt-0 3xl:gap-[0.75vw] 3xl:px-[1.75vw] 3xl:py-[1vw] 3xl:text-[1.02vw] 4xl:mt-[2.6vw]"
+            className="mt-9 inline-flex items-center gap-2.5 rounded-[8px] bg-[#2a2a6b] px-6 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#e8a21c] hover:text-[#2a2a6b] 3xl:mt-12 3xl:gap-[0.75vw] 3xl:px-[1.75vw] 3xl:py-[1vw] 3xl:text-[1.02vw] 4xl:mt-[2.6vw]"
           >
-            Explore Our Collections{" "}
+            Explore Our Products{" "}
             <ArrowUpRight size={16} className="3xl:h-[1.17vw] 3xl:w-[1.17vw]" />
           </Link>
         </Reveal>

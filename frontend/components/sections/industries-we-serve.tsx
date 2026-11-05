@@ -95,7 +95,7 @@ export function IndustriesServedSection({
   const [eyebrow, setEyebrow] = useState("Global Flooring Solutions");
   const [title, setTitle] = useState("Industries We Serve");
   const [description, setDescription] = useState(
-    "From iconic hospitality destinations to refined commercial spaces and residences, we create bespoke flooring that brings design vision to life."
+    "From iconic hospitality destinations to refined commercial spaces and luxury residences, we deliver bespoke flooring solutions that bring design visions to life.",
   );
   const [industriesList, setIndustriesList] = useState<Industry[]>(INDUSTRIES);
 

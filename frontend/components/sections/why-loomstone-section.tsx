@@ -68,7 +68,7 @@ const VIDEO_SHIFT_Y_XL = 8;
 // NOTE: order matters — the 1500px block must come before the 1700px block
 // so that >= 1700px screens are overridden by the XL rule.
 const VIDEO_CSS = `
-.loomstone-video{transform:translate(${VIDEO_SHIFT_X}%,${VIDEO_SHIFT_Y}%) scale(${VIDEO_ZOOM});transform-origin:center}
+.loomstone-video{background-color:#fdfbf7;transform:translate(${VIDEO_SHIFT_X}%,${VIDEO_SHIFT_Y}%) scale(${VIDEO_ZOOM});transform-origin:center}
 @media (max-width:${MOBILE_MAX_WIDTH}px){
   .loomstone-video{transform:translate(${VIDEO_SHIFT_X_MOBILE}%,${VIDEO_SHIFT_Y_MOBILE}%) scale(${VIDEO_ZOOM_MOBILE})}
 }
@@ -111,31 +111,31 @@ const DEFAULT_FEATURES: Feature[] = [
   {
     icon: Layers,
     title: "Flooring Expertise",
-    text: "Axminster carpets & Rugs, Handcrafted carpets & Rugs, Textile flooring, Resilient Flooring",
+    text: "Axminster Carpets & Rugs, Handcrafted carpets & Rugs, Textile Flooring and Resilient Flooring",
   },
   {
     icon: Palette,
     title: "Design Collaboration",
-    text: "Working with architects and designers to translate their creative vision into distinctive flooring concepts.",
+    text: "Working with architects, designers and product team to translate their creative vision into distinctive flooring concepts.",
   },
   {
     icon: Gem,
     title: "Bespoke Flooring Solutions",
-    text: "Custom patterns, colours, textures and specifications crafted to bring each project's unique design vision to life.",
+    text: "Custom patterns, colours, textures and specifications crafted to bring each project's design vision to life.",
   },
   {
     icon: Globe,
     title: "Global Partnerships",
-    text: "Working with trusted manufacturing partners to deliver quality material, consistent standards & Bespoke flooring solutions.",
+    text: "Working with trusted manufacturing partners to deliver quality material, consistent standards & bespoke flooring solutions.",
   },
   {
     icon: ClipboardCheck,
     title: "Technical Precision",
-    text: "Precision in every detail, creating flooring solutions that unite design, quality and performance.",
+    text: "Precision in every detail, delivering flooring solutions that unite design, quality and performance.",
   },
   {
     icon: Handshake,
-    title: "End to End Project Support",
+    title: "End-to-End Project Support",
     text: "Seamless coordination from design development to supply & installation, ensuring smooth project execution from concept to completion.",
   },
 ];
@@ -399,7 +399,7 @@ export function WhyLoomstoneSection({
             <style>{VIDEO_CSS}</style>
             <video
               ref={videoRef}
-              className="loomstone-video pointer-events-none absolute inset-0 h-full w-full object-cover"
+              className="loomstone-video pointer-events-none absolute inset-0 h-full w-full bg-[#fdfbf7] object-cover"
               src={video}
               poster={activePoster}
               autoPlay
@@ -424,8 +424,8 @@ export function WhyLoomstoneSection({
         </div>
 
         {/* ================= CONTENT ================= */}
-        <div className="contents lg:flex lg:items-center lg:px-[6%] lg:py-20 xl:px-[7%] 3xl:px-[8%] 3xl:py-28 4xl:px-[10%] 4xl:py-32">
-          <div className="contents lg:mx-auto lg:block lg:w-full lg:max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
+        <div className="contents lg:flex lg:items-center lg:pl-[3%] lg:pr-[4%] lg:py-20 xl:pl-[2.5%] 3xl:pl-[5%] 3xl:py-28 4xl:pl-[5%] 4xl:py-32">
+          <div className="contents lg:block lg:w-full lg:max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
             <motion.h2
               className="order-1 m-0 px-4 pt-12 text-center font-manrope text-[28px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-left sm:text-[46px] lg:text-[clamp(44px,3.9vw,58px)] 3xl:text-[64px] 4xl:text-[76px] sm:px-10 md:px-14 lg:order-none lg:px-0 lg:pt-0"
               style={{ color: HEADING }}
