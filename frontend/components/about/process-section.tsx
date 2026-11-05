@@ -46,22 +46,22 @@ export const defaultProcessSteps: ProcessStep[] = [
   {
     title: "Technical Planning & Specification",
     description:
-      "We align design intent with material suitability, durability, performance requirements and project budgets to support informed decisions.",
-    media: "/process/technical-planning.webp",
+      "Precision in every detail, from accurate measurements and specifications to budget planning, ensuring flooring solutions that balance design, quality and performance.",
+    media: "/process/technical-planning.jpeg",
     mediaAlt: "Technical planning and specification of flooring",
   },
   {
-    title: "Production & Quality Assurance",
+    title: "Manufacturing & Quality",
     description:
-      "Through careful coordination and quality checks, we focus on consistency, craftsmanship and adherence to agreed project specifications.",
-    media: "/process/production-quality.webp",
+      "Combining skilled craftsmanship, advanced manufacturing capabilities and rigorous quality control to deliver flooring solutions that meet the highest standards.",
+    media: "/process/production-quality.jpeg",
     mediaAlt: "Flooring production and quality inspection",
   },
   {
-    title: "Installation & Project Support",
+    title: "Project Delivery & Execution",
     description:
-      "From delivery coordination to installation guidance, we provide project support to help achieve a seamless finish and lasting performance.",
-    media: "/process/installation-support.webp",
+      "From production and logistics to installation coordination, we ensure seamless project execution with attention to detail at every stage.",
+    media: "/process/installation-support.jpeg",
     mediaAlt: "Flooring installation and on-site project support",
   },
 ];
