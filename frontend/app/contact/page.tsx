@@ -209,7 +209,7 @@ export default function ContactPage() {
                       type="submit"
                       className="title inline-flex shrink-0 items-center gap-3 rounded-[8px] border border-navy px-4 py-4 text-sm font-medium text-navy transition-colors hover:bg-navy hover:text-white md:px-9 md:tracking-[.1em] 3xl:px-11 3xl:py-5 3xl:text-base 4xl:px-12 4xl:py-6 4xl:text-lg"
                     >
-                      Send inquiry &amp; request swatches{" "}
+                      Send Enquiry &amp; request samples{" "}
                       <ArrowRight size={18} />
                     </button>
                     {/* <p className="max-w-[400px] text-[12.5px] leading-[1.6] text-cool 3xl:max-w-[500px] 3xl:text-[14px] 4xl:max-w-[560px] 4xl:text-[16px]">
