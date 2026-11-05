@@ -64,12 +64,12 @@ export default function InspirationPage() {
       {/* Inspiration Collage - Masonry preserving natural dimensions */}
       <section className="bg-[#FFFCF4] px-6 pb-[70px] pt-[130px] md:px-[5%] md:pb-[100px] md:pt-[170px]">
         <div className="mx-auto max-w-[1310px] 3xl:max-w-[1700px] 4xl:max-w-[2100px]">
-          <h1 className="font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,60px)] 3xl:text-[66px] 4xl:text-[76px]">
+          <h1 className="font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,60px)] 3xl:text-[66px] 4xl:text-[76px] mb-8 lg:mb-12 xl:mb-16">
             Inspirations...
           </h1>
-          <p className="mb-16 mt-5 max-w-[640px] text-[16px] leading-[1.8] text-cool md:text-[17px] 3xl:mb-20 3xl:max-w-[780px] 3xl:text-[20px] 4xl:max-w-[900px] 4xl:text-[23px]">
+          {/* <p className="mb-16 mt-5 max-w-[640px] text-[16px] leading-[1.8] text-cool md:text-[17px] 3xl:mb-20 3xl:max-w-[780px] 3xl:text-[20px] 4xl:max-w-[900px] 4xl:text-[23px]">
             Explore a world...
-          </p>
+          </p> */}
           <GalleryGrid items={items} />
         </div>
       </section>
