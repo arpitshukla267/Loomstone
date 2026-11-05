@@ -44,7 +44,7 @@ export const defaultProcessSteps: ProcessStep[] = [
     mediaAlt: "Flooring samples and prototypes under review",
   },
   {
-    title: "Technical Planning & Specification",
+    title: "Technical Planning",
     description:
       "Precision in every detail, from accurate measurements and specifications to budget planning, ensuring flooring solutions that balance design, quality and performance.",
     media: "/process/technical-planning.jpeg",
