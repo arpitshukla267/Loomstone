@@ -16,8 +16,10 @@ const taglineFont = Cormorant_Garamond({
 const DEFAULT_COMPANY = "Loomstone";
 const DEFAULT_OWNER = "Pawan Yadav";
 const DEFAULT_FOUNDER_IMAGE = "/founder.webp";
-const DEFAULT_TAGLINE = "Perfection is the foundation beneath every great space.";
-const DEFAULT_QUOTE = `We believe exceptional hospitality is shaped by thoughtful details. Flooring is more than a surface; it is a defining design element that enhances environments, enriches guest experiences, and contributes to the enduring identity of a space.`;
+const DEFAULT_TAGLINE =
+  "I believe great spaces are shaped by thoughtful details—and the right flooring brings them to life.";
+const DEFAULT_QUOTE = `With more then 20 years of experience in the flooring industry, Pawan Yadav brings expertise in bespoke flooring solutions , product development and project delivery across luxury hospitality, commercial and premium residential spaces.
+His approach combines design insight, technical knowledge and market understanding to create tailored flooring solutions that elevate interiors and deliver lasting value.`;
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const FETCH_TIMEOUT = 4000;
@@ -68,7 +70,7 @@ export default function FounderSection() {
 
   const [sectionTitle, setSectionTitle] = useState("Meet Our Visionary");
   const [founderName, setFounderName] = useState(DEFAULT_OWNER);
-  const [designation, setDesignation] = useState(`Managing Partner`);
+  const [designation, setDesignation] = useState(`Founder, Loomstone `);
   const [tagline, setTagline] = useState(DEFAULT_TAGLINE);
   const [quote, setQuote] = useState(DEFAULT_QUOTE);
   const [image, setImage] = useState(DEFAULT_FOUNDER_IMAGE);
@@ -196,7 +198,7 @@ export default function FounderSection() {
           {/* 3. Founder quote: simple fade-up */}
           <motion.p
             {...revealAfter(quoteBase)}
-            className="font-manrope mt-5 max-w-none text-[14px] font-medium leading-[1.6] sm:mt-6 sm:text-[16px] md:text-[16px] lg:mt-[1.6vw] lg:text-[1.3vw] 3xl:text-[1.2vw]"
+            className="font-manrope mt-5 max-w-none text-[14px] font-medium leading-[1.6] sm:mt-6 sm:text-[16px] md:text-[16px] lg:mt-[1.6vw] lg:text-[1.1vw] 3xl:text-[1.2vw]"
           >
             {quote}
           </motion.p>

@@ -31,9 +31,14 @@ const STATIC_INSPIRATIONS: InspirationItem[] = [
     image: "/inspiration/3.webp",
   },
   {
-    order: 3,
+    order: 4,
     name: "",
     image: "/inspiration/4.webp",
+  },
+  {
+    order: 5,
+    name: "",
+    image: "/inspiration/5.webp",
   },
 ];
 
