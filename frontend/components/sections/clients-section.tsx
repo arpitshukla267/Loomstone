@@ -563,10 +563,10 @@ export interface TestimonialsSectionProps {
 
 export function ClientsSection({
   titleTop = "Trusted by leaders",
-  titleBottom = "from various sectors",
-  description = "Learn why professionals trust our solutions to complete their customer journeys.",
-  ctaLabel = "Read Success Stories",
-  ctaHref = "about#our-story",
+  titleBottom = "Across Industries",
+  description = "Building lasting partnerships through thoughtfully crafted flooring solutions and exceptional project delivery.",
+  ctaLabel = "Explore our Projects",
+  ctaHref = "clientele",
   images = [],
   imageFit = "cover",
 }: TestimonialsSectionProps) {
@@ -679,7 +679,7 @@ export function ClientsSection({
             </h2>
 
             <motion.p
-              className="mt-4 max-w-[340px] text-[15px] leading-[1.65] text-navy/80 sm:mt-6 sm:max-w-[460px] sm:text-[17px] sm:leading-[1.7] 3xl:max-w-[580px] 3xl:text-[20px] 4xl:max-w-[650px] 4xl:text-[22px]"
+              className="mt-4 max-w-[340px] text-[15px] leading-[1.65] text-navy/80 sm:mt-6 sm:max-w-[500px] sm:text-[17px] sm:leading-[1.7] 3xl:max-w-[580px] 3xl:text-[20px] 4xl:max-w-[650px] 4xl:text-[22px]"
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VIEWPORT}

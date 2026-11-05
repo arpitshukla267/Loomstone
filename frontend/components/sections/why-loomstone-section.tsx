@@ -424,7 +424,7 @@ export function WhyLoomstoneSection({
         </div>
 
         {/* ================= CONTENT ================= */}
-        <div className="contents lg:flex lg:items-center lg:pl-[3%] lg:pr-[4%] lg:py-20 xl:pl-[2.5%] 3xl:pl-[5%] 3xl:py-28 4xl:pl-[5%] 4xl:py-32">
+        <div className="contents lg:flex lg:items-center lg:pl-[5%] lg:pr-[4%] lg:py-20 xl:pl-[5.5%] 3xl:pl-[7%] 3xl:py-28 4xl:pl-[5%] 4xl:py-32">
           <div className="contents lg:block lg:w-full lg:max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px]">
             <motion.h2
               className="order-1 m-0 px-4 pt-12 text-center font-manrope text-[28px] font-medium leading-[1.1] tracking-[-0.02em] sm:text-left sm:text-[46px] lg:text-[clamp(44px,3.9vw,58px)] 3xl:text-[64px] 4xl:text-[76px] sm:px-10 md:px-14 lg:order-none lg:px-0 lg:pt-0"
