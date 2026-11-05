@@ -59,9 +59,9 @@ export default function BlogsPage() {
               <h2 className="mt-4 font-manrope text-xl font-normal text-navy">
                 Something inspiring is taking shape. Stay tuned.
               </h2>
-              <p className="mt-2 text-sm text-cool max-w-md mx-auto">
+              {/* <p className="mt-2 text-sm text-cool max-w-md mx-auto">
                 We are crafting thoughtful journals on artisanal weaving and interior architecture. Please check back soon.
-              </p>
+              </p> */}
             </div>
           ) : (
             <div className="mt-14 3xl:mt-18 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 4xl:grid-cols-4 lg:gap-12 3xl:gap-14">
