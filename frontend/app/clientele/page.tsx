@@ -20,11 +20,11 @@ interface TestimonialItem {
 }
 
 const STATIC_CLIENTS: ClientItem[] = [
-  { name: "Leela", logo: "/clients/leela.webp" },
   { name: "Marriott Hotels", logo: "/clients/marriott.webp" },
-  { name: "ITC Hotels", logo: "/clients/itc.png" },
   { name: "Hilton Hotels & Resorts", logo: "/clients/hilton.webp" },
   { name: "Hyatt Regency", logo: "/clients/hyatt.png" },
+  { name: "ITC Hotels", logo: "/clients/itc.png" },
+  { name: "Leela", logo: "/clients/leela.webp" },
   { name: "DLF Hospitality", logo: "/clients/dlf.webp" },
   { name: "FCML India", logo: "/clients/fcml.png" },
   { name: "Airtel", logo: "/clients/airtel.webp" },
@@ -87,7 +87,7 @@ export default function ClientelePage() {
   const [heading, setHeading] = useState("Built on Expertise.");
   const [headingHighlight, setHeadingHighlight] = useState("Defined by Trust.");
   const [description, setDescription] = useState(
-    "We partner with architects, designers, developers and hospitality groups to deliver tailored flooring solutions, backed by design collaboration, quality and dependable project coordination."
+    "We partner with architects, interior designers, developers and leading hospitality groups to deliver thoughtfully tailored flooring solutions. Combining design expertise, refined craftsmanship and meticulous project coordination, we bring every vision to life with quality, confidence and seamless execution.",
   );
   const [subheading, setSubheading] = useState(
     "Thoughtful Collaboration. Lasting Partnerships."
@@ -197,7 +197,7 @@ export default function ClientelePage() {
         </div>
 
         {/* Testimonials */}
-        {testimonials.length > 0 && (
+        {/* {testimonials.length > 0 && (
           <>
             <div className="border-t border-line" />
             <div className="mx-auto max-w-[85vw] 3xl:max-w-[88vw] 4xl:max-w-[82vw] px-6 pt-12 md:px-[5%] md:pt-20 3xl:pt-24 xl:px-0 pb-12">
@@ -222,7 +222,7 @@ export default function ClientelePage() {
               </div>
             </div>
           </>
-        )}
+        )} */}
       </section>
     </PageFrame>
   );

@@ -1,26 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Lens } from "@/components/ui/lens";
 
+// Sirf 3 fields: order (number), name (optional), image (url)
 type GalleryItem = {
-  title: string;
+  order: number;
+  name?: string;
   image: string | { src: string };
 };
 
 type GalleryGridProps = {
   items: GalleryItem[];
-  // kept optional so older call sites still compile; no longer used
-  saved?: string[];
-  onToggleSave?: (title: string) => void;
 };
 
 const srcOf = (image: GalleryItem["image"]) =>
   typeof image === "string" ? image : image.src;
+
+const altOf = (item: GalleryItem) => item.name || `Inspiration ${item.order}`;
 
 // Natural aspect ratio of the opened image so the lens maps 1:1 onto it
 function useRatio(src: string | null) {
@@ -38,7 +39,13 @@ function useRatio(src: string | null) {
   return ratio;
 }
 
-export default function GalleryGrid({ items }: GalleryGridProps) {
+export default function GalleryGrid({ items: rawItems }: GalleryGridProps) {
+  // order ke hisab se sort
+  const items = useMemo(
+    () => [...rawItems].sort((a, b) => a.order - b.order),
+    [rawItems],
+  );
+
   const [active, setActive] = useState<number | null>(null);
 
   const close = useCallback(() => setActive(null), []);
@@ -70,7 +77,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
     };
   }, [active, close, next, prev]);
 
-  // Close the viewer if the filtered list shrinks under it
+  // Close the viewer if the list shrinks under it
   useEffect(() => {
     if (active !== null && active >= items.length) setActive(null);
   }, [items.length, active]);
@@ -100,18 +107,18 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
       <div className="columns-1 gap-2 sm:columns-2 lg:columns-3 3xl:columns-4 3xl:gap-4 4xl:columns-4 4xl:gap-6">
         {items.map((item, index) => (
           <motion.button
-            key={item.title}
+            key={`${item.order}-${srcOf(item.image)}`}
             type="button"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: index * 0.04 }}
             onClick={() => setActive(index)}
-            aria-label={`Open ${item.title}`}
+            aria-label={`Open ${altOf(item)}`}
             className="group mb-2 3xl:mb-4 block w-full break-inside-avoid cursor-zoom-in overflow-hidden bg-[#eee]"
           >
             <Image
               src={srcOf(item.image)}
-              alt={item.title}
+              alt={altOf(item)}
               width={0}
               height={0}
               priority={index < 4}
@@ -137,7 +144,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
                 onClick={close}
                 role="dialog"
                 aria-modal="true"
-                aria-label={current.title}
+                aria-label={altOf(current)}
                 style={{
                   position: "fixed",
                   inset: 0,
@@ -183,7 +190,7 @@ export default function GalleryGrid({ items }: GalleryGridProps) {
                 >
                   <Lens
                     src={currentSrc}
-                    alt={current.title}
+                    alt={altOf(current)}
                     zoomFactor={2.5}
                     lensSize={200}
                     className="h-full w-full"

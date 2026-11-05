@@ -76,12 +76,12 @@ export default function BrochurePage() {
 
   return (
     <PageFrame active="Brochure">
-      <section className="bg-[#FFFCF4] px-6 pb-[70px] pt-[130px] md:px-[5%] md:pb-[100px] md:pt-[170px]">
-        <div className="mx-auto max-w-[1100px] 3xl:max-w-[1500px] 4xl:max-w-[1800px]">
-          <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16 3xl:gap-24 4xl:gap-32">
+      <section className="bg-[#FFFCF4] px-6 pb-[70px] pt-[190px] md:px-[5%] md:pb-[100px] md:pt-[250px]">
+        <div className="mx-auto max-w-[80vw] 3xl:max-w-[80vw] 4xl:max-w-[80vw]">
+          <div className="grid items-start gap-10 md:grid-cols-2 md:gap-16 3xl:gap-24 4xl:gap-32">
             {/* Left: copy */}
             <div>
-              <div className="relative h-[48px] w-[180px] md:h-[60px] md:w-[220px]">
+              {/* <div className="relative h-[48px] w-[180px] md:h-[60px] md:w-[220px]">
                 <Image
                   src="/logo-vertical.png"
                   alt="Loomstone"
@@ -90,15 +90,13 @@ export default function BrochurePage() {
                   sizes="220px"
                   className="object-cover object-left -ml-12"
                 />
-              </div>
+              </div> */}
               <h1 className="mt-4 font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,56px)] 3xl:text-[62px] 4xl:text-[72px]">
-                Request the{" "}
-                <em className="not-italic text-gold">Loomstone Brochure</em>
+                Experience the{" "}
+                <em className="not-italic text-gold">Art of Flooring</em>
               </h1>
               <p className="mt-5 max-w-[480px] 3xl:max-w-[600px] 4xl:max-w-[700px] text-[15px] leading-[1.8] text-cool md:text-[17px] 3xl:text-[19px] 4xl:text-[21px]">
-                Explore our bespoke carpets, textile flooring and custom
-                flooring solutions for hospitality and commercial spaces. Share
-                your details and we will send the brochure to you shortly.
+                Share your details to receive our exclusive Brochure and explore a curated collection of Bespoke carpets and distinctive flooring solutions, thoughtfully designed for Hospitality, Commercial & Luxury Spaces
               </p>
             </div>
 

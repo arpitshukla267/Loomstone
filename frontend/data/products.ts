@@ -10,17 +10,17 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: "prod-01",
     slug: "bespoke-axminster-carpets-rugs",
-    name: "Bespoke Axminster Carpets & Rugs",
+    name: "Axminster Carpets & Rugs",
     description:
-      "High-performance flooring crafted for luxury hospitality and commercial environments, seamlessly blending enduring beauty, exceptional durability, and world-class craftsmanship.",
+      "Precision-woven flooring solutions combining design flexibility, durability and refined craftsmanship for exceptional hospitality spaces.",
     images: ["/final-website/Ax.jpg"],
   },
   {
     id: "prod-02",
     slug: "bespoke-hand-crafted-carpets-rugs",
-    name: "Bespoke Hand-crafted Carpets & Rugs",
+    name: "Handcrafted Carpets & Rugs",
     description:
-      "Created by skilled artisans and tailored to the most demanding design visions, our bespoke carpets and rugs combine exquisite craftsmanship, unparalleled customization, and timeless luxury.",
+      "Distinctive handmade creations, crafted with artistic expression, premium materials and exceptional attention to detail.",
     images: ["/final-website/hk.jpg"],
   },
   {
@@ -28,7 +28,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     slug: "textile-flooring",
     name: "Textile Flooring",
     description:
-      "Architectural flooring solutions crafted for modern workplaces, hospitality spaces, and commercial interiors, combining sophisticated design, exceptional performance, and limitless creative possibilities.",
+      "Versatile textile flooring solutions designed to enhance hospitality, corporate and commercial spaces through comfort, acoustics and design.",
     images: ["/final-website/tile.jpg"],
   },
   {
@@ -36,7 +36,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     slug: "resilient-flooring",
     name: "Resilient Flooring",
     description:
-      "Engineered for demanding commercial and hospitality interiors, our resilient flooring pairs lasting durability with comfort underfoot and refined architectural finishes. A low-maintenance surface that performs beautifully in high-traffic spaces without compromising on design.",
+      "Contemporary flooring solutions combining durability, design versatility and easy maintenance for demanding commercial and hospitality environments.",
     images: ["/final-website/lvt.jpg"],
   },
 ];

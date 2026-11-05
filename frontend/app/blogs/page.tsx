@@ -41,12 +41,10 @@ export default function BlogsPage() {
           {/* Header - Simple, no eyebrow, no icons, no decoratives */}
           <div className="max-w-[700px] 3xl:max-w-[850px]">
             <h1 className="font-manrope text-[36px] font-normal tracking-[-0.03em] text-navy md:text-[52px] 3xl:text-[64px] 4xl:text-[76px]">
-              Blogs
+              The Loomstone Journal
             </h1>
             <p className="mt-3 text-[15px] 3xl:text-[18px] 4xl:text-[20px] leading-relaxed text-cool">
-              Stories on traditional weaving techniques, natural fiber
-              characteristics, and architectural proportions for contemporary
-              spaces.
+              A curated space for design inspiration, craftsmanship stories, emerging trends and insights into the evolving world of carpets and contemporary flooring
             </p>
           </div>
 
@@ -59,7 +57,7 @@ export default function BlogsPage() {
             <div className="mt-16 rounded-2xl border border-line bg-white/60 p-12 text-center md:p-16">
               <BookOpen className="mx-auto h-12 w-12 text-gold/60" />
               <h2 className="mt-4 font-manrope text-xl font-normal text-navy">
-                No Stories Published Yet
+                Something inspiring is taking shape. Stay tuned.
               </h2>
               <p className="mt-2 text-sm text-cool max-w-md mx-auto">
                 We are crafting thoughtful journals on artisanal weaving and interior architecture. Please check back soon.

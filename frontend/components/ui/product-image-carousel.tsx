@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 type Props = {
   images: string[];
@@ -174,7 +175,7 @@ export function ProductImageCarousel({ images, alt }: Props) {
   return (
     <div
       ref={rootRef}
-      className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e9e8]"
+      className="relative aspect-[4/5] w-full overflow-hidden bg-[#e8e9e8] md:aspect-[4/4]"
     >
       <div
         ref={scrollerRef}
@@ -191,14 +192,14 @@ export function ProductImageCarousel({ images, alt }: Props) {
             key={src + i}
             className="relative h-full w-full shrink-0 snap-center"
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={src}
               alt={`${alt} ${i + 1}`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               loading={i === 0 ? "eager" : "lazy"}
-              decoding="async"
               draggable={false}
-              className="h-full w-full object-cover"
+              className="object-cover"
             />
           </div>
         ))}

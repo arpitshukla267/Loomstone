@@ -89,24 +89,22 @@ export default function ContactPage() {
     <PageFrame active="Contact">
       <div className="bg-[#FFFCF4]">
         <section className="mx-auto max-w-[1310px] px-6 pt-[130px] pb-12 md:px-[5%] md:pt-[170px] md:pb-16 min-[1350px]:px-0 3xl:max-w-[1700px] 3xl:pb-24 4xl:max-w-[2100px] 4xl:pb-32">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.9fr_1.3fr] lg:gap-[60px] 3xl:gap-[100px] 4xl:gap-[140px]">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.15fr_1.2fr] lg:gap-[60px] 3xl:gap-[100px] 4xl:gap-[140px]">
             {/* ---------------- LEFT ---------------- */}
-            <div className="flex flex-col justify-between">
+            <div className="flex flex-col justify-between gap-12">
               <div>
                 <h1 className="font-manrope text-[44px] font-medium leading-[1.05] tracking-[-0.03em] text-navy md:text-[60px] 3xl:text-[72px] 4xl:text-[84px]">
-                  Get in touch /{" "}
-                  <em className="text-gold not-italic">
-                    start a custom order.
-                  </em>
+                  Lets create something{" "}
+                  <em className="text-gold not-italic">Exceptional together</em>
                 </h1>
                 <p className="mt-9 max-w-[570px] text-[17px] leading-[1.95] text-cool 3xl:max-w-[700px] 3xl:text-[20px] 4xl:max-w-[820px] 4xl:text-[23px]">
-                  Connect with our design team. From choosing your rug size and
-                  color to handweaving and delivery, we work closely with
-                  homeowners, interior designers, and architects.
+                  Share your vision with us, from bespoke carpets to distinctive
+                  flooring solutions. Let's collaborate to create inspiring
+                  spaces defined by design, craftsmanship, and quality.{" "}
                 </p>
               </div>
 
-              <div className="mt-16 border-t border-line pt-9 lg:mt-0 3xl:pt-12">
+              <div className="mt-16 border-t border-line pt-9 lg:mt-12 3xl:pt-12">
                 {/* 2-2 grid: Email + Phone, then Quick response + Sales Office */}
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 3xl:gap-10">
                   {info.email && (
@@ -191,14 +189,14 @@ export default function ContactPage() {
                       required
                     />
                     <Input
-                      label="Product"
+                      label="Product of interest"
                       placeholder="Product you are interested in"
                     />
                   </div>
 
                   {/* Description */}
                   <label className={`${labelCls} mt-8 3xl:mt-11`}>
-                    <Label text="Description" />
+                    <Label text="Requirements" />
                     <textarea
                       rows={3}
                       placeholder=""

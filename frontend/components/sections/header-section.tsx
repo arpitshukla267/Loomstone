@@ -29,13 +29,20 @@ const rightLinks: [string, string][] = [
 
 const mobileLinks = [...leftLinks, ...rightLinks];
 
+// Jin routes par header top par transparent + bada logo ho, scroll par solid ho
+const transparentTopRoutes = ["/", "/brochure"];
+
+// Jin routes ka top background light hai, wahan top par text black rahega
+const darkTextRoutes = ["/brochure"];
+
 export function HeaderSection({
   onShowToast,
   onOpenInquiry,
   activePage,
 }: HeaderSectionProps) {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isHome = transparentTopRoutes.includes(pathname);
+  const darkTopText = darkTextRoutes.includes(pathname);
   const router = useRouter();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -86,15 +93,18 @@ export function HeaderSection({
   }, [menuOpen]);
 
   // solid = cream bg + dark text + chhota logo.
-  // Home par: top par transparent/white text/bada logo, scroll ke baad solid.
+  // Home aur /brochure par: top par transparent/white text/bada logo, scroll ke baad solid.
   // Baaki pages par: hamesha solid.
   const solid = !isHome || scrolled || menuOpen;
 
+  // Transparent state me text color: light page par black, hero par white
+  const topTextClass = darkTopText
+    ? "text-black"
+    : "text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.45)]";
+
   const desktopLinkClass = (active: boolean) =>
     `text-[11px] xl:text-sm 3xl:text-base 4xl:text-lg font-medium xl:tracking-[.03em] uppercase no-underline transition-colors duration-300 border-b-2 ${
-      solid
-        ? "text-navy"
-        : "text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.45)]"
+      solid ? "text-navy" : topTextClass
     } ${active ? "border-gold" : "border-transparent"}`;
 
   return (
@@ -156,9 +166,7 @@ export function HeaderSection({
               type="button"
               onClick={handleDownloadBrochure}
               className={`cursor-pointer border-0 bg-transparent text-[11px] font-bold uppercase transition-colors duration-300 xl:text-sm 3xl:text-base 4xl:text-lg ${
-                solid
-                  ? "text-navy"
-                  : "text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.45)]"
+                solid ? "text-navy" : topTextClass
               }`}
             >
               Brochure
@@ -168,7 +176,7 @@ export function HeaderSection({
           {/* Mobile toggle */}
           <button
             className={`relative block h-6 w-6 cursor-pointer border-0 bg-transparent p-0 transition-colors duration-300 md:hidden ${
-              solid ? "text-navy" : "text-white"
+              solid ? "text-navy" : darkTopText ? "text-black" : "text-white"
             }`}
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
