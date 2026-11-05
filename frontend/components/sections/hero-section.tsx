@@ -108,8 +108,7 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/axminster-2.webp",
     heading: (
       <>
-        Bespoke Fashionable Flooring{" "}
-        <em className="text-gold not-italic"> </em>
+        Bespoke Fashionable Flooring <em className="text-gold not-italic"> </em>
       </>
     ),
     description:
@@ -119,12 +118,12 @@ const defaultSlides: HeroSlide[] = [
     image: "/hero-backup/handmade.webp",
     heading: (
       <>
-        Beyond Flooring, An Art of Living.{""}{" "}
+        Every Surface, A Statment of Luxury{""}{" "}
         <em className="text-gold not-italic"></em>
       </>
     ),
     description:
-      "Expertly handcrafted to bring timeless elegance, refined textures, and exceptional character to every space.",
+      "Thoughtfully crafted for exceptional comfort, enduring quality and timeless elegance",
   },
   {
     image: "/hero-backup/carpet-tiles.webp",
@@ -145,7 +144,7 @@ const defaultSlides: HeroSlide[] = [
       </>
     ),
     description:
-      "Resilient flooring made for high-traffic spaces without compromising on style. Strong, easy to maintain, and designed to look flawless for years.",
+      "Engineered for durability, designed for elegance, built for lasting performance.",
   },
 ];
 

@@ -15,36 +15,36 @@ const CLIENTS_DIR = path.resolve(__dirname, "../../frontend/public/clients");
 const CLOUDINARY_FOLDER = "loomstone";
 
 const sectionData = {
-  heading: "Built on Expertise.",
-  headingHighlight: "Defined by Trust.",
+  heading: "Trusted by Industry Leaders.",
+  headingHighlight: "Proven by Results.",
   description:
-    "We partner with architects, designers, developers and hospitality groups to deliver tailored flooring solutions, backed by design collaboration, quality and dependable project coordination.",
-  subheading: "Thoughtful Collaboration. Lasting Partnerships.",
-  testimonialsHeading: "What Our Clients Says",
+    "From five-star hotel chains to Fortune 500 corporate campuses, Loomstone has delivered bespoke flooring for over 200 projects across India and the Middle East — partnering with the country's most respected architects, designers, and hospitality groups.",
+  subheading: "Long-Term Partnerships. Measurable Impact.",
+  testimonialsHeading: "Voices of Our Partners",
   testimonials: [
     {
-      text: "Loomstone delivered exceptional bespoke carpets for our flagship hotel suites. The craftsmanship and acoustic quality exceed expectations.",
+      text: "Loomstone understood our brand language from the very first meeting. The bespoke Axminster carpets they delivered for our Udaipur property set a new benchmark for our entire portfolio. Their attention to colour fidelity and pattern scale was outstanding.",
       name: "Rajiv Menon",
-      designation: "VP of Hospitality Design",
-      company: "Luxury Hotels Group",
+      designation: "VP of Design & Technical Services",
+      company: "The Leela Palaces, Hotels and Resorts",
       order: 0,
     },
     {
-      text: "Working with the Loomstone team on our commercial headquarters was seamless. Their attention to architectural specification and durability is unmatched.",
+      text: "We've collaborated with Loomstone on three commercial headquarters projects. They bring a level of technical rigour — fire ratings, acoustic data, lifecycle costing — that most flooring suppliers simply don't offer. A genuine design partner.",
       name: "Sneha Kapoor",
       designation: "Principal Architect",
       company: "Studio Formwork",
       order: 1,
     },
     {
-      text: "From sampling and prototyping to final on-site installation, the execution was flawless. A trusted partner for high-traffic luxury hospitality.",
+      text: "From initial sampling through to final installation across 400+ rooms, the execution was flawless. Loomstone managed tight timelines without compromising quality — exactly what large-scale hospitality renovations demand.",
       name: "Vikram Singhania",
       designation: "Director of Projects",
-      company: "Heritage Resorts",
+      company: "ITC Hotels",
       order: 2,
     },
     {
-      text: "Their handcrafted rugs brought timeless elegance and warmth to our penthouse project. The subtle abrash and natural fibers make all the difference.",
+      text: "Their hand-knotted rugs brought a layer of warmth and identity to our penthouse collection that no other element could. The artisan quality, natural dyes, and custom sizing made each piece feel truly one-of-a-kind.",
       name: "Ananya Mehta",
       designation: "Lead Interior Designer",
       company: "Atelier Living",
@@ -54,14 +54,16 @@ const sectionData = {
 };
 
 const clientLogosData = [
-  { name: "Leela", fileName: "leela.webp", order: 0 },
-  { name: "Marriott Hotels", fileName: "marriott.webp", order: 1 },
+  { name: "The Leela", fileName: "leela.webp", order: 0 },
+  { name: "Marriott International", fileName: "marriott.webp", order: 1 },
   { name: "ITC Hotels", fileName: "itc.png", order: 2 },
   { name: "Hilton Hotels & Resorts", fileName: "hilton.webp", order: 3 },
-  { name: "Hyatt Regency", fileName: "hyatt.png", order: 4 },
-  { name: "DLF Hospitality", fileName: "dlf.webp", order: 5 },
+  { name: "Hyatt Hotels", fileName: "hyatt.png", order: 4 },
+  { name: "DLF Limited", fileName: "dlf.webp", order: 5 },
   { name: "FCML India", fileName: "fcml.png", order: 6 },
-  { name: "Airtel", fileName: "airtel.webp", order: 7 },
+  { name: "Bharti Airtel", fileName: "airtel.webp", order: 7 },
+  { name: "Vodafone", fileName: "vodafone.webp", order: 8 },
+  { name: "Fortune Hotels", fileName: "Fortune-Hotel-logo.webp", order: 9 },
 ];
 
 const uploadLogo = async (fileName, publicId) => {

@@ -10,43 +10,43 @@ dotenv.config();
 import WhyLoomstone from "../models/WhyLoomstone.js";
 
 const whyLoomstoneData = {
-  heading: "What Sets Loomstone Apart",
-  subheading: "Thoughtful Design. Bespoke Craftsmanship. Seamless Execution.",
+  heading: "Why India's Leading Architects Choose Loomstone",
+  subheading: "Design-Led. Quality-Driven. Partnership-Focused.",
   features: [
     {
       icon: "Layers",
-      title: "Flooring Expertise",
-      text: "Axminster carpets & Rugs, Handcrafted carpets & Rugs, Textile flooring, Resilient Flooring",
+      title: "Complete Flooring Portfolio",
+      text: "One partner for every flooring need — Axminster carpets, hand-knotted & hand-tufted rugs, broadloom & carpet tiles, LVT, SPC, and resilient flooring — eliminating multi-vendor complexity.",
       order: 0,
     },
     {
       icon: "Palette",
-      title: "Design Collaboration",
-      text: "Working with architects and designers to translate their creative vision into distinctive flooring concepts.",
+      title: "Architect-First Design Studio",
+      text: "Our in-house design team works shoulder-to-shoulder with architects and interior designers, translating mood boards and material palettes into production-ready flooring concepts.",
       order: 1,
     },
     {
       icon: "Gem",
-      title: "Bespoke Flooring Solutions",
-      text: "Custom patterns, colours, textures and specifications crafted to bring each project's unique design vision to life.",
+      title: "Truly Bespoke Manufacturing",
+      text: "Custom colourways, pile heights, pattern scales, and yarn blends — every specification is tailored. No minimum order is too small for a flagship project.",
       order: 2,
     },
     {
       icon: "Globe",
-      title: "Global Manufacturing Partnerships",
-      text: "Working with trusted manufacturing partners and specialist suppliers to deliver quality material, consistent standards & Bespoke flooring solutions.",
+      title: "Global Supply, Local Expertise",
+      text: "Strategic partnerships with mills in the UK, New Zealand, Belgium, and India ensure world-class raw materials, competitive pricing, and reliable lead times.",
       order: 3,
     },
     {
       icon: "ClipboardCheck",
-      title: "Technical Precision",
-      text: "Meticulous attention to specification, accurate measurements, budget consideration and project requirements ensuring flooring solutions that balance design intent, performance and practicality.",
+      title: "Specification & Compliance Rigour",
+      text: "Detailed technical data sheets, fire-rating certifications (BS 4790, EN 13501), acoustic performance reports, and VOC compliance — delivered upfront to accelerate approvals.",
       order: 4,
     },
     {
       icon: "Handshake",
-      title: "End to End Project Support",
-      text: "Coordinated support from design development to supply and installation, ensuring a seamless product journey from concept to completion.",
+      title: "End-to-End Project Ownership",
+      text: "From initial consultation through sampling, production, logistics, installation supervision, and post-handover maintenance support — a single accountable team throughout.",
       order: 5,
     },
   ],

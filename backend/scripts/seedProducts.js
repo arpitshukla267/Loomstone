@@ -32,7 +32,7 @@ const presentProductsData = [
     name: "Bespoke Axminster Carpets & Rugs",
     slug: "bespoke-axminster-carpets-rugs",
     description:
-      "High-performance flooring crafted for luxury hospitality and commercial environments, seamlessly blending enduring beauty, exceptional durability, and world-class craftsmanship.",
+      "Precision-woven on state-of-the-art looms, our Axminster carpets deliver unlimited design freedom with exceptional durability — engineered to retain colour, pattern definition, and pile resilience across millions of footfalls in luxury hotels, resorts, and premium commercial interiors.",
     fileNames: ["Ax.jpg"],
     order: 0,
   },
@@ -40,7 +40,7 @@ const presentProductsData = [
     name: "Bespoke Hand-crafted Carpets & Rugs",
     slug: "bespoke-hand-crafted-carpets-rugs",
     description:
-      "Created by skilled artisans and tailored to the most demanding design visions, our bespoke carpets and rugs combine exquisite craftsmanship, unparalleled customization, and timeless luxury.",
+      "Hand-knotted and hand-tufted by master artisans using the finest New Zealand wool, silk, and botanical fibres. Each piece is a one-of-a-kind creation — custom-designed to complement signature suites, presidential lobbies, and heritage restoration projects.",
     fileNames: ["hk.jpg"],
     order: 1,
   },
@@ -48,7 +48,7 @@ const presentProductsData = [
     name: "Textile Flooring",
     slug: "textile-flooring",
     description:
-      "Architectural flooring solutions crafted for modern workplaces, hospitality spaces, and commercial interiors, combining sophisticated design, exceptional performance, and limitless creative possibilities.",
+      "Modular carpet tiles and broadloom solutions engineered for modern workplaces, convention centres, and hospitality corridors. Superior acoustic performance, rapid installation, and virtually limitless colour and texture combinations for dynamic commercial environments.",
     fileNames: ["tile.jpg"],
     order: 2,
   },
@@ -56,7 +56,7 @@ const presentProductsData = [
     name: "Resilient Flooring",
     slug: "resilient-flooring",
     description:
-      "Engineered for demanding commercial and hospitality interiors, our resilient flooring pairs lasting durability with comfort underfoot and refined architectural finishes. A low-maintenance surface that performs beautifully in high-traffic spaces without compromising on design.",
+      "Luxury Vinyl Tile (LVT), SPC, and heterogeneous vinyl flooring that replicates the beauty of natural wood and stone with waterproof, scratch-resistant, and low-maintenance performance — ideal for high-traffic hospitality zones, healthcare facilities, and F&B spaces.",
     fileNames: ["lvt.jpg"],
     order: 3,
   },

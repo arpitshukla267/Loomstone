@@ -18,60 +18,60 @@ const CLOUDINARY_FOLDER = "loomstone";
 
 /* ─── Current Data for Founder Section ─── */
 const founderData = {
-  sectionTitle: "Meet Our Visionary",
+  sectionTitle: "The Mind Behind Loomstone",
   founderName: "Pawan Yadav",
-  designation: "Managing Partner at Loomstone",
-  tagline: "Perfection is the foundation beneath every great space.",
+  designation: "Founder & Managing Partner, Loomstone",
+  tagline: "Where craftsmanship meets conscience — every floor tells a story.",
   quote:
-    "We believe exceptional hospitality is shaped by thoughtful details. Flooring is more than a surface; it is a defining design element that enhances environments, enriches guest experiences, and contributes to the enduring identity of a space.",
+    "With over 15 years in the luxury hospitality flooring industry, I founded Loomstone to bridge the gap between world-class design and responsible sourcing. We don't just supply floors — we partner with architects and designers to create surfaces that define the character of a space, from five-star hotel lobbies to landmark commercial developments. Every project is a collaboration rooted in precision, trust, and an unwavering commitment to excellence.",
   fileName: "founder.webp",
 };
 
 /* ─── Current Data for Process Section ─── */
 const processSectionData = {
-  heading: "From Vision to Exceptional Spaces",
+  heading: "Our Process — Concept to Completion",
   intro:
-    "At Loomstone, exceptional flooring begins with a clear vision and is realised through meticulous execution. We guide every project from concept to completion, creating floors that elevate the character and identity of a space.",
+    "Every Loomstone project follows a proven six-stage journey. We embed ourselves in your design team from day one, ensuring that the flooring solution is not an afterthought but a defining element — delivered on spec, on budget, and on time.",
   steps: [
     {
-      title: "Design Consultation",
+      title: "Discovery & Design Consultation",
       description:
-        "We work with architects, designers and project teams to understand the vision, technical requirements and practical needs of every space.",
+        "We begin by understanding the project's architectural narrative, functional demands, foot-traffic patterns, and aesthetic goals through in-depth sessions with architects, interior designers, and project owners.",
       fileName: "design-consultation.webp",
       order: 0,
     },
     {
       title: "Bespoke Design Development",
       description:
-        "From patterns and colours to textures and materials, we develop tailored flooring solutions that complement each project's architectural vision and functional requirements.",
+        "Our design studio translates creative briefs into detailed flooring concepts — custom patterns, colour palettes, material blends, and textures — ensuring every element harmonises with the broader interior vision.",
       fileName: "design-development.webp",
       order: 1,
     },
     {
       title: "Sampling & Prototyping",
       description:
-        "Detailed samples bring concepts to life, allowing materials, colours and finishes to be reviewed and refined before production.",
+        "Physical samples and prototypes are produced so stakeholders can evaluate materials, colours, and finishes under real lighting and spatial conditions before committing to full production.",
       fileName: "sampling-prototyping.webp",
       order: 2,
     },
     {
-      title: "Technical Planning & Specification",
+      title: "Technical Specification & Budgeting",
       description:
-        "We align design intent with material suitability, durability, performance requirements and project budgets to support informed decisions.",
+        "We prepare comprehensive technical specifications — covering material performance, fire ratings, acoustic values, and maintenance profiles — aligned with project budgets and regulatory requirements.",
       fileName: "technical-planning.webp",
       order: 3,
     },
     {
-      title: "Production & Quality Assurance",
+      title: "Manufacturing & Quality Control",
       description:
-        "Through careful coordination and quality checks, we focus on consistency, craftsmanship and adherence to agreed project specifications.",
+        "Production is managed through our trusted global manufacturing partners with multi-stage quality inspections ensuring consistency in colour, pile height, pattern registration, and dimensional accuracy.",
       fileName: "production-quality.webp",
       order: 4,
     },
     {
-      title: "Installation & Project Support",
+      title: "Logistics, Installation & Aftercare",
       description:
-        "From delivery coordination to installation guidance, we provide project support to help achieve a seamless finish and lasting performance.",
+        "We coordinate delivery schedules, provide on-site installation guidance with trained fitting teams, and offer post-installation support including maintenance documentation and warranty management.",
       fileName: "installation-support.webp",
       order: 5,
     },
