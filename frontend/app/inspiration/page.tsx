@@ -17,18 +17,23 @@ interface InspirationItem {
 const STATIC_INSPIRATIONS: InspirationItem[] = [
   {
     order: 1,
-    name: "Unbleached Highland Fleece",
+    name: "",
     image: "/inspiration/1.webp",
   },
   {
     order: 2,
-    name: "Walnut Husks & Plant Roots",
+    name: "",
     image: "/inspiration/2.webp",
   },
   {
     order: 3,
-    name: "Hand-Knotting on the Loom",
+    name: "",
     image: "/inspiration/3.webp",
+  },
+  {
+    order: 3,
+    name: "",
+    image: "/inspiration/4.webp",
   },
 ];
 
