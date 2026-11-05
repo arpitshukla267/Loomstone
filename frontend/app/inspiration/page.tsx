@@ -35,11 +35,6 @@ const STATIC_INSPIRATIONS: InspirationItem[] = [
     name: "",
     image: "/inspiration/4.webp",
   },
-  {
-    order: 5,
-    name: "",
-    image: "/inspiration/5.webp",
-  },
 ];
 
 export default function InspirationPage() {
