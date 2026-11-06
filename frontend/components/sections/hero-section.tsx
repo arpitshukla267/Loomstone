@@ -61,6 +61,14 @@ const SLIDE_DURATION = 5000;
 const FETCH_TIMEOUT = 4000; // 4 sec mein backend na bole to fallback
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+/* ---------- Mobile image helper ---------- */
+
+// "/hero-backup/axminster.webp" -> "/hero-backup/axminster-mobile.webp"
+// Backend ke URL (query string wale) ke saath bhi chalega
+function getMobileSrc(src: string): string {
+  return src.replace(/(\.[a-zA-Z0-9]+)(\?.*)?$/, "-mobile$1$2");
+}
+
 /* ---------- Backend integration ---------- */
 
 // "Handmade rugs for *beautiful* spaces." -> JSX (gold word + line breaks)
@@ -162,10 +170,12 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [progressKey, setProgressKey] = useState(0);
 
-  // Preload all slides in background
+  // Preload all slides in background (mobile pe sirf mobile images)
   useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
     heroSlides.forEach((s) => {
-      if (s.image) preloadImage(s.image);
+      if (!s.image) return;
+      preloadImage(isMobile ? getMobileSrc(s.image) : s.image);
     });
   }, [heroSlides]);
 
@@ -224,7 +234,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
   );
 
   // Sirf 2nd slide (index 1) ki image halka neeche
-  const isShiftedSlide = activeSlide === 1; 
+  const isShiftedSlide = activeSlide === 1;
 
   return (
     <motion.section
@@ -235,19 +245,10 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
       transition={{ duration: 0.2, ease: "easeOut" }}
       className="relative min-h-screen flex items-center justify-center overflow-hidden px-6 md:px-[5%] pt-24 pb-28 md:pt-36 md:pb-28 3xl:px-[7%] 3xl:pt-44 3xl:pb-36 4xl:px-[9%]"
     >
-      {/* Smooth Background Image Slider */}
+      {/* Smooth Background Image Slider (desktop + mobile images) */}
       <AnimatePresence initial={false}>
-        <motion.img
+        <motion.picture
           key={currentSlide.image}
-          src={currentSlide.image}
-          alt="Handcrafted rugs in an elegant interior"
-          loading="eager"
-          decoding="async"
-          style={{
-            objectPosition: "50% 50%",
-            // top edge fix rakho, taaki upar white line na aaye
-            transformOrigin: isShiftedSlide ? "50% 0%" : "50% 50%",
-          }}
           initial={{ opacity: 0, scale: isShiftedSlide ? 1.24 : 1.04 }}
           animate={{ opacity: 1, scale: isShiftedSlide ? 1.15 : 1 }}
           exit={{ opacity: 0 }}
@@ -255,8 +256,27 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
             opacity: { duration: 0.9, ease: "easeInOut" },
             scale: { duration: 3.2, ease: "linear" },
           }}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+          style={{
+            // top edge fix rakho, taaki upar white line na aaye
+            transformOrigin: isShiftedSlide ? "50% 0%" : "50% 50%",
+          }}
+          className="absolute inset-0 block w-full h-full"
+        >
+          {/* Mobile (< 768px) */}
+          <source
+            media="(max-width: 767px)"
+            srcSet={getMobileSrc(currentSlide.image)}
+          />
+          {/* Desktop / fallback */}
+          <img
+            src={currentSlide.image}
+            alt="Handcrafted rugs in an elegant interior"
+            loading="eager"
+            decoding="async"
+            style={{ objectPosition: "50% 50%" }}
+            className="w-full h-full object-cover"
+          />
+        </motion.picture>
       </AnimatePresence>
 
       <div className="pointer-events-none absolute inset-0 z-[5] bg-black/20" />

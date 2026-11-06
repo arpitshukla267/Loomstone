@@ -2,6 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageFrame } from "@/components/site/site-chrome";
 
+import { Metadata } from "next";
+import { siteUrl } from "@/lib/seo-config";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 export const dynamic = "force-dynamic";
@@ -24,12 +27,59 @@ async function fetchBlog(slug: string) {
   }
 }
 
-export async function generateMetadata({ params }: BlogDetailPageProps) {
+export async function generateMetadata({
+  params,
+}: BlogDetailPageProps): Promise<Metadata> {
   const post = await fetchBlog(params.slug);
-  if (!post) return { title: "Blog Not Found | Loomstone" };
+  if (!post) {
+    return {
+      title: "Story Not Found",
+      description: "The requested blog story could not be found.",
+    };
+  }
+
+  const title = post.title;
+  const description =
+    post.summary ||
+    "Explore luxury carpet craftsmanship, design insights and trends from Loomstone.";
+  const ogImageUrl = post.image || "/product.webp";
+
   return {
-    title: `${post.title} | Loomstone Blog`,
-    description: post.summary,
+    title,
+    description,
+    keywords: [
+      post.title,
+      "Loomstone blog",
+      "luxury carpets",
+      "bespoke rugs",
+      "hospitality flooring",
+      "carpet design insights",
+    ],
+    alternates: {
+      canonical: `/blogs/${params.slug}`,
+    },
+    openGraph: {
+      type: "article",
+      title: `${title} | Loomstone`,
+      description,
+      url: `${siteUrl}/blogs/${params.slug}`,
+      publishedTime: post.date,
+      authors: ["Loomstone"],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | Loomstone`,
+      description,
+      images: [ogImageUrl],
+    },
   };
 }
 

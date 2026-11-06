@@ -95,16 +95,16 @@ export function FooterSection({ onShowToast }: FooterSectionProps = {}) {
     {
       key: "instagram",
       label: "Instagram",
-      href: info.instagram,
+      href: "https://www.instagram.com/loomstone.in?mdxt=MXNrZzBtMDl2b2N3OQ%3D%3D&utm_source=qr",
       icon: <InstagramIcon />,
     },
     {
       key: "linkedin",
       label: "LinkedIn",
-      href: info.linkedin,
+      href: "https://www.linkedin.com/company/loomstone/",
       icon: <Linkedin size={16} strokeWidth={2} aria-hidden="true" />,
     },
-    { key: "x", label: "X", href: info.x, icon: <XIcon /> },
+    // { key: "x", label: "X", href: info.x, icon: <XIcon /> },
   ].filter((s) => s.href);
 
   return (

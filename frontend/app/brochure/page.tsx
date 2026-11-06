@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { PageFrame } from "@/components/site/site-chrome";
-import Image from "next/image";
+
 type FormState = {
   name: string;
   mobile: string;
@@ -22,7 +22,7 @@ function validate(form: FormState): Errors {
   }
 
   const digits = form.mobile.replace(/\D/g, "");
-  if (digits.length < 10 || digits.length > 13) {
+  if (digits.length < 10 || digits.length > 15) {
     errors.mobile = "Please enter a valid mobile number.";
   }
 
@@ -38,11 +38,15 @@ export default function BrochurePage() {
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+    if (apiError) {
+      setApiError(null);
     }
   };
 
@@ -54,16 +58,23 @@ export default function BrochurePage() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
+    setApiError(null);
     try {
-      // TODO: connect to your backend / email service here, e.g.
-      // await fetch("/api/brochure", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(form),
-      // });
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const res = await fetch("/api/brochure", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        throw new Error(data?.error || "Failed to submit brochure request. Please try again.");
+      }
+
       setSubmitted(true);
       setForm(initialForm);
+    } catch (err: any) {
+      setApiError(err?.message || "An error occurred while submitting your request.");
     } finally {
       setSubmitting(false);
     }
@@ -81,16 +92,6 @@ export default function BrochurePage() {
           <div className="grid items-center gap-10 md:grid-cols-2 md:gap-16 3xl:gap-24 4xl:gap-32">
             {/* Left: copy */}
             <div>
-              {/* <div className="relative h-[48px] w-[180px] md:h-[60px] md:w-[220px]">
-                <Image
-                  src="/logo-vertical.png"
-                  alt="Loomstone"
-                  fill
-                  priority
-                  sizes="220px"
-                  className="object-cover object-left -ml-12"
-                />
-              </div> */}
               <h1 className="mt-4 font-manrope text-[36px] font-semibold leading-[1.1] tracking-[-0.03em] text-navy md:text-[clamp(40px,5vw,56px)] 3xl:text-[62px] 4xl:text-[72px]">
                 Experience the{" "}
                 <em className="not-italic text-gold">Art of Flooring</em>
@@ -114,7 +115,10 @@ export default function BrochurePage() {
                   </p>
                   <button
                     type="button"
-                    onClick={() => setSubmitted(false)}
+                    onClick={() => {
+                      setSubmitted(false);
+                      setApiError(null);
+                    }}
                     className="mt-8 text-[12px] font-semibold uppercase tracking-[0.08em] text-navy underline underline-offset-4 transition-colors hover:text-gold"
                   >
                     Submit another request
@@ -131,6 +135,12 @@ export default function BrochurePage() {
                     </p>
                   </div>
 
+                  {apiError && (
+                    <div className="rounded-[4px] border border-red-300 bg-red-50 p-3 text-[13px] text-red-700">
+                      {apiError}
+                    </div>
+                  )}
+
                   <div>
                     <label
                       htmlFor="name"
@@ -145,6 +155,7 @@ export default function BrochurePage() {
                       value={form.name}
                       onChange={(e) => handleChange("name", e.target.value)}
                       placeholder="Your full name"
+                      disabled={submitting}
                       className={inputClass(!!errors.name)}
                     />
                     {errors.name && (
@@ -169,6 +180,7 @@ export default function BrochurePage() {
                       value={form.mobile}
                       onChange={(e) => handleChange("mobile", e.target.value)}
                       placeholder="Your Phone Number"
+                      disabled={submitting}
                       className={inputClass(!!errors.mobile)}
                     />
                     {errors.mobile && (
@@ -192,6 +204,7 @@ export default function BrochurePage() {
                       value={form.email}
                       onChange={(e) => handleChange("email", e.target.value)}
                       placeholder="Your Email"
+                      disabled={submitting}
                       className={inputClass(!!errors.email)}
                     />
                     {errors.email && (
