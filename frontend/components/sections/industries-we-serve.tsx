@@ -57,7 +57,7 @@ export function IndustryCard({
           </h3>
         </div>
 
-        {onOpenInquiry ? (
+        {/* {onOpenInquiry ? (
           <button
             type="button"
             onClick={onOpenInquiry}
@@ -74,7 +74,7 @@ export function IndustryCard({
           >
             <ArrowUpRight size={20} />
           </Link>
-        )}
+        )} */}
       </div>
     </article>
   );
