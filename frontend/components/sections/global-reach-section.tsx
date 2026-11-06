@@ -2,7 +2,11 @@
 
 import { useRef } from "react";
 import { motion, MotionConfig, useInView } from "framer-motion";
-import { WorldMap, defaultDestinations, type Destination } from "../ui/world-map";
+import {
+  WorldMap,
+  defaultDestinations,
+  type Destination,
+} from "../ui/world-map";
 import { SectionIntro } from "./section-intro";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -29,7 +33,9 @@ export function GlobalReachSection({
       >
         <div
           ref={ref}
-          className="mx-auto max-w-[90vw] px-0 py-[20px] md:px-[5%] md:py-[100px]"
+          // Mobile: full width, top padding only (no bottom padding)
+          // Desktop (md+): unchanged -> max-w-[90vw], px-[5%], py-[100px]
+          className="mx-auto max-w-[100vw] px-0 pb-0 pt-[20px] md:max-w-[90vw] md:px-[5%] md:py-[100px]"
         >
           {/* ================= HEADER ================= */}
           <motion.div

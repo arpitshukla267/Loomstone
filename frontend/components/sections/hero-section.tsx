@@ -313,7 +313,7 @@ export function HeroSection({ onOpenInquiry, slides }: HeroSectionProps) {
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px] my-4 md:my-5 text-white font-manrope font-medium text-4xl md:text-5xl 3xl:text-6xl 4xl:text-7xl leading-[1.2] tracking-[-0.02em]"
+            className="max-w-[900px] 3xl:max-w-[1100px] 4xl:max-w-[1300px] my-4 md:my-5 text-white font-manrope font-medium text-4xl md:text-5xl 3xl:text-6xl 4xl:text-7xl sm:leading-[1.2] tracking-[-0.02em]"
           >
             {currentSlide.heading}
           </motion.h1>
